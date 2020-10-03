@@ -7,11 +7,11 @@
 #include "gff_08GameModeBase.generated.h"
 
 /**
- * 
+ *
  */
 UCLASS()
 class GFF_08_API Agff_08GameModeBase : public AGameModeBase
 {
-	GENERATED_BODY()
-	
+    GENERATED_BODY()
+
 };

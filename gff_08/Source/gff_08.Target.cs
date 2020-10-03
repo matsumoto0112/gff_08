@@ -10,5 +10,7 @@ public class gff_08Target : TargetRules
 		Type = TargetType.Game;
 		DefaultBuildSettings = BuildSettingsVersion.V2;
 		ExtraModuleNames.AddRange( new string[] { "gff_08" } );
+
+        CppStandard = CppStandardVersion.Cpp17;
 	}
 }
