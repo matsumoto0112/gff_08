@@ -1,0 +1,6 @@
+Strix Unreal SDK
+Copyright 2019 Soft Gear Co., Ltd. All Rights Reserved.
+
+This product includes software developed by Soft Gear Co., Ltd.
+
+See https://strixengine.com/en/terms-of-use/ for full license details.
