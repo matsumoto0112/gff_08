@@ -1,0 +1,30 @@
+﻿#pragma once
+
+#include <strix/client/room/model/Room.h>
+#include <strix/client/room/model/RoomMember.h>
+
+#include <strix/client/room/message/OwnerlessRoomCreateMessage.h>
+#include <strix/client/room/message/RoomCreateMessage.h>
+#include <strix/client/room/message/RoomCreateResponse.h>
+#include <strix/client/room/message/RoomDeleteNotification.h>
+#include <strix/client/room/message/RoomDirectRelayMessage.h>
+#include <strix/client/room/message/RoomDirectRelayNotification.h>
+#include <strix/client/room/message/RoomDirectRelayResponse.h>
+#include <strix/client/room/message/RoomGetMembersMessage.h>
+#include <strix/client/room/message/RoomGetMembersResponse.h>
+#include <strix/client/room/message/RoomJoinFailedResponse.h>
+#include <strix/client/room/message/RoomJoinMessage.h>
+#include <strix/client/room/message/RoomJoinNotification.h>
+#include <strix/client/room/message/RoomJoinResponse.h>
+#include <strix/client/room/message/RoomLeaveFailedResponse.h>
+#include <strix/client/room/message/RoomLeaveMessage.h>
+#include <strix/client/room/message/RoomLeaveNotification.h>
+#include <strix/client/room/message/RoomLeaveResponse.h>
+#include <strix/client/room/message/RoomRelayMessage.h>
+#include <strix/client/room/message/RoomRelayNotification.h>
+#include <strix/client/room/message/RoomRelayResponse.h>
+#include <strix/client/room/message/RoomSetMemberFailedResponse.h>
+#include <strix/client/room/message/RoomSetMemberMessage.h>
+#include <strix/client/room/message/RoomSetMemberNotification.h>
+#include <strix/client/room/message/RoomSetMemberResponse.h>
+#include <strix/client/room/message/RoomSetNotification.h>

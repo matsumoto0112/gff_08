@@ -1,0 +1,18 @@
+{
+  "FileVersion": 3,
+  "Version": 1,
+  "VersionName": "1.4",
+  "FriendlyName": "StrixSDK",
+  "Description": "Plugin containing strix client libraries and header files, along with required dependencies.",
+  "Category": "Other",
+  "CreatedBy": "Soft Gear Co., Ltd.",
+  "CreatedByURL": "http://www.soft-gear.co.jp",
+  "DocsURL": "",
+  "MarketplaceURL": "",
+  "SupportURL": "",
+  "CanContainContent": false,
+  "IsBetaVersion": false,
+  "Installed": false,
+  "Modules": [
+  ]
+}

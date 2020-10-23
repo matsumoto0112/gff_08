@@ -1,0 +1,34 @@
+﻿#pragma once
+
+#include <strix/client/core/message/CreateFailedResponse.h>
+#include <strix/client/core/message/CreateMessage.h>
+#include <strix/client/core/message/CreateResponse.h>
+#include <strix/client/core/message/DefaultMessageDispatcher.h>
+#include <strix/client/core/message/DefaultParameterMessageDispatcher.h>
+#include <strix/client/core/message/DeleteByFailedResponse.h>
+#include <strix/client/core/message/DeleteByMessage.h>
+#include <strix/client/core/message/DeleteByResponse.h>
+#include <strix/client/core/message/DeleteFailedResponse.h>
+#include <strix/client/core/message/DeleteMessage.h>
+#include <strix/client/core/message/DeleteResponse.h>
+#include <strix/client/core/message/GetMessage_.h>
+#include <strix/client/core/message/GetResponse.h>
+#include <strix/client/core/message/GetCountMessage.h>
+#include <strix/client/core/message/GetCountResponse.h>
+#include <strix/client/core/message/MessageDispatcher.h>
+#include <strix/client/core/message/ParameterMessage.h>
+#include <strix/client/core/message/SearchFailedResponse.h>
+#include <strix/client/core/message/SearchMessage.h>
+#include <strix/client/core/message/SearchResponse.h>
+#include <strix/client/core/message/SetByFailedResponse.h>
+#include <strix/client/core/message/SetByMessage.h>
+#include <strix/client/core/message/SetByResponse.h>
+#include <strix/client/core/message/SetFailedResponse.h>
+#include <strix/client/core/message/SetMessage.h>
+#include <strix/client/core/message/SetResponse.h>
+
+#include <strix/client/core/node/NodeInfo.h>
+#include <strix/client/core/ChildUID.h>
+#include <strix/client/core/ServerUID.h>
+#include <strix/client/core/UserUID.h>
+#include <strix/client/core/SharedUID.h>
