@@ -15,7 +15,7 @@ ULapCounter::ULapCounter() {
 void ULapCounter::BeginPlay() {
 	Super::BeginPlay();
 
-	// ...
+	LapCount = 1;
 }
 
 // Called every frame
