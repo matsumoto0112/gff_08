@@ -27,6 +27,17 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "LapCounter")
 	void PassCheckPoint(ACheckPoint* PassedCheckPoint);
 
+	int32 GetLapCounter() const {
+		return LapCount;
+	}
+	int32 GetCurrentCheckPointIndex() const {
+		return CurrentCheckPointIndex;
+	}
+
+	void SetRanking(int32 Rank) {
+		Ranking = Rank;
+	}
+
 protected:
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "LapCounter")
 	int32 LapCount;
@@ -36,4 +47,7 @@ protected:
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "LapCounter")
 	int32 MaxCheckPointIndex;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "LapCounter")
+	int32 Ranking;
 };
