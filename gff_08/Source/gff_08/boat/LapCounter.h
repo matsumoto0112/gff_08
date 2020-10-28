@@ -38,6 +38,11 @@ public:
 		Ranking = Rank;
 	}
 
+	void MoveNextLap();
+
+	UFUNCTION(BlueprintCallable, Category = "LapCounter")
+	float GetTotalLapTime() const;
+
 protected:
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "LapCounter")
 	int32 LapCount;
@@ -50,4 +55,10 @@ protected:
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "LapCounter")
 	int32 Ranking;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "LapCounter")
+	float CurrentLapTime;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "LapCounter")
+	TArray<float> LapTimes;
 };

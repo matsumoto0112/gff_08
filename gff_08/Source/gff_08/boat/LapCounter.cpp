@@ -21,8 +21,7 @@ void ULapCounter::BeginPlay() {
 // Called every frame
 void ULapCounter::TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) {
 	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
-
-	// ...
+	CurrentLapTime += DeltaTime;
 }
 
 void ULapCounter::PassCheckPoint(ACheckPoint* PassedCheckPoint) {
@@ -31,7 +30,7 @@ void ULapCounter::PassCheckPoint(ACheckPoint* PassedCheckPoint) {
 	// スタート地点のチェックポイント
 	if (PassedCheckPointIndex == 0) {
 		if (CurrentCheckPointIndex == MaxCheckPointIndex) {
-			LapCount++;
+			MoveNextLap();
 			CurrentCheckPointIndex = PassedCheckPointIndex;
 		}
 	} else {
@@ -39,4 +38,18 @@ void ULapCounter::PassCheckPoint(ACheckPoint* PassedCheckPoint) {
 			CurrentCheckPointIndex = PassedCheckPointIndex;
 		}
 	}
+}
+
+void ULapCounter::MoveNextLap() {
+	LapCount++;
+	LapTimes.Add(CurrentLapTime);
+	CurrentLapTime = 0.0f;
+}
+
+float ULapCounter::GetTotalLapTime() const {
+	float TotalTime = 0.0f;
+	for (auto&& Time : LapTimes) {
+		TotalTime += Time;
+	}
+	return TotalTime;
 }

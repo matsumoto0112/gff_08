@@ -9,11 +9,22 @@ UMyGameInstance::UMyGameInstance() {
 }
 
 void UMyGameInstance::Init() {
+	Super::Init();
 	SoundSystem->Init(SoundDataAsset);
 }
 
-void UMyGameInstance::Shutdown()
-{
+void UMyGameInstance::Shutdown() {
+	Super::Shutdown();
+	FCoreDelegates::OnHandleSystemError.Remove(OnSystemErrorDelegateHandle);
+	Super::Shutdown();
+}
+
+void UMyGameInstance::PrintLogBlueprintCallstack() {
+	FString Callstack = FFrame::GetScriptCallstack();
+
+	UE_LOG(LogTemp, Error, TEXT("--------------------------------------"));
+	UE_LOG(LogTemp, Error, TEXT(" Blueprint Callstack:\n%s"), *Callstack);
+	UE_LOG(LogTemp, Error, TEXT("--------------------------------------"));
 }
 
 UMyGameInstance* UMyGameInstance::GetInstance() {
@@ -29,4 +40,8 @@ UMyGameInstance* UMyGameInstance::GetInstance() {
 
 USoundSystem* UMyGameInstance::GetSoundSystem() const {
 	return SoundSystem;
+}
+
+void UMyGameInstance::OnSystemError() {
+	PrintLogBlueprintCallstack();
 }

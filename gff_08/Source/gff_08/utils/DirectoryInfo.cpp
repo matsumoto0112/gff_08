@@ -12,7 +12,7 @@ FString UDirectoryInfo::HelloWorld() {
 
 bool UDirectoryInfo::WriteFragCount(FString fileName, TArray<int> counter) {
 	//ディレクトリ取得
-	FString dir = FPaths::ProjectDir();
+	FString dir = FPaths::LaunchDir();
 	//ファイル名取得
 	FString fName = fileName + ".txt";
 
