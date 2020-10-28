@@ -11,6 +11,6 @@ public class gff_08Target : TargetRules
 		DefaultBuildSettings = BuildSettingsVersion.V2;
 		ExtraModuleNames.AddRange( new string[] { "gff_08" } );
 
-        CppStandard = CppStandardVersion.Cpp14;
+        //CppStandard = CppStandardVersion.Cpp14;
     }
 }
