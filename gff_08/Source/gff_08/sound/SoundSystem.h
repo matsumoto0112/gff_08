@@ -28,7 +28,7 @@ public:
 	 * @param Sound ‰¹Œ¹‚ÌŽí—Þ
 	 */
 	UFUNCTION(BlueprintCallable, Category = "SoundSystem")
-	ASoundObject* PlaySound(ESoundResourceType Sound);
+	ASoundObject* PlaySound(ESoundResourceType Sound, bool bAutoDelete = true);
 
 protected:
 	UPROPERTY()

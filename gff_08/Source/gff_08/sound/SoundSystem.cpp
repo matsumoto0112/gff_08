@@ -12,7 +12,7 @@ void USoundSystem::Init(USoundDataAsset* Asset) {
 }
 
 // ‰¹Œ¹‚ÌÄ¶
-ASoundObject* USoundSystem::PlaySound(ESoundResourceType Sound) {
+ASoundObject* USoundSystem::PlaySound(ESoundResourceType Sound, bool bAutoDelete) {
 	FSoundDataAssetRecord* Asset = SoundDataAsset->Data.Find(Sound);
 	if (!Asset) {
 		if (GEngine) {
@@ -23,6 +23,6 @@ ASoundObject* USoundSystem::PlaySound(ESoundResourceType Sound) {
 	}
 
 	ASoundObject* SoundObject = GetWorld()->SpawnActor<ASoundObject>();
-	SoundObject->Init(Asset->Sound);
+	SoundObject->Init(Asset->Sound, bAutoDelete);
 	return SoundObject;
 }

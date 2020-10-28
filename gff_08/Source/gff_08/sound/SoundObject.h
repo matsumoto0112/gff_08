@@ -21,11 +21,16 @@ public:
 
 	virtual void BeginPlay() override;
 	virtual void EndPlay(const EEndPlayReason::Type EndPlayReason) override;
-	virtual void Init(USoundBase* Sound);
+	virtual void Init(USoundBase* Sound, bool bAutoDelete = true);
 	UFUNCTION(BlueprintCallable, Category = "SoundObject")
 	virtual void Stop();
+	UFUNCTION(Category = "SoundObject")
+	void AudioPlayFinished();
 
 private:
 	UPROPERTY(VisibleAnywhere, Category = "Components")
 	UAudioComponent* AudioComponent;
+
+	UPROPERTY()
+	bool bAutoDelete;
 };
