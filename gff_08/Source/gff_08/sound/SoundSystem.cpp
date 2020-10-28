@@ -12,7 +12,40 @@ void USoundSystem::Init(USoundDataAsset* Asset) {
 }
 
 // ‰¹Œ¹‚ÌÄ¶
-ASoundObject* USoundSystem::PlaySound(ESoundResourceType Sound, bool bAutoDelete) {
+ASoundObject* USoundSystem::PlaySound2D(ESoundResourceType Sound, bool bAutoDelete) {
+	FSoundDataAssetRecord* Asset = GetRecord(Sound);
+	if (!Asset) {
+		return nullptr;
+	}
+
+	ASoundObject* SoundObject = GetWorld()->SpawnActor<ASoundObject>();
+	SoundObject->Init(Asset->Sound, bAutoDelete);
+	return SoundObject;
+}
+
+ASoundObject* USoundSystem::PlaySoundWithAttachOwnerActor(ESoundResourceType Sound, AActor* OwnerActor, bool bAutoDelete) {
+	FSoundDataAssetRecord* Asset = GetRecord(Sound);
+	if (!Asset) {
+		return nullptr;
+	}
+
+	ASoundObject* SoundObject = GetWorld()->SpawnActor<ASoundObject>();
+	SoundObject->Init(Asset->Sound, Asset->SoundAttenuation, OwnerActor, bAutoDelete);
+	return SoundObject;
+}
+
+ASoundObject* USoundSystem::PlaySoundAtLocation(ESoundResourceType Sound, const FVector& Location, bool bAutoDelete) {
+	FSoundDataAssetRecord* Asset = GetRecord(Sound);
+	if (!Asset) {
+		return nullptr;
+	}
+
+	ASoundObject* SoundObject = GetWorld()->SpawnActor<ASoundObject>();
+	SoundObject->Init(Asset->Sound, Asset->SoundAttenuation, Location, bAutoDelete);
+	return SoundObject;
+}
+
+FSoundDataAssetRecord* USoundSystem::GetRecord(ESoundResourceType Sound) const {
 	FSoundDataAssetRecord* Asset = SoundDataAsset->Data.Find(Sound);
 	if (!Asset) {
 		if (GEngine) {
@@ -21,8 +54,5 @@ ASoundObject* USoundSystem::PlaySound(ESoundResourceType Sound, bool bAutoDelete
 		UE_LOG(LogSound, Error, TEXT("•s–¾‚È‰¹Œ¹‚ªÄ¶‚³‚ê‚æ‚¤‚Æ‚µ‚Ü‚µ‚½B"));
 		return nullptr;
 	}
-
-	ASoundObject* SoundObject = GetWorld()->SpawnActor<ASoundObject>();
-	SoundObject->Init(Asset->Sound, bAutoDelete);
-	return SoundObject;
+	return Asset;
 }

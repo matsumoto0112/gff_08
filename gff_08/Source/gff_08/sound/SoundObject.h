@@ -22,15 +22,20 @@ public:
 	virtual void BeginPlay() override;
 	virtual void EndPlay(const EEndPlayReason::Type EndPlayReason) override;
 	virtual void Init(USoundBase* Sound, bool bAutoDelete = true);
+	virtual void Init(USoundBase* Sound, USoundAttenuation* SoundAttenuation, AActor* OwnerActor, bool bAutoDelete = true);
+	virtual void Init(USoundBase* Sound, USoundAttenuation* SoundAttenuation, const FVector& Location, bool bAutoDelete = true);
 	UFUNCTION(BlueprintCallable, Category = "SoundObject")
 	virtual void Stop();
 	UFUNCTION(Category = "SoundObject")
 	void AudioPlayFinished();
+	UFUNCTION(BlueprintCallable, Category = "SoundObject")
+	virtual bool IsFinished() const;
 
-private:
-	UPROPERTY(VisibleAnywhere, Category = "Components")
+protected:
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components")
 	UAudioComponent* AudioComponent;
-
 	UPROPERTY()
 	bool bAutoDelete;
+	UPROPERTY()
+	bool bAudioPlayFinished;
 };
