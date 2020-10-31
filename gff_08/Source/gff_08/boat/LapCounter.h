@@ -24,31 +24,51 @@ public:
 	// Called every frame
 	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
 
+	/**
+	 * チェックポイントを通過した
+	 * @param PassedCheckPoint 通過したチェックポイント
+	 */
 	UFUNCTION(BlueprintCallable, Category = "LapCounter")
 	void PassCheckPoint(ACheckPoint* PassedCheckPoint);
 
-	int32 GetLapCounter() const {
-		return LapCount;
+	/**
+	 * 周回数を取得する
+	 */
+	int32 GetLapCount() const {
+		return CurrentLapCount;
 	}
+
+	/**
+	 * 現在のチェックポイントインデックスを取得する
+	 */
 	int32 GetCurrentCheckPointIndex() const {
-		return CurrentCheckPointIndex;
+		return CurrentIndex;
 	}
 
 	void SetRanking(int32 Rank) {
 		Ranking = Rank;
 	}
 
-	void MoveNextLap();
-
 	UFUNCTION(BlueprintCallable, Category = "LapCounter")
 	float GetTotalLapTime() const;
 
 protected:
+	//! 最も進んだ時のチェックポイントのインデックス
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "LapCounter")
-	int32 LapCount;
+	int32 MostAdvancedIndex;
 
+	//! 現在のラップ数（周回数）
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "LapCounter")
-	int32 CurrentCheckPointIndex;
+	int32 MostAdcancedLapCount;
+
+	//! 現在のチェックポイントのインデックス
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "LapCounter")
+	int32 CurrentIndex;
+
+	//! 現在のラップ数
+	//! 逆走などで戻ることがあるため
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "LapCounter")
+	int32 CurrentLapCount;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "LapCounter")
 	int32 MaxCheckPointIndex;

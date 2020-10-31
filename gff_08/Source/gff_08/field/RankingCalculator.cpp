@@ -36,21 +36,29 @@ void URankingCalculator::TickComponent(float DeltaTime, ELevelTick TickType, FAc
 
 	//ボートをルールによってソートし、順位を設定する
 	LapCounters.Sort([&](const ULapCounter& A, const ULapCounter& B) {
+		const int32 LapCount_A = A.GetLapCount();
+		const int32 LapCount_B = B.GetLapCount();
 		// ラップ数での降順
-		if (A.GetLapCounter() != B.GetLapCounter()) {
-			return A.GetLapCounter() > B.GetLapCounter();
+		if (LapCount_A != LapCount_B) {
+			return LapCount_A > LapCount_B;
 		}
+
+		const int32 CheckPointIndex_A = A.GetCurrentCheckPointIndex();
+		const int32 CheckPointIndex_B = B.GetCurrentCheckPointIndex();
 		// チェックポイントインデックスでの降順
-		if (A.GetCurrentCheckPointIndex() != B.GetCurrentCheckPointIndex()) {
-			return A.GetCurrentCheckPointIndex() > B.GetCurrentCheckPointIndex();
+		if (CheckPointIndex_A != CheckPointIndex_B) {
+			return CheckPointIndex_A > CheckPointIndex_B;
 		}
 
 		//チェックポイントまでの距離順で最終決定
-		ACheckPoint* CheckPoint_A = CheckPointManager->GetNextPoint(A.GetCurrentCheckPointIndex());
-		float Distance_A_NextCheckPoint = FVector::Distance(CheckPoint_A->GetActorLocation(), A.GetOwner()->GetActorLocation());
+		const ACheckPoint* CheckPoint_A = CheckPointManager->GetNextPoint(CheckPointIndex_A);
+		const float Distance_A_NextCheckPoint =
+			FVector::Distance(CheckPoint_A->GetActorLocation(), A.GetOwner()->GetActorLocation());
 
-		ACheckPoint* CheckPoint_B = CheckPointManager->GetNextPoint(B.GetCurrentCheckPointIndex());
-		float Distance_B_NextCheckPoint = FVector::Distance(CheckPoint_B->GetActorLocation(), B.GetOwner()->GetActorLocation());
+		const ACheckPoint* CheckPoint_B = CheckPointManager->GetNextPoint(CheckPointIndex_B);
+		const float Distance_B_NextCheckPoint =
+			FVector::Distance(CheckPoint_B->GetActorLocation(), B.GetOwner()->GetActorLocation());
+
 		return Distance_A_NextCheckPoint < Distance_B_NextCheckPoint;
 	});
 

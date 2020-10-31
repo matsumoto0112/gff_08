@@ -15,7 +15,10 @@ ULapCounter::ULapCounter() {
 void ULapCounter::BeginPlay() {
 	Super::BeginPlay();
 
-	LapCount = 1;
+	MostAdvancedIndex = 0;
+	MostAdcancedLapCount = 1;
+	CurrentIndex = 0;
+	CurrentLapCount = 1;
 }
 
 // Called every frame
@@ -24,26 +27,41 @@ void ULapCounter::TickComponent(float DeltaTime, ELevelTick TickType, FActorComp
 	CurrentLapTime += DeltaTime;
 }
 
+// チェックポイントを通過した
 void ULapCounter::PassCheckPoint(ACheckPoint* PassedCheckPoint) {
 	const int32 PassedCheckPointIndex = PassedCheckPoint->GetIndex();
+	constexpr int32 START_CHECKPOINT_INDEX = 0;
 
 	// スタート地点のチェックポイント
-	if (PassedCheckPointIndex == 0) {
-		if (CurrentCheckPointIndex == MaxCheckPointIndex) {
-			MoveNextLap();
-			CurrentCheckPointIndex = PassedCheckPointIndex;
+	if (PassedCheckPointIndex == START_CHECKPOINT_INDEX) {
+		// 今までに進んだ最大のチェックポイントがコースの最後のインデックスなら1週してきたということ
+		if (MostAdvancedIndex == MaxCheckPointIndex) {
+			MostAdcancedLapCount++;
+			LapTimes.Add(CurrentLapTime);
+			CurrentLapTime = 0.0f;
+			MostAdvancedIndex = PassedCheckPointIndex;
 		}
+
 	} else {
-		if (CurrentCheckPointIndex + 1 == PassedCheckPointIndex) {
-			CurrentCheckPointIndex = PassedCheckPointIndex;
+		// 次のチェックポイントに触れたらその情報で更新
+		if (MostAdvancedIndex + 1 == PassedCheckPointIndex) {
+			MostAdvancedIndex = PassedCheckPointIndex;
 		}
 	}
-}
 
-void ULapCounter::MoveNextLap() {
-	LapCount++;
-	LapTimes.Add(CurrentLapTime);
-	CurrentLapTime = 0.0f;
+	// 順位決定用のインデックスの更新処理
+	if (PassedCheckPointIndex == START_CHECKPOINT_INDEX) {
+		// 周回したタイミングで加算
+		if (CurrentIndex == MaxCheckPointIndex) {
+			CurrentLapCount++;
+		}
+	} else if (PassedCheckPointIndex == MaxCheckPointIndex) {
+		// 戻ったタイミングで減算
+		if (CurrentIndex == START_CHECKPOINT_INDEX) {
+			CurrentLapCount = FMath::Max(CurrentLapCount - 1, 1);
+		}
+	}
+	CurrentIndex = PassedCheckPointIndex;
 }
 
 float ULapCounter::GetTotalLapTime() const {
