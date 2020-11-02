@@ -28,19 +28,19 @@ public:
 	 * @param Sound 音源の種類
 	 */
 	UFUNCTION(BlueprintCallable, Category = "SoundSystem")
-	ASoundObject* PlaySound2D(ESoundResourceType Sound, bool bAutoDelete = true);
+	ASoundObject* PlaySound2D(ESoundResourceType Sound, bool bAutoDelete = true) const;
 	/**
 	 * アクターに追従し、音を再生する
 	 * @param Sound 音源の種類
 	 */
 	UFUNCTION(BlueprintCallable, Category = "SoundSystem")
-	ASoundObject* PlaySoundWithAttachOwnerActor(ESoundResourceType Sound, AActor* OwnerActor, bool bAutoDelete = true);
+	ASoundObject* PlaySoundWithAttachOwnerActor(ESoundResourceType Sound, AActor* OwnerActor, bool bAutoDelete = true) const;
 	/**
 	 * 特定座標で音を再生する
 	 * @param Sound 音源の種類
 	 */
 	UFUNCTION(BlueprintCallable, Category = "SoundSystem")
-	ASoundObject* PlaySoundAtLocation(ESoundResourceType Sound, const FVector& Location, bool bAutoDelete = true);
+	ASoundObject* PlaySoundAtLocation(ESoundResourceType Sound, const FVector& Location, bool bAutoDelete = true) const;
 
 private:
 	FSoundDataAssetRecord* GetRecord(ESoundResourceType Sound) const;

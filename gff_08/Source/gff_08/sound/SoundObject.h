@@ -30,6 +30,9 @@ public:
 	void AudioPlayFinished();
 	UFUNCTION(BlueprintCallable, Category = "SoundObject")
 	virtual bool IsFinished() const;
+	UAudioComponent* GetAudioComponent() const {
+		return AudioComponent;
+	}
 
 protected:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components")

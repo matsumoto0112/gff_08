@@ -12,7 +12,7 @@ void USoundSystem::Init(USoundDataAsset* Asset) {
 }
 
 // âπåπÇÃçƒê∂
-ASoundObject* USoundSystem::PlaySound2D(ESoundResourceType Sound, bool bAutoDelete) {
+ASoundObject* USoundSystem::PlaySound2D(ESoundResourceType Sound, bool bAutoDelete) const {
 	FSoundDataAssetRecord* Asset = GetRecord(Sound);
 	if (!Asset) {
 		return nullptr;
@@ -23,7 +23,7 @@ ASoundObject* USoundSystem::PlaySound2D(ESoundResourceType Sound, bool bAutoDele
 	return SoundObject;
 }
 
-ASoundObject* USoundSystem::PlaySoundWithAttachOwnerActor(ESoundResourceType Sound, AActor* OwnerActor, bool bAutoDelete) {
+ASoundObject* USoundSystem::PlaySoundWithAttachOwnerActor(ESoundResourceType Sound, AActor* OwnerActor, bool bAutoDelete) const {
 	FSoundDataAssetRecord* Asset = GetRecord(Sound);
 	if (!Asset) {
 		return nullptr;
@@ -34,7 +34,7 @@ ASoundObject* USoundSystem::PlaySoundWithAttachOwnerActor(ESoundResourceType Sou
 	return SoundObject;
 }
 
-ASoundObject* USoundSystem::PlaySoundAtLocation(ESoundResourceType Sound, const FVector& Location, bool bAutoDelete) {
+ASoundObject* USoundSystem::PlaySoundAtLocation(ESoundResourceType Sound, const FVector& Location, bool bAutoDelete) const {
 	FSoundDataAssetRecord* Asset = GetRecord(Sound);
 	if (!Asset) {
 		return nullptr;
