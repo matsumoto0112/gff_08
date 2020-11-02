@@ -6,6 +6,7 @@
 #include "GameFramework/Pawn.h"
 #include "gff_08/boat/BoatMover.h"
 #include "gff_08/boat/LapCounter.h"
+#include "gff_08/field/CheckPoint.h"
 #include "gff_08/sound/SoundObject.h"
 
 #include "Boat.generated.h"
@@ -23,6 +24,9 @@ protected:
 	virtual void BeginPlay() override;
 	virtual void EndPlay(const EEndPlayReason::Type EndPlayReason) override;
 
+	UFUNCTION(BlueprintCallable, Category = "Boat")
+	void RaceReady(ACheckPoint* StartCheckPoint, const FVector& StartLocation);
+
 	/**
 	 * プレイヤーのスピード
 	 */
@@ -36,6 +40,11 @@ protected:
 	 */
 	UFUNCTION(BlueprintCallable, Category = "Boat")
 	virtual void CalcMovementValues(float& MoveValue, float& LeftValue, float& RightValue) const;
+	/**
+	 * 逆走運転しているか
+	 */
+	UFUNCTION(BlueprintCallable, Category = "Boat")
+	virtual bool IsReverseDriving() const;
 
 public:
 	// Called every frame
@@ -51,6 +60,9 @@ protected:
 	//! スクリュー音
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Boat")
 	ASoundObject* ScrewSound;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Boat")
+	ACheckPoint* NextCheckPoint;
 
 	//! 左モーターの値
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Boat")

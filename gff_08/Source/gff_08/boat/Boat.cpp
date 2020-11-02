@@ -4,6 +4,7 @@
 
 #include "gff_08/utils/MyGameInstance.h"
 #include "gff_08/utils/SpeedConverter.h"
+#include "kismet/KismetSystemLibrary.h"
 
 // Sets default values
 ABoat::ABoat() {
@@ -28,6 +29,11 @@ void ABoat::EndPlay(const EEndPlayReason::Type EndPlayReason) {
 	ScrewSound->Stop();
 }
 
+void ABoat::RaceReady(ACheckPoint* StartCheckPoint, const FVector& StartLocation) {
+	NextCheckPoint = StartCheckPoint;
+	SetActorLocation(StartLocation);
+}
+
 float ABoat::GetPlayerSpeed() const {
 	return USpeedConverter::ToSpeedKilometerPerHour(GetVelocity().Size());
 }
@@ -38,6 +44,13 @@ void ABoat::CalcMovementValues(float& MoveValue, float& LeftValue, float& RightV
 	MoveValue = MinValue;
 	LeftValue = LeftMotorValue - MinValue;
 	RightValue = RightMotorValue - MinValue;
+}
+
+bool ABoat::IsReverseDriving() const {
+	const FVector ForwardVector = GetActorForwardVector();
+	const FVector To = NextCheckPoint->GetActorLocation() - GetActorLocation();
+	const float Dot = ForwardVector.CosineAngle2D(To);
+	return Dot < 0.0f;
 }
 
 // Called every frame
