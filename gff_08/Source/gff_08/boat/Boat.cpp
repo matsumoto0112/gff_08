@@ -59,6 +59,8 @@ void ABoat::Tick(float DeltaTime) {
 
 	MoveSound->GetAudioComponent()->SetFloatParameter(TEXT("Speed"), GetPlayerSpeed());
 	ScrewSound->GetAudioComponent()->SetFloatParameter(TEXT("Speed"), GetPlayerSpeed());
+
+	const FVector UpVector = GetActorUpVector();
 }
 
 // Called to bind functionality to input
