@@ -23,7 +23,11 @@ protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 	virtual void EndPlay(const EEndPlayReason::Type EndPlayReason) override;
-
+	/**
+	 * レース準備
+	 * @param StartCheckPoint スタート時のチェックポイント
+	 * @param StartLocation 開始地点
+	 */
 	UFUNCTION(BlueprintCallable, Category = "Boat")
 	void RaceReady(ACheckPoint* StartCheckPoint, const FVector& StartLocation);
 
