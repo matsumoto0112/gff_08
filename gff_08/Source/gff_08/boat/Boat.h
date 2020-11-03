@@ -5,6 +5,7 @@
 #include "CoreMinimal.h"
 #include "GameFramework/Pawn.h"
 #include "gff_08/boat/BoatMover.h"
+#include "gff_08/boat/Driver.h"
 #include "gff_08/boat/LapCounter.h"
 #include "gff_08/field/CheckPoint.h"
 #include "gff_08/sound/SoundObject.h"
@@ -64,14 +65,10 @@ protected:
 	//! スクリュー音
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Boat")
 	ASoundObject* ScrewSound;
-
+	//! 次に向かうべきチェックポイント
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Boat")
 	ACheckPoint* NextCheckPoint;
-
-	//! 左モーターの値
+	//! 運転手
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Boat")
-	float LeftMotorValue;
-	//! 右モーターの値
-	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Boat")
-	float RightMotorValue;
+	TScriptInterface<IDriver> Driver;
 };

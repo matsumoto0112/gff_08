@@ -39,11 +39,12 @@ float ABoat::GetPlayerSpeed() const {
 }
 
 void ABoat::CalcMovementValues(float& MoveValue, float& LeftValue, float& RightValue) const {
-	const float MinValue = FMath::Min(LeftMotorValue, RightMotorValue);
+	const FInputInfo InputInfo = IDriver::Execute_CurrentInputInfo(Driver.GetObject());
+	const float MinValue = FMath::Min(InputInfo.LeftMotorValue, InputInfo.RightMotorValue);
 
 	MoveValue = MinValue;
-	LeftValue = LeftMotorValue - MinValue;
-	RightValue = RightMotorValue - MinValue;
+	LeftValue = InputInfo.LeftMotorValue - MinValue;
+	RightValue = InputInfo.RightMotorValue - MinValue;
 }
 
 bool ABoat::IsReverseDriving() const {
