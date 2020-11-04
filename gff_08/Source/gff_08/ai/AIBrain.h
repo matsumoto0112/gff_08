@@ -26,5 +26,11 @@ public:
 	FInputInfo Next();
 
 private:
+	void UpdateTargetPoint();
+
+private:
 	ABoat* Parent;
+
+	FVector CurrentTargetPoint;
+	int32 CurrentTargetCheckPointIndex;
 };

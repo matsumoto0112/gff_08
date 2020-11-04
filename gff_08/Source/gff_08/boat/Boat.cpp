@@ -57,6 +57,7 @@ bool ABoat::IsReverseDriving() const {
 // Called every frame
 void ABoat::Tick(float DeltaTime) {
 	Super::Tick(DeltaTime);
+	IDriver::Execute_UpdateInputInfo(Driver.GetObject());
 
 	MoveSound->GetAudioComponent()->SetFloatParameter(TEXT("Speed"), GetPlayerSpeed());
 	ScrewSound->GetAudioComponent()->SetFloatParameter(TEXT("Speed"), GetPlayerSpeed());
