@@ -45,11 +45,6 @@ protected:
 	 */
 	UFUNCTION(BlueprintCallable, Category = "Boat")
 	virtual void CalcMovementValues(float& MoveValue, float& LeftValue, float& RightValue) const;
-	/**
-	 * ‹t‘–‰^“]‚µ‚Ä‚¢‚é‚©
-	 */
-	UFUNCTION(BlueprintCallable, Category = "Boat")
-	virtual bool IsReverseDriving() const;
 
 public:
 	// Called every frame
@@ -57,6 +52,19 @@ public:
 
 	// Called to bind functionality to input
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
+
+	/**
+	 * ‹t‘–‰^“]‚µ‚Ä‚¢‚é‚©
+	 */
+	UFUNCTION(BlueprintCallable, Category = "Boat")
+	virtual bool IsReverseDriving() const;
+
+	/**
+	 * ŽŸ‚ÉŒü‚©‚¤‚×‚«ƒ`ƒFƒbƒNƒ|ƒCƒ“ƒg‚ðŽæ“¾‚·‚é
+	 */
+	ACheckPoint* GetNextCheckPoint() const {
+		return NextCheckPoint;
+	}
 
 protected:
 	//! ˆÚ“®‰¹
