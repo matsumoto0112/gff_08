@@ -9,6 +9,10 @@
 
 class ACheckPointManager;
 
+/**
+ * コースにおける通過点を示す
+ * 主にAI、周回、逆走判定に使用する
+ */
 UCLASS()
 class GFF_08_API ACheckPoint : public AActor {
 	GENERATED_BODY()
@@ -25,10 +29,16 @@ public:
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 
+	/**
+	 * 何番目のチェックポイントか取得する
+	 */
 	int32 GetIndex() const {
 		return Index;
 	}
 
+	/**
+	 * 次のチェックポイントを返す
+	 */
 	UFUNCTION(BlueprintCallable, Category = "CheckPoint")
 	ACheckPoint* GetNextPoint() const;
 

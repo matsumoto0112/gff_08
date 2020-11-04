@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "UObject/NoExportTypes.h"
+#include "gff_08/boat/Boat.h"
 #include "gff_08/boat/Driver.h"
 
 #include "AIBrain.generated.h"
@@ -19,10 +20,11 @@ public:
 	UAIBrain();
 
 	UFUNCTION(BlueprintCallable, Category = "Brain")
-	void Init();
+	void Init(ABoat* Boat);
 
 	UFUNCTION(BlueprintCallable, Category = "Brain")
 	FInputInfo Next();
 
 private:
+	ABoat* Parent;
 };
