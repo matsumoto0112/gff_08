@@ -36,7 +36,7 @@ public:
 	static constexpr int32 width = 1024;
 	static constexpr int32 height = 1024;
 
-	UPROPERTY()
+	UPROPERTY(VisibleAnywhere)
 	UTexture2D* texture;
 	UPROPERTY()
 	TArray<Fr8g8b8a8> my_data;
