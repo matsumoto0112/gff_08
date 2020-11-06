@@ -5,3 +5,4 @@
 #include "CoreMinimal.h"
 
 DECLARE_LOG_CATEGORY_EXTERN(LogSound, Log, All);
+DECLARE_LOG_CATEGORY_EXTERN(LogRace, Log, All);
