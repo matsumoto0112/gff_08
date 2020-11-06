@@ -10,11 +10,12 @@ UMyGameInstance::UMyGameInstance() {
 
 void UMyGameInstance::Init() {
 	Super::Init();
+	OnSystemErrorDelegateHandle = FCoreDelegates::OnHandleSystemError.AddUObject(this, &UMyGameInstance::OnSystemError);
+
 	SoundSystem->Init(SoundDataAsset);
 }
 
 void UMyGameInstance::Shutdown() {
-	Super::Shutdown();
 	FCoreDelegates::OnHandleSystemError.Remove(OnSystemErrorDelegateHandle);
 	Super::Shutdown();
 }
