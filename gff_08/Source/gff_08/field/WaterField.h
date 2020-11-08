@@ -2,11 +2,38 @@
 
 #pragma once
 
-#include "AccelWaveInfo.h"
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
 
 #include "WaterField.generated.h"
+
+USTRUCT(BlueprintType)
+struct GFF_08_API Fr8g8b8a8 {
+	GENERATED_USTRUCT_BODY()
+
+	uint8 r = 255, g = 255, b = 255, a = 255;
+};
+
+USTRUCT(BlueprintType)
+struct GFF_08_API FAccelWaveInfo {
+	GENERATED_USTRUCT_BODY()
+
+	FAccelWaveInfo() : velocity(FVector()), length(0.0f), startTime(), isValid(false) {
+	}
+
+	FAccelWaveInfo(FVector velocity, float length, FDateTime startTime, bool isValid)
+		: velocity(velocity), length(length), startTime(startTime), isValid(isValid) {
+	}
+
+	//波の向き
+	FVector velocity;
+	//波の強さ
+	float length;
+	//生成されてからの時間
+	FDateTime startTime;
+	//存在するかどうか
+	bool isValid;
+};
 
 UCLASS()
 class GFF_08_API AWaterField : public AActor {
@@ -23,14 +50,27 @@ public:
 
 	UPROPERTY(VisibleAnywhere)
 	UStaticMeshComponent* visualMesh;	 //メッシュ情報
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Index")
-	int row;
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Index")
-	int column;
-	UPROPERTY(BlueprintReadWrite)
+
+	UPROPERTY(BlueprintReadOnly)
 	float width;
-	UPROPERTY(BlueprintReadWrite)
+	UPROPERTY(BlueprintReadOnly)
 	float height;
+	UPROPERTY(BlueprintReadOnly)
+	float edgeW;
+	UPROPERTY(BlueprintReadOnly)
+	float edgeH;
+
+	UPROPERTY(BlueprintReadOnly)
+	float edgeTexW;
+	UPROPERTY(BlueprintReadOnly)
+	float edgeTexH;
+
+	//行
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Index")
+	int row;
+	//列
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Index")
+	int column;
 
 protected:
 	// スタート時
@@ -41,16 +81,23 @@ public:
 	virtual void Tick(float DeltaTime) override;
 
 	UFUNCTION(BlueprintCallable, Category = "WaterField")
-	void TestMethod();
+	FVector GetAccelVelocity(FVector position);
 	UFUNCTION(BlueprintCallable, Category = "WaterField")
-	int CulcGrid(const float gridPos, const float size, const int index);
-	UFUNCTION(BlueprintCallable, Category = "WaterField")
-	FVector GetAccelVelocity(const FVector position);
-	UFUNCTION(BlueprintCallable, Category = "WaterField")
-	void AddAccelWave(int r, int c, FVector velocity, float length, AActor* waveObject);
-	UFUNCTION(BlueprintCallable, Category = "WaterField")
-	bool IsWaveValid(const int r, const int c);
+	void GenerateAccelWave(FVector position, FRotator rotate);
 
 private:
-	std::vector<std::vector<FAccelWaveInfo>> waveList;
+	UFUNCTION()
+	void CreateTextureAndMaterial();
+	FVector CulcFieldGrid(FVector position);
+	int CulcGrid(float position, float edge, int index);
+	void UpdateFlowMap(FVector fieldGrid);
+
+private:
+	static constexpr int32 TEXTURE_EDGE_W = 1024;
+	static constexpr int32 TEXTURE_EDGE_H = 1024;
+
+	TArray<Fr8g8b8a8> textureColorData;
+	TArray<TArray<FAccelWaveInfo>> waveArray;
+	UTexture2D* flowMap;
+	bool updateFlag; 
 };
