@@ -13,15 +13,6 @@ ACheckPointManager::ACheckPointManager() {
 // Called when the game starts or when spawned
 void ACheckPointManager::BeginPlay() {
 	Super::BeginPlay();
-
-	TArray<AActor*> CheckPointActors;
-	UGameplayStatics::GetAllActorsOfClass(GetWorld(), ACheckPoint::StaticClass(), CheckPointActors);
-
-	for (auto* Actor : CheckPointActors) {
-		if (ACheckPoint* CheckPoint = Cast<ACheckPoint>(Actor)) {
-			CheckPoints.Add(CheckPoint->GetIndex(), CheckPoint);
-		}
-	}
 }
 
 // Called every frame
@@ -32,4 +23,21 @@ void ACheckPointManager::Tick(float DeltaTime) {
 ACheckPoint* ACheckPointManager::GetNextPoint(int32 CurrentIndex) const {
 	int32 NextIndex = (CurrentIndex + 1) % CheckPoints.Num();
 	return *CheckPoints.Find(NextIndex);
+}
+
+ACheckPoint* ACheckPointManager::GetStartPoint() const {
+	return CheckPoints[0];
+}
+
+void ACheckPointManager::CollectCheckPointsInWorld() {
+	CheckPoints.Empty();
+
+	TArray<AActor*> CheckPointActors;
+	UGameplayStatics::GetAllActorsOfClass(GetWorld(), ACheckPoint::StaticClass(), CheckPointActors);
+
+	for (auto* Actor : CheckPointActors) {
+		if (ACheckPoint* CheckPoint = Cast<ACheckPoint>(Actor)) {
+			CheckPoints.Add(CheckPoint->GetIndex(), CheckPoint);
+		}
+	}
 }

@@ -16,6 +16,8 @@ ABoat::ABoat() {
 void ABoat::BeginPlay() {
 	Super::BeginPlay();
 
+	MoveType = EBoatMovableType::NoMove;
+
 	const UMyGameInstance* Instance = UMyGameInstance::GetInstance();
 	const USoundSystem* SoundSystem = Instance->GetSoundSystem();
 	MoveSound = SoundSystem->PlaySoundWithAttachOwnerActor(ESoundResourceType::SE_BOAT_MOVE, this, false);
@@ -29,9 +31,13 @@ void ABoat::EndPlay(const EEndPlayReason::Type EndPlayReason) {
 	ScrewSound->Stop();
 }
 
-void ABoat::RaceReady(ACheckPoint* StartCheckPoint, const FVector& StartLocation) {
+void ABoat::RaceReady(ACheckPoint* StartCheckPoint) {
 	NextCheckPoint = StartCheckPoint;
-	SetActorLocation(StartLocation);
+	MoveType = EBoatMovableType::StraightOnly;
+}
+
+void ABoat::RaceStart() {
+	MoveType = EBoatMovableType::Default;
 }
 
 float ABoat::GetPlayerSpeed() const {
@@ -42,9 +48,26 @@ void ABoat::CalcMovementValues(float& MoveValue, float& LeftValue, float& RightV
 	const FInputInfo InputInfo = IDriver::Execute_CurrentInputInfo(Driver.GetObject());
 	const float MinValue = FMath::Min(InputInfo.LeftMotorValue, InputInfo.RightMotorValue);
 
-	MoveValue = MinValue;
-	LeftValue = InputInfo.LeftMotorValue - MinValue;
-	RightValue = InputInfo.RightMotorValue - MinValue;
+	switch (MoveType) {
+		case EBoatMovableType::Default:
+			MoveValue = MinValue;
+			LeftValue = InputInfo.LeftMotorValue - MinValue;
+			RightValue = InputInfo.RightMotorValue - MinValue;
+			break;
+		case EBoatMovableType::NoMove:
+			MoveValue = 0.0f;
+			LeftValue = 0.0f;
+			RightValue = 0.0f;
+			break;
+		case EBoatMovableType::StraightOnly:
+			MoveValue = 0.8f;
+			LeftValue = 0.0f;
+			RightValue = 0.0f;
+			break;
+		default:
+			UE_LOG(LogTemp, Error, TEXT("Unconfirmed enum EBoatMovableType encounter."));
+			break;
+	}
 }
 
 bool ABoat::IsReverseDriving() const {

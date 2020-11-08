@@ -27,14 +27,15 @@ void USetupRacers::TickComponent(float DeltaTime, ELevelTick TickType, FActorCom
 	// ...
 }
 
-void USetupRacers::Setup(const FAllRacerInfo& RacersInfo) {
+TArray<ABoat*> USetupRacers::Setup(const FAllRacerInfo& RacersInfo) {
 	if (RacersInfo.Racers.Num() > StartPoints.Num()) {
 		GEngine->AddOnScreenDebugMessage(-1, 3.0f, FColor::Red, TEXT("レーサーの数がスタート地点の数より多く設定されています。"));
 		UE_LOG(LogRace, Error, TEXT("レーサーの数がスタート地点の数より多く設定されています。"));
-		return;
+		return TArray<ABoat*>();
 	}
 
 	const int32 RacersNum = RacersInfo.Racers.Num();
+	TArray<ABoat*> Res;
 	for (int32 i = 0; i < RacersNum; i++) {
 		const FRacerInfo& Racer = RacersInfo.Racers[i];
 		const ATargetPoint* Point = StartPoints[i];
@@ -50,5 +51,8 @@ void USetupRacers::Setup(const FAllRacerInfo& RacersInfo) {
 		} else {
 			Boat->SpawnDefaultController();
 		}
+		Res.Push(Boat);
 	}
+
+	return Res;
 }

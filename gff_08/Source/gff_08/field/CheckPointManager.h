@@ -26,8 +26,12 @@ public:
 
 	UFUNCTION(BlueprintCallable, Category = "CheckPointManager")
 	ACheckPoint* GetNextPoint(int32 CurrentIndex) const;
+	UFUNCTION(BlueprintCallable, Category = "CheckPointManager")
+	ACheckPoint* GetStartPoint() const;
+
+	UFUNCTION(BlueprintCallable, Category = "CheckPointManager")
+	void CollectCheckPointsInWorld();
 
 protected:
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "CheckPointManager")
-	TMap<int32, ACheckPoint*> CheckPoints;
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "CheckPointManager") TMap<int32, ACheckPoint*> CheckPoints;
 };

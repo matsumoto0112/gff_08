@@ -31,9 +31,10 @@ public:
 
 	/**
 	 * レーサーたちをセットアップする
+	 * @return レーサーのボートの配列
 	 */
 	UFUNCTION(BlueprintCallable, Category = "SetUpRacers")
-	void Setup(const FAllRacerInfo& RacersInfo);
+	TArray<ABoat*> Setup(const FAllRacerInfo& RacersInfo);
 
 protected:
 	//! 開始地点

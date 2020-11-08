@@ -4,7 +4,9 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
+#include "gff_08/field/CheckPointManager.h"
 #include "gff_08/stage/SetupRacers.h"
+#include "gff_08/ui/CountDownTimer.h"
 
 #include "RaceManager.generated.h"
 
@@ -25,6 +27,17 @@ public:
 	virtual void Tick(float DeltaTime) override;
 
 protected:
+	//! レースのセットアップ処理担当
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components")
 	USetupRacers* Setup;
+	//! チェックポイント管理者
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Components")
+	ACheckPointManager* CheckPointManager;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components")
+	UCountDownTimer* CountDownUI;
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Components")
+	float CountDownTime;
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Components")
+	TArray<ABoat*> Boats;
 };

@@ -12,6 +12,16 @@
 
 #include "Boat.generated.h"
 
+/**
+ * ボートの移動可能状態
+ */
+UENUM(BlueprintType)
+enum class EBoatMovableType : uint8 {
+	Default,
+	NoMove,
+	StraightOnly,
+};
+
 UCLASS()
 class GFF_08_API ABoat : public APawn {
 	GENERATED_BODY()
@@ -24,19 +34,7 @@ protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 	virtual void EndPlay(const EEndPlayReason::Type EndPlayReason) override;
-	/**
-	 * レース準備
-	 * @param StartCheckPoint スタート時のチェックポイント
-	 * @param StartLocation 開始地点
-	 */
-	UFUNCTION(BlueprintCallable, Category = "Boat")
-	void RaceReady(ACheckPoint* StartCheckPoint, const FVector& StartLocation);
 
-	/**
-	 * プレイヤーのスピード
-	 */
-	UFUNCTION(BlueprintCallable, Category = "Boat")
-	virtual float GetPlayerSpeed() const;
 	/**
 	 * 移動量を計算する
 	 * @param[out] 移動量
@@ -65,8 +63,29 @@ public:
 	ACheckPoint* GetNextCheckPoint() const {
 		return NextCheckPoint;
 	}
+	/**
+	 * レース準備
+	 * @param StartCheckPoint スタート時のチェックポイント
+	 * @param StartLocation 開始地点
+	 */
+	UFUNCTION(BlueprintCallable, Category = "Boat")
+	void RaceReady(ACheckPoint* StartCheckPoint);
+	/**
+	 * レース開始
+	 */
+	UFUNCTION(BlueprintCallable, Category = "Boat")
+	void RaceStart();
+
+	/**
+	 * プレイヤーのスピード
+	 */
+	UFUNCTION(BlueprintCallable, Category = "Boat")
+	virtual float GetPlayerSpeed() const;
 
 protected:
+	//! ボートの現在の移動可能状態
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Boat")
+	EBoatMovableType MoveType;
 	//! 移動音
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Boat")
 	ASoundObject* MoveSound;
