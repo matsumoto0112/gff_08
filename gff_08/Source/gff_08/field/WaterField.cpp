@@ -35,13 +35,13 @@ void AWaterField::BeginPlay() {
 	edgeH = height / column;
 
 	waveArray.Init(TArray<FAccelWaveInfo>(), row);
-	for (int i = 0; i < waveArray.Num(); i++) {
+	for (int32 i = 0; i < waveArray.Num(); i++) {
 		waveArray[i].Init(FAccelWaveInfo(), column);
 	}
 
 	//画像色情報初期化
 	textureColorData.Init(Fr8g8b8a8(), TEXTURE_EDGE_W * TEXTURE_EDGE_H);
-	for (int i = 0; i < TEXTURE_EDGE_W * TEXTURE_EDGE_H; i++) {
+	for (int32 i = 0; i < TEXTURE_EDGE_W * TEXTURE_EDGE_H; i++) {
 		textureColorData[i].r = 255 / 2;
 		textureColorData[i].g = 255 / 2;
 		textureColorData[i].b = 0;
@@ -71,28 +71,24 @@ void AWaterField::Tick(float DeltaTime) {
  位置からグリッド座標を求め、その場所の加速波の情報を取得する
 */
 FVector AWaterField::GetAccelVelocity(FVector position) {
-	int x = CulcGrid(position.X, width, row);
-	int y = CulcGrid(position.Y, height, column);
-
-	if (waveArray[x][y].isValid == false) {
-		return FVector();
+	FVector grid = CulcFieldGrid(position);
+	if (waveArray[grid.X][grid.Y].isValid == false) {
+		return FVector::ZeroVector;
 	}
 
-	return waveArray[x][y].velocity * waveArray[x][y].length;
+	return waveArray[grid.X][grid.Y].velocity * waveArray[grid.X][grid.Y].length;
 }
 
 /*
  加速波の生成処理
 */
 void AWaterField::GenerateAccelWave(FVector position, FRotator rotate) {
-	UE_LOG(LogTemp, Log, TEXT("GenerateAccelWave = %f"), position.X);
 	FVector grid = CulcFieldGrid(position);
 
 	if (waveArray[grid.X][grid.Y].isValid == true) {
 		return;
 	}
-	FVector vel;
-	vel.Set(FMath::Cos(rotate.Yaw), FMath::Sin(rotate.Yaw), 0.0f);
+	FVector vel(FMath::Cos(rotate.Yaw), FMath::Sin(rotate.Yaw), 0.0f);
 	vel.Normalize();
 	waveArray[grid.X][grid.Y].velocity = vel;
 	waveArray[grid.X][grid.Y].length = 700.0f;
@@ -130,21 +126,20 @@ int AWaterField::CulcGrid(float position, float edge, int index) {
 	float gridF = ((position + edge) / (edge * 2.0f)) * index;
 	int32 grid = FMath::CeilToInt(gridF);
 	grid = FMath::Clamp(grid, 0, index - 1);
-	// UE_LOG(LogTemp, Log, TEXT("Grid = %d"), grid);
 	return grid;
 }
 
 void AWaterField::UpdateFlowMap(FVector fieldGrid) {
 	//テクスチャのグリッド座標
-	int texX = fieldGrid.Y * edgeTexW;
-	int texY = fieldGrid.X * edgeTexH;
+	int32 texX = fieldGrid.Y * edgeTexW;
+	int32 texY = fieldGrid.X * edgeTexH;
 
-	int index = (TEXTURE_EDGE_W * texX) + texY;
+	int32 index = (TEXTURE_EDGE_W * texX) + texY;
 
 	FVector vel = waveArray[fieldGrid.X][fieldGrid.Y].velocity;
 	vel *= 100;
 
-	int forCount = 0;
+	int32 forCount = 0;
 	for (int i = index; i < index + edgeTexW; i++) {
 		int startPoint = index + (TEXTURE_EDGE_W * forCount);
 		for (int j = startPoint; j < startPoint + edgeTexH; j++) {

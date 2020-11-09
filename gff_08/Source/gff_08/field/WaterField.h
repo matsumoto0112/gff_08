@@ -18,7 +18,7 @@ USTRUCT(BlueprintType)
 struct GFF_08_API FAccelWaveInfo {
 	GENERATED_USTRUCT_BODY()
 
-	FAccelWaveInfo() : velocity(FVector()), length(0.0f), startTime(), isValid(false) {
+	FAccelWaveInfo() : velocity(FVector::ZeroVector), length(0.0f), startTime(), isValid(false) {
 	}
 
 	FAccelWaveInfo(FVector velocity, float length, FDateTime startTime, bool isValid)
