@@ -86,8 +86,12 @@ public:
 	virtual float GetPlayerSpeed() const;
 
 protected:
-	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Boat")
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Components")
+	UStaticMeshComponent* StaticMesh;
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Components")
 	UBoatMover* BoatMover;
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Components")
+	ULapCounter* LapCounter;
 
 	//! ボートのデータアセット
 	UPROPERTY(EditDefaultsOnly, Category = "Boat")

@@ -12,8 +12,14 @@ ABoat::ABoat() {
 	// Set this pawn to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
 
+	StaticMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("StaticMesh"));
+	RootComponent = StaticMesh;
+
 	BoatMover = CreateDefaultSubobject<UBoatMover>(TEXT("BoatMover"));
 	this->AddOwnedComponent(BoatMover);
+
+	LapCounter = CreateDefaultSubobject<ULapCounter>(TEXT("LapCounter"));
+	this->AddOwnedComponent(LapCounter);
 }
 
 // Called when the game starts or when spawned
@@ -42,7 +48,7 @@ void ABoat::ChangeBoat(int32 BoatID) {
 	}
 
 	const FBoatParameterRecord Parameter = BoatDataAsset->Data[BoatID];
-	// this-
+	BoatMover->SetParameter(Parameter.MaxSpeed, Parameter.Acceleration, Parameter.Control);
 }
 
 void ABoat::RaceReady(ACheckPoint* StartCheckPoint) {
@@ -96,10 +102,14 @@ void ABoat::Tick(float DeltaTime) {
 	Super::Tick(DeltaTime);
 	IDriver::Execute_UpdateInputInfo(Driver.GetObject());
 
+	float MoveValue;
+	float LeftValue;
+	float RightValue;
+	CalcMovementValues(MoveValue, LeftValue, RightValue);
+	BoatMover->Move(MoveValue, LeftValue, RightValue);
+
 	MoveSound->GetAudioComponent()->SetFloatParameter(TEXT("Speed"), GetPlayerSpeed());
 	ScrewSound->GetAudioComponent()->SetFloatParameter(TEXT("Speed"), GetPlayerSpeed());
-
-	const FVector UpVector = GetActorUpVector();
 }
 
 // Called to bind functionality to input
