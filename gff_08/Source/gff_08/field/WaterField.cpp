@@ -78,7 +78,7 @@ FVector AWaterField::GetAccelVelocity(FVector position) {
 		return FVector();
 	}
 
-	return waveArray[x][y].velocity;
+	return waveArray[x][y].velocity * waveArray[x][y].length;
 }
 
 /*
@@ -128,9 +128,9 @@ FVector AWaterField::CulcFieldGrid(FVector position) {
 
 int AWaterField::CulcGrid(float position, float edge, int index) {
 	float gridF = ((position + edge) / (edge * 2.0f)) * index;
-	int grid = FMath::CeilToInt(gridF);
+	int32 grid = FMath::CeilToInt(gridF);
 	grid = FMath::Clamp(grid, 0, index - 1);
-	UE_LOG(LogTemp, Log, TEXT("Grid = %d"), grid);
+	// UE_LOG(LogTemp, Log, TEXT("Grid = %d"), grid);
 	return grid;
 }
 
