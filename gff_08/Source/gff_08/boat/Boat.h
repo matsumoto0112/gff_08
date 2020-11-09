@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Pawn.h"
+#include "gff_08/boat/BoatDataAsset.h"
 #include "gff_08/boat/BoatMover.h"
 #include "gff_08/boat/Driver.h"
 #include "gff_08/boat/LapCounter.h"
@@ -63,6 +64,9 @@ public:
 	ACheckPoint* GetNextCheckPoint() const {
 		return NextCheckPoint;
 	}
+
+	UFUNCTION(BlueprintCallable, Category = "Boat")
+	void ChangeBoat(int32 BoatID);
 	/**
 	 * レース準備
 	 * @param StartCheckPoint スタート時のチェックポイント
@@ -82,6 +86,10 @@ public:
 	virtual float GetPlayerSpeed() const;
 
 protected:
+	//! ボートのデータアセット
+	UPROPERTY(EditDefaultsOnly, Category = "Boat")
+	UBoatDataAsset* BoatDataAsset;
+
 	//! ボートの現在の移動可能状態
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Boat")
 	EBoatMovableType MoveType;
