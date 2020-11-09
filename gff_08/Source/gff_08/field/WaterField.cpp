@@ -50,9 +50,6 @@ void AWaterField::BeginPlay() {
 	edgeTexH = TEXTURE_EDGE_H * 1.0f / column;
 
 	CreateTextureAndMaterial();
-
-	GenerateAccelWave(FVector(-1170, 240, 0), FRotator(0.0f, 0.0f, 90.0f));
-	GenerateAccelWave(FVector(0, 0, 0), FRotator(0.0f, 0.0f, 270));
 }
 // Called every frame
 void AWaterField::Tick(float DeltaTime) {
@@ -95,7 +92,7 @@ void AWaterField::GenerateAccelWave(FVector position, FRotator rotate) {
 		return;
 	}
 	FVector vel;
-	vel.Set(FMath::Cos(rotate.Roll), FMath::Sin(rotate.Roll), 0.0f);
+	vel.Set(FMath::Cos(rotate.Yaw), FMath::Sin(rotate.Yaw), 0.0f);
 	vel.Normalize();
 	waveArray[grid.X][grid.Y].velocity = vel;
 	waveArray[grid.X][grid.Y].length = 700.0f;
@@ -132,13 +129,9 @@ FVector AWaterField::CulcFieldGrid(FVector position) {
 int AWaterField::CulcGrid(float position, float edge, int index) {
 	float gridF = ((position + edge) / (edge * 2.0f)) * index;
 	int grid = FMath::CeilToInt(gridF);
-	grid = FMath::Min(grid, index);
-	grid = FMath::Max(grid, 0);
+	grid = FMath::Clamp(grid, 0, index - 1);
 	UE_LOG(LogTemp, Log, TEXT("Grid = %d"), grid);
-	if (grid >= index) {
-		return grid;
-	}
-	return grid - 1;
+	return grid;
 }
 
 void AWaterField::UpdateFlowMap(FVector fieldGrid) {
