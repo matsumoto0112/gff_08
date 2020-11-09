@@ -39,7 +39,7 @@ void ABoat::ChangeBoat(int32 BoatID) {
 	}
 
 	const FBoatParameterRecord Parameter = BoatDataAsset->Data[BoatID];
-	//this->
+	//this-
 }
 
 void ABoat::RaceReady(ACheckPoint* StartCheckPoint) {
