@@ -66,7 +66,6 @@ public:
 	/**
 	 * レース準備
 	 * @param StartCheckPoint スタート時のチェックポイント
-	 * @param StartLocation 開始地点
 	 */
 	UFUNCTION(BlueprintCallable, Category = "Boat")
 	void RaceReady(ACheckPoint* StartCheckPoint);
