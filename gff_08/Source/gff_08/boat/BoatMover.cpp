@@ -2,7 +2,9 @@
 
 #include "BoatMover.h"
 
+#include "gff_08/utils/MyLogCategory.h"
 #include "gff_08/utils/SpeedConverter.h"
+#include "kismet/GamePlayStatics.h"
 
 // Sets default values for this component's properties
 UBoatMover::UBoatMover(const FObjectInitializer& ObjectInitializer) : Super(ObjectInitializer) {
@@ -16,6 +18,13 @@ UBoatMover::UBoatMover(const FObjectInitializer& ObjectInitializer) : Super(Obje
 // Called when the game starts
 void UBoatMover::BeginPlay() {
 	Super::BeginPlay();
+
+	AActor* FieldActor = UGameplayStatics::GetActorOfClass(GetWorld(), AWaterField::StaticClass());
+	Field = Cast<AWaterField>(FieldActor);
+
+	if (!Field) {
+		UE_LOG(LogBoat, Error, TEXT("Can not find Field Actor!"));
+	}
 }
 
 void UBoatMover::Init(const FBoatMoverInitStructure& InitStructure) {
@@ -113,9 +122,12 @@ void UBoatMover::SettingWaveGenerateTimer() {
 	}
 }
 
-void UBoatMover::GenerateWave_Implementation() {
+void UBoatMover::GenerateWave() const {
+	const FVector Location = BoatMesh->GetComponentLocation();
+	const FRotator Rotation = BoatMesh->GetRelativeRotation();
+	Field->GenerateAccelWave(Location, Rotation);
 }
 
-FVector UBoatMover::GetWaveAccelVelocity_Implementation() {
-	return FVector::ZeroVector;
+FVector UBoatMover::GetWaveAccelVelocity() const {
+	return Field->GetAccelVelocity(BoatMesh->GetComponentLocation());
 }

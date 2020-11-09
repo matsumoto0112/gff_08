@@ -5,6 +5,7 @@
 #include "Components/ActorComponent.h"
 #include "Components/ArrowComponent.h"
 #include "CoreMinimal.h"
+#include "gff_08/field/WaterField.h"
 
 #include "BoatMover.generated.h"
 
@@ -110,18 +111,16 @@ protected:
 	 * @note 波の生成処理はBP上でしか行えないため、BPに処理を移譲する
 	 * 後々Cpp上で呼べるようになった時にはcpp上で処理する
 	 */
-	UFUNCTION(BlueprintNativeEvent, BlueprintCallable, Category = "BoatMover")
-	void GenerateWave();
-	virtual void GenerateWave_Implementation();
+	UFUNCTION(BlueprintCallable, Category = "BoatMover")
+	void GenerateWave() const;
 
 	/**
 	 * 波の加速度の取得
 	 * @note 波の加速度取得処理はBP上でしか行えないため、BPに処理を移譲する
 	 * 後々Cpp上で呼べるようになった時にはcpp上で処理する
 	 */
-	UFUNCTION(BlueprintNativeEvent, BlueprintCallable, Category = "BoatMover")
-	FVector GetWaveAccelVelocity();
-	virtual FVector GetWaveAccelVelocity_Implementation();
+	UFUNCTION(BlueprintCallable, Category = "BoatMover")
+	FVector GetWaveAccelVelocity() const;
 
 protected:
 	//! 親のポーン
@@ -138,6 +137,9 @@ protected:
 	UArrowComponent* GenerateWaveLocation;
 
 protected:
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Field")
+	AWaterField* Field;
+
 	//! 最大移動速度
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Move")
 	float MoveMaxSpeed = 150.0f;
