@@ -73,6 +73,10 @@ public:
 	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
 
 	/**
+	 * ボートのパラメータ設定
+	 */
+	void SetParameter(float MaxMoveSpeed, float Accel, float Control);
+	/**
 	 * 移動処理
 	 */
 	UFUNCTION(BlueprintCallable, Category = "BoatMover")

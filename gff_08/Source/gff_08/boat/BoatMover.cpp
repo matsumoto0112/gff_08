@@ -32,6 +32,9 @@ void UBoatMover::TickComponent(float DeltaTime, ELevelTick TickType, FActorCompo
 	// ...
 }
 
+void UBoatMover::SetParameter(float MaxMoveSpeed, float Accel, float Control) {
+}
+
 void UBoatMover::Move(float MoveValue, float LeftMotorValue, float RightMotorValue) {
 	if (!IsOverBoatMaxSpeed()) {
 		AddForwardForce(MoveValue);
