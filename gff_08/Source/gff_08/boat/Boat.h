@@ -23,12 +23,17 @@ enum class EBoatMovableType : uint8 {
 	StraightOnly,
 };
 
+/**
+ * ボートクラス
+ */
 UCLASS()
 class GFF_08_API ABoat : public APawn {
 	GENERATED_BODY()
 
 public:
-	// Sets default values for this pawn's properties
+	/**
+	 * デフォルトコンストラクタ
+	 */
 	ABoat();
 
 protected:
@@ -65,6 +70,10 @@ public:
 		return NextCheckPoint;
 	}
 
+	/**
+	 * 機体を変更する
+	 * @param BoatID ボートのID
+	 */
 	UFUNCTION(BlueprintCallable, Category = "Boat")
 	void ChangeBoat(int32 BoatID);
 	/**
@@ -86,14 +95,19 @@ public:
 	virtual float GetPlayerSpeed() const;
 
 protected:
+	//! ボートメッシュ
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Components")
 	UStaticMeshComponent* StaticMesh;
+	//! ボート移動処理
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Components")
 	UBoatMover* BoatMover;
+	//! 周回計測
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Components")
 	ULapCounter* LapCounter;
+	//! 回転の力を加える地点
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Components")
 	UArrowComponent* SteerForceLocation;
+	//! 波の生成地点
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Components")
 	UArrowComponent* GenerateWaveLocation;
 

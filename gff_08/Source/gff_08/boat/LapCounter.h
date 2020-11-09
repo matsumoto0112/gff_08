@@ -8,6 +8,10 @@
 
 #include "LapCounter.generated.h"
 
+/**
+ * 周回計測機能
+ * 周回計測と言いつつ、順位の判定に使う変数も持たせているため役割が不明瞭になってきた
+ */
 UCLASS(ClassGroup = (Custom), meta = (BlueprintSpawnableComponent))
 class GFF_08_API ULapCounter : public UActorComponent {
 	GENERATED_BODY()
@@ -44,11 +48,16 @@ public:
 	int32 GetCurrentCheckPointIndex() const {
 		return CurrentIndex;
 	}
-
+	/**
+	 * ランキングをセットする
+	 */
 	void SetRanking(int32 Rank) {
 		Ranking = Rank;
 	}
 
+	/**
+	 * 全体のラップタイムを取得する
+	 */
 	UFUNCTION(BlueprintCallable, Category = "LapCounter")
 	float GetTotalLapTime() const;
 
@@ -69,16 +78,18 @@ protected:
 	//! 逆走などで戻ることがあるため
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "LapCounter")
 	int32 CurrentLapCount;
-
+	//最大で進んだチェックポイント番号
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "LapCounter")
 	int32 MaxCheckPointIndex;
 
+	//現在のランキング
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "LapCounter")
 	int32 Ranking;
 
+	//現在のラップタイム
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "LapCounter")
 	float CurrentLapTime;
-
+	//! このゲームにおける各週のラップタイム
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "LapCounter")
 	TArray<float> LapTimes;
 };

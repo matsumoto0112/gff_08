@@ -2,6 +2,7 @@
 
 #include "BoatDataAsset.h"
 
+//インポート処理
 void UBoatDataAsset::Import() {
 #if WITH_EDITORONLY_DATA
 	if (!DataTable) {
@@ -14,6 +15,7 @@ void UBoatDataAsset::Import() {
 	Data.Empty();
 	const TArray<FName> Names = DataTable->GetRowNames();
 
+	//データテーブルから各行を取り出し、アセット化する
 	for (int32 i = 0; i < Names.Num(); i++) {
 		const FBoatParameter* Record = DataTable->FindRow<FBoatParameter>(Names[i], FString());
 

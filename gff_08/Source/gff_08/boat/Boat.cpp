@@ -12,6 +12,7 @@ ABoat::ABoat() {
 	// Set this pawn to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
 
+	//必要なコンポーネントの作成
 	StaticMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("StaticMesh"));
 	RootComponent = StaticMesh;
 
@@ -32,8 +33,10 @@ ABoat::ABoat() {
 void ABoat::BeginPlay() {
 	Super::BeginPlay();
 
+	//最初は移動しない設定にする
 	MoveType = EBoatMovableType::NoMove;
 
+	//音源オブジェクトの作成
 	const UMyGameInstance* Instance = UMyGameInstance::GetInstance();
 	const USoundSystem* SoundSystem = Instance->GetSoundSystem();
 	MoveSound = SoundSystem->PlaySoundWithAttachOwnerActor(ESoundResourceType::SE_BOAT_MOVE, this, false);
@@ -43,33 +46,45 @@ void ABoat::BeginPlay() {
 void ABoat::EndPlay(const EEndPlayReason::Type EndPlayReason) {
 	Super::EndPlay(EndPlayReason);
 
+	//音源の停止
 	MoveSound->Stop();
 	ScrewSound->Stop();
 }
 
+//機体の変更
 void ABoat::ChangeBoat(int32 BoatID) {
+	// IDからパラメータを取得する
 	if (!BoatDataAsset->Data.IsValidIndex(BoatID)) {
 		UE_LOG(LogBoat, Error, TEXT("Boat parameter is not defined."));
 		return;
 	}
 
+	//パラメータを必要な変数に代入していく
 	const FBoatParameterRecord Parameter = BoatDataAsset->Data[BoatID];
 	BoatMover->SetParameter(Parameter.MaxSpeed, Parameter.Acceleration, Parameter.Control);
 }
 
+//レースの準備
 void ABoat::RaceReady(ACheckPoint* StartCheckPoint) {
+	//最初のチェックポイントを設定する
 	NextCheckPoint = StartCheckPoint;
+	//直線移動するよう設定
 	MoveType = EBoatMovableType::StraightOnly;
 }
 
+//レースの開始
 void ABoat::RaceStart() {
+	//ここから自由に移動できるようにする
 	MoveType = EBoatMovableType::Default;
 }
 
+//プレイヤーのスピードを取得する
 float ABoat::GetPlayerSpeed() const {
+	// km/sに変換する
 	return USpeedConverter::ToSpeedKilometerPerHour(GetVelocity().Size());
 }
 
+//移動力を計算する
 void ABoat::CalcMovementValues(float& MoveValue, float& LeftValue, float& RightValue) const {
 	const FInputInfo InputInfo = IDriver::Execute_CurrentInputInfo(Driver.GetObject());
 	const float MinValue = FMath::Min(InputInfo.LeftMotorValue, InputInfo.RightMotorValue);
@@ -80,23 +95,28 @@ void ABoat::CalcMovementValues(float& MoveValue, float& LeftValue, float& RightV
 			LeftValue = InputInfo.LeftMotorValue - MinValue;
 			RightValue = InputInfo.RightMotorValue - MinValue;
 			break;
+			//移動なし
 		case EBoatMovableType::NoMove:
 			MoveValue = 0.0f;
 			LeftValue = 0.0f;
 			RightValue = 0.0f;
 			break;
+			//直進のみ
 		case EBoatMovableType::StraightOnly:
-			MoveValue = 0.8f;
+			MoveValue = 0.8f;	 //定数で移動する
 			LeftValue = 0.0f;
 			RightValue = 0.0f;
 			break;
+			//その他
 		default:
 			UE_LOG(LogTemp, Error, TEXT("Unconfirmed enum EBoatMovableType encounter."));
 			break;
 	}
 }
 
+//反対方向に移動中か
 bool ABoat::IsReverseDriving() const {
+	//正面とのベクトルで判定する
 	const FVector ForwardVector = GetActorForwardVector();
 	const FVector To = NextCheckPoint->GetActorLocation() - GetActorLocation();
 	const float Dot = ForwardVector.CosineAngle2D(To);
@@ -106,14 +126,18 @@ bool ABoat::IsReverseDriving() const {
 // Called every frame
 void ABoat::Tick(float DeltaTime) {
 	Super::Tick(DeltaTime);
+
+	//移動に使用するパラメータはドライバーが計算する
 	IDriver::Execute_UpdateInputInfo(Driver.GetObject());
 
+	//移動力計算
 	float MoveValue;
 	float LeftValue;
 	float RightValue;
 	CalcMovementValues(MoveValue, LeftValue, RightValue);
 	BoatMover->Move(MoveValue, LeftValue, RightValue);
 
+	//音源に対するパラメータ設定
 	MoveSound->GetAudioComponent()->SetFloatParameter(TEXT("Speed"), GetPlayerSpeed());
 	ScrewSound->GetAudioComponent()->SetFloatParameter(TEXT("Speed"), GetPlayerSpeed());
 }

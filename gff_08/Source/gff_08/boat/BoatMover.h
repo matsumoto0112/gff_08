@@ -75,10 +75,16 @@ public:
 
 	/**
 	 * ボートのパラメータ設定
+	 * @param MaxMoveSpeed 最高速度
+	 * @param Accel 加速度
+	 * @param Control 回転力
 	 */
 	void SetParameter(float MaxMoveSpeed, float Accel, float Control);
 	/**
 	 * 移動処理
+	 * @param MoveValue 移動量
+	 * @param LeftMotorValue 左モーターの回転量
+	 * @param RightMotorValue 右モーターの回転量
 	 */
 	UFUNCTION(BlueprintCallable, Category = "BoatMover")
 	virtual void Move(float MoveValue, float LeftMotorValue, float RightMotorValue);
@@ -137,6 +143,7 @@ protected:
 	UArrowComponent* GenerateWaveLocation;
 
 protected:
+	//! フィールド
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Field")
 	AWaterField* Field;
 

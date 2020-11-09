@@ -19,6 +19,7 @@ UBoatMover::UBoatMover(const FObjectInitializer& ObjectInitializer) : Super(Obje
 void UBoatMover::BeginPlay() {
 	Super::BeginPlay();
 
+	//フィールドをワールドから探す
 	AActor* FieldActor = UGameplayStatics::GetActorOfClass(GetWorld(), AWaterField::StaticClass());
 	Field = Cast<AWaterField>(FieldActor);
 
@@ -27,6 +28,7 @@ void UBoatMover::BeginPlay() {
 	}
 }
 
+//初期化
 void UBoatMover::Init(const FBoatMoverInitStructure& InitStructure) {
 	ParentPawn = InitStructure.ParentPawn;
 	BoatMesh = InitStructure.BoatMesh;
@@ -41,22 +43,30 @@ void UBoatMover::TickComponent(float DeltaTime, ELevelTick TickType, FActorCompo
 	// ...
 }
 
+//パラメータ設定
 void UBoatMover::SetParameter(float MaxMoveSpeed, float Accel, float Control) {
 }
 
+//移動処理
 void UBoatMover::Move(float MoveValue, float LeftMotorValue, float RightMotorValue) {
+	//最高速度を超えていない限り前方に対する移動を追加する
 	if (!IsOverBoatMaxSpeed()) {
 		AddForwardForce(MoveValue);
 	}
 
+	//回転処理
 	AddRightForce(LeftMotorValue, RightMotorValue);
+
+	//波の生成タイマー処理
 	SettingWaveGenerateTimer();
 
+	//波による加速処理
 	const FVector WaveAccelVelocity = GetWaveAccelVelocity();
 	const FVector NormalizedWaveAccelVelocity = WaveAccelVelocity.GetSafeNormal();
 	BoatMesh->AddForce(NormalizedWaveAccelVelocity * WaveInfluence);
 }
 
+//最高速度を超えているか
 bool UBoatMover::IsOverBoatMaxSpeed() const {
 	const FVector Velocity = ParentPawn->GetVelocity();
 	const float Length = Velocity.Size();
@@ -65,6 +75,8 @@ bool UBoatMover::IsOverBoatMaxSpeed() const {
 	return Speed_km_h >= MoveMaxSpeed;
 }
 
+//前方に対する力を加算する
+//前方向に対する移動処理に使用
 void UBoatMover::AddForwardForce(float MoveValue) {
 	//現在速度(cm/s)を取得する
 	const FVector Velocity = ParentPawn->GetVelocity();
@@ -84,6 +96,8 @@ void UBoatMover::AddForwardForce(float MoveValue) {
 	BoatMesh->AddForce(ForwardVector * ForcePower);
 }
 
+//右方向に力を加える
+//回転に使用
 void UBoatMover::AddRightForce(float LeftMotorValue, float RightMotorValue) {
 	const float RotateValue = LeftMotorValue - RightMotorValue;
 	const float Mass = BoatMesh->GetMass();
@@ -97,6 +111,7 @@ void UBoatMover::AddRightForce(float LeftMotorValue, float RightMotorValue) {
 	BoatMesh->AddForceAtLocation(RightVector * ForcePower, SteerLocation);
 }
 
+//波の生成タイマー処理
 void UBoatMover::SettingWaveGenerateTimer() {
 	const FVector Velocity = ParentPawn->GetVelocity();
 	const float VelocityLength = Velocity.Size();
@@ -122,12 +137,14 @@ void UBoatMover::SettingWaveGenerateTimer() {
 	}
 }
 
+//波の生成処理
 void UBoatMover::GenerateWave() const {
 	const FVector Location = GenerateWaveLocation->GetComponentLocation();
 	const FRotator Rotation = GenerateWaveLocation->GetRelativeRotation();
 	Field->GenerateAccelWave(Location, Rotation);
 }
 
+//波の加速度を取得する
 FVector UBoatMover::GetWaveAccelVelocity() const {
 	return Field->GetAccelVelocity(BoatMesh->GetComponentLocation());
 }

@@ -41,9 +41,16 @@ class GFF_08_API IDriver {
 
 	// Add interface functions to this class. This is the class that will be inherited to implement this interface.
 public:
+	/**
+	 * 現在の移動入力を取得する
+	 * 複数回同一フレームで呼ばれることを考慮し、取得と更新処理を分割
+	 */
 	UFUNCTION(BlueprintNativeEvent, BlueprintCallable, Category = "Driver")
 	FInputInfo CurrentInputInfo() const;
 
+	/**
+	 * 入力状態を更新する
+	 */
 	UFUNCTION(BlueprintNativeEvent, BlueprintCallable, Category = "Driver")
 	void UpdateInputInfo();
 };
