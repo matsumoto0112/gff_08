@@ -92,6 +92,10 @@ protected:
 	UBoatMover* BoatMover;
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Components")
 	ULapCounter* LapCounter;
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Components")
+	UArrowComponent* SteerForceLocation;
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Components")
+	UArrowComponent* GenerateWaveLocation;
 
 	//! ボートのデータアセット
 	UPROPERTY(EditDefaultsOnly, Category = "Boat")

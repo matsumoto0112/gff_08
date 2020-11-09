@@ -20,6 +20,12 @@ ABoat::ABoat() {
 
 	LapCounter = CreateDefaultSubobject<ULapCounter>(TEXT("LapCounter"));
 	this->AddOwnedComponent(LapCounter);
+
+	SteerForceLocation = CreateDefaultSubobject<UArrowComponent>(TEXT("SteerForceLocation"));
+	SteerForceLocation->SetupAttachment(RootComponent);
+
+	GenerateWaveLocation = CreateDefaultSubobject<UArrowComponent>(TEXT("GenerateWaveLocation"));
+	GenerateWaveLocation->SetupAttachment(RootComponent);
 }
 
 // Called when the game starts or when spawned
