@@ -11,6 +11,9 @@
 ABoat::ABoat() {
 	// Set this pawn to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
+
+	BoatMover = CreateDefaultSubobject<UBoatMover>(TEXT("BoatMover"));
+	this->AddOwnedComponent(BoatMover);
 }
 
 // Called when the game starts or when spawned
@@ -39,7 +42,7 @@ void ABoat::ChangeBoat(int32 BoatID) {
 	}
 
 	const FBoatParameterRecord Parameter = BoatDataAsset->Data[BoatID];
-	//this-
+	// this-
 }
 
 void ABoat::RaceReady(ACheckPoint* StartCheckPoint) {

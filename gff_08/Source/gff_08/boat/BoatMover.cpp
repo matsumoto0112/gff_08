@@ -123,8 +123,8 @@ void UBoatMover::SettingWaveGenerateTimer() {
 }
 
 void UBoatMover::GenerateWave() const {
-	const FVector Location = BoatMesh->GetComponentLocation();
-	const FRotator Rotation = BoatMesh->GetRelativeRotation();
+	const FVector Location = GenerateWaveLocation->GetComponentLocation();
+	const FRotator Rotation = GenerateWaveLocation->GetRelativeRotation();
 	Field->GenerateAccelWave(Location, Rotation);
 }
 

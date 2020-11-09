@@ -86,6 +86,9 @@ public:
 	virtual float GetPlayerSpeed() const;
 
 protected:
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Boat")
+	UBoatMover* BoatMover;
+
 	//! ボートのデータアセット
 	UPROPERTY(EditDefaultsOnly, Category = "Boat")
 	UBoatDataAsset* BoatDataAsset;
