@@ -7,6 +7,9 @@
 
 #include "JampBoard.generated.h"
 
+/**
+ * ジャンプ台オブジェクト
+ */
 UCLASS()
 class GFF_08_API AJampBoard : public AActor {
 	GENERATED_BODY()
@@ -24,6 +27,7 @@ public:
 	virtual void Tick(float DeltaTime) override;
 
 protected:
+	//! ジャンプ台のメッシュ
 	UPROPERTY(EditDefaultsOnly, Category = "Components")
 	UStaticMeshComponent* JampBoardMesh;
 };

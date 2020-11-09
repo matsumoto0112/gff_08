@@ -9,6 +9,9 @@
 
 #include "SoundDataAsset.generated.h"
 
+/**
+ * 音源の種類
+ */
 UENUM(BlueprintType)
 enum class ESoundResourceType : uint8 {
 	BGM_TITLE,
@@ -25,6 +28,9 @@ enum class ESoundResourceType : uint8 {
 	SE_RACE_START,
 };
 
+/**
+ * 音データ
+ */
 USTRUCT(BlueprintType)
 struct GFF_08_API FSoundData : public FTableRowBase {
 	GENERATED_USTRUCT_BODY()
@@ -54,6 +60,9 @@ struct GFF_08_API FSoundData : public FTableRowBase {
 	USoundAttenuation* SoundAttenuation;
 };
 
+/**
+ * データアセットに格納する音データ
+ */
 USTRUCT(BlueprintType)
 struct GFF_08_API FSoundDataAssetRecord {
 	GENERATED_USTRUCT_BODY()
@@ -68,7 +77,7 @@ struct GFF_08_API FSoundDataAssetRecord {
 };
 
 /**
- *
+ * サウンドデータアセット
  */
 UCLASS()
 class GFF_08_API USoundDataAsset : public UDataAsset {
@@ -79,6 +88,9 @@ public:
 	UDataTable* DataTable;
 #endif
 
+	/**
+	 * データテーブルからインポートする
+	 */
 	UFUNCTION(meta = (CallInEditor = "true"))
 	void Import();
 
