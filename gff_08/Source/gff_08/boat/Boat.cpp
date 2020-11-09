@@ -3,6 +3,7 @@
 #include "Boat.h"
 
 #include "gff_08/utils/MyGameInstance.h"
+#include "gff_08/utils/MyLogCategory.h"
 #include "gff_08/utils/SpeedConverter.h"
 #include "kismet/KismetSystemLibrary.h"
 
@@ -29,6 +30,16 @@ void ABoat::EndPlay(const EEndPlayReason::Type EndPlayReason) {
 
 	MoveSound->Stop();
 	ScrewSound->Stop();
+}
+
+void ABoat::ChangeBoat(int32 BoatID) {
+	if (!BoatDataAsset->Data.IsValidIndex(BoatID)) {
+		UE_LOG(LogBoat, Error, TEXT("Boat parameter is not defined."));
+		return;
+	}
+
+	const FBoatParameterRecord Parameter = BoatDataAsset->Data[BoatID];
+	//this->
 }
 
 void ABoat::RaceReady(ACheckPoint* StartCheckPoint) {
