@@ -24,6 +24,63 @@ AWaterField::AWaterField() {
 void AWaterField::BeginPlay() {
 	Super::BeginPlay();
 
+	Initialize();
+}
+
+// Called every frame
+void AWaterField::Tick(float DeltaTime) {
+	Super::Tick(DeltaTime);
+
+	if (updateFlag == false) {
+		return;
+	}
+
+	UpdateTexture();
+
+	updateFlag = false;
+}
+
+/**
+ * 位置からグリッド座標を求め、その場所の加速波の情報を取得する
+ * @param [position] Actorのworld座標
+ * @return 加速度
+ */
+FVector AWaterField::GetAccelVelocity(const FVector position) {
+	FVector grid = CulcFieldGrid(position);
+	if (waveArray[grid.X][grid.Y].isValid == false) {
+		return FVector::ZeroVector;
+	}
+
+	return waveArray[grid.X][grid.Y].velocity * waveArray[grid.X][grid.Y].length;
+}
+
+/**
+ * 加速波の生成処理
+ * @param [position] Actorのworld座標
+ * @param [rotate]   Actorの回転
+ */
+void AWaterField::GenerateAccelWave(const FVector position, const FRotator rotate) {
+	FVector grid = CulcFieldGrid(position);
+
+	//すでに波が生成されていたら
+	if (waveArray[grid.X][grid.Y].isValid == true) {
+		return;
+	}
+	FVector vel(FMath::Cos(rotate.Pitch), FMath::Sin(rotate.Pitch), 0.0f);
+	vel.Normalize();
+	waveArray[grid.X][grid.Y].velocity = vel;
+	waveArray[grid.X][grid.Y].length = 700.0f;
+	waveArray[grid.X][grid.Y].startTime = FDateTime::Now();
+	waveArray[grid.X][grid.Y].isValid = true;
+
+	UpdateFlowMap(grid);
+	updateFlag = true;
+}
+
+/**
+ * 初期化処理
+ */
+void AWaterField::Initialize() {
 	updateFlag = false;
 	//フィールドの縦横の長さ、グリッド1辺の長さを調べる
 	FVector origin, boxExtent;
@@ -34,6 +91,7 @@ void AWaterField::BeginPlay() {
 	edgeW = width / row;
 	edgeH = height / column;
 
+	//波情報保存配列の初期化
 	waveArray.Init(TArray<FAccelWaveInfo>(), row);
 	for (int32 i = 0; i < waveArray.Num(); i++) {
 		waveArray[i].Init(FAccelWaveInfo(), column);
@@ -51,85 +109,40 @@ void AWaterField::BeginPlay() {
 
 	CreateTextureAndMaterial();
 }
-// Called every frame
-void AWaterField::Tick(float DeltaTime) {
-	Super::Tick(DeltaTime);
 
-	if (updateFlag == false) {
-		return;
-	}
-
-	auto locked_bulk_data = flowMap->PlatformData->Mips[0].BulkData.Lock(LOCK_READ_WRITE);
-	FMemory::Memcpy(locked_bulk_data, textureColorData.GetData(), sizeof(Fr8g8b8a8) * textureColorData.Num());
-	flowMap->PlatformData->Mips[0].BulkData.Unlock();
-	flowMap->UpdateResource();
-
-	updateFlag = false;
-}
-
-/*
- 位置からグリッド座標を求め、その場所の加速波の情報を取得する
-*/
-FVector AWaterField::GetAccelVelocity(FVector position) {
-	FVector grid = CulcFieldGrid(position);
-	if (waveArray[grid.X][grid.Y].isValid == false) {
-		return FVector::ZeroVector;
-	}
-
-	return waveArray[grid.X][grid.Y].velocity * waveArray[grid.X][grid.Y].length;
-}
-
-/*
- 加速波の生成処理
-*/
-void AWaterField::GenerateAccelWave(FVector position, FRotator rotate) {
-	FVector grid = CulcFieldGrid(position);
-
-	if (waveArray[grid.X][grid.Y].isValid == true) {
-		return;
-	}
-	FVector vel(FMath::Cos(rotate.Yaw), FMath::Sin(rotate.Yaw), 0.0f);
-	vel.Normalize();
-	waveArray[grid.X][grid.Y].velocity = vel;
-	waveArray[grid.X][grid.Y].length = 700.0f;
-	waveArray[grid.X][grid.Y].startTime = FDateTime::Now();
-	waveArray[grid.X][grid.Y].isValid = true;
-
-	UpdateFlowMap(grid);
-	updateFlag = true;
-}
-
+/**
+ * マテリアルとflowMapの作成
+ */
 void AWaterField::CreateTextureAndMaterial() {
 	//マテリアルの作成
 	UPrimitiveComponent* Primitive = Cast<UPrimitiveComponent>(GetComponentByClass(UPrimitiveComponent::StaticClass()));
-	UMaterialInstanceDynamic* Material = Primitive->CreateAndSetMaterialInstanceDynamicFromMaterial(
-		0, Cast<UMaterial>(StaticLoadObject(UMaterial::StaticClass(), nullptr, TEXT("/Game/Materials/M_Water"))));
+	UMaterialInstanceDynamic* Material = Primitive->CreateAndSetMaterialInstanceDynamicFromMaterial(0, copyWaterMaterial);
 
 	//テクスチャの作成
 	flowMap = UTexture2D::CreateTransient(TEXTURE_EDGE_W, TEXTURE_EDGE_H, PF_R8G8B8A8);
 
-	auto locked_bulk_data = flowMap->PlatformData->Mips[0].BulkData.Lock(LOCK_READ_WRITE);
-	FMemory::Memcpy(locked_bulk_data, textureColorData.GetData(), sizeof(Fr8g8b8a8) * textureColorData.Num());
-	flowMap->PlatformData->Mips[0].BulkData.Unlock();
-	flowMap->UpdateResource();
+	UpdateTexture();
 
 	// マテリアルインスタンスへテクスチャーパラメーターを設定する。与える値の型は UTexture2D*
 	Material->SetTextureParameterValue("FlowMap", flowMap);
 	visualMesh->SetMaterial(0, Material);
 }
 
-FVector AWaterField::CulcFieldGrid(FVector position) {
-	return FVector(CulcGrid(position.X, width, row), CulcGrid(position.Y, height, column), 0);
+/**
+ * テクスチャの更新を行う
+ */
+void AWaterField::UpdateTexture() {
+	auto locked_bulk_data = flowMap->PlatformData->Mips[0].BulkData.Lock(LOCK_READ_WRITE);
+	FMemory::Memcpy(locked_bulk_data, textureColorData.GetData(), sizeof(Fr8g8b8a8) * textureColorData.Num());
+	flowMap->PlatformData->Mips[0].BulkData.Unlock();
+	flowMap->UpdateResource();
 }
 
-int AWaterField::CulcGrid(float position, float edge, int index) {
-	float gridF = ((position + edge) / (edge * 2.0f)) * index;
-	int32 grid = FMath::CeilToInt(gridF);
-	grid = FMath::Clamp(grid, 0, index - 1);
-	return grid;
-}
-
-void AWaterField::UpdateFlowMap(FVector fieldGrid) {
+/**
+ * flowMapの色情報の更新を行う
+ * @param [fieldGrid] ActorのGrid座標
+ */
+void AWaterField::UpdateFlowMap(const FVector fieldGrid) {
 	//テクスチャのグリッド座標
 	int32 texX = fieldGrid.Y * edgeTexW;
 	int32 texY = fieldGrid.X * edgeTexH;
@@ -151,4 +164,28 @@ void AWaterField::UpdateFlowMap(FVector fieldGrid) {
 		}
 		forCount++;
 	}
+}
+
+/**
+ * 与えられたActorの位置をGrid座標に変換する
+ * @param [position] Actorのworld座標
+ * @return Grid座標
+ */
+FVector AWaterField::CulcFieldGrid(const FVector position) {
+	return FVector(CulcGrid(position.X, width, row), CulcGrid(position.Y, height, column), 0);
+}
+
+/**
+ * Fieldの辺の長さ、Gridの数から
+ * Grid上の座標を求める
+ * @param [position] 座標
+ * @param [edge]     軸に対する辺の長さ
+ * @param [index]    軸に対する幅の数
+ * @return 軸に対するGrid座標
+ */
+int32 AWaterField::CulcGrid(float position, float edge, int32 index) {
+	float gridF = ((position + edge) / (edge * 2.0f)) * index;
+	int32 grid = FMath::CeilToInt(gridF);
+	grid = FMath::Clamp(grid, 0, index - 1);
+	return grid;
 }

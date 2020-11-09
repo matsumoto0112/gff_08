@@ -71,6 +71,8 @@ public:
 	//列
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Index")
 	int column;
+	UPROPERTY(EditAnywhere, Category = "CopyMaterial")
+	UMaterial* copyWaterMaterial;
 
 protected:
 	// スタート時
@@ -81,23 +83,25 @@ public:
 	virtual void Tick(float DeltaTime) override;
 
 	UFUNCTION(BlueprintCallable, Category = "WaterField")
-	FVector GetAccelVelocity(FVector position);
+	FVector GetAccelVelocity(const FVector position);
 	UFUNCTION(BlueprintCallable, Category = "WaterField")
-	void GenerateAccelWave(FVector position, FRotator rotate);
+	void GenerateAccelWave(const FVector position,const FRotator rotate);
 
 private:
-	UFUNCTION()
+	void Initialize();
 	void CreateTextureAndMaterial();
-	FVector CulcFieldGrid(FVector position);
-	int CulcGrid(float position, float edge, int index);
+	void UpdateTexture();
 	void UpdateFlowMap(FVector fieldGrid);
+	FVector CulcFieldGrid(const FVector position);
+	int32 CulcGrid(float position, float edge, int32 index);
 
 private:
+	//画像サイズ
 	static constexpr int32 TEXTURE_EDGE_W = 1024;
 	static constexpr int32 TEXTURE_EDGE_H = 1024;
 
 	TArray<Fr8g8b8a8> textureColorData;
 	TArray<TArray<FAccelWaveInfo>> waveArray;
 	UTexture2D* flowMap;
-	bool updateFlag; 
+	bool updateFlag;
 };
