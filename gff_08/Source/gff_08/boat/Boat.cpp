@@ -70,6 +70,7 @@ void ABoat::ChangeBoat(int32 BoatID) {
 	const FBoatParameterRecord Parameter = BoatDataAsset->Data[BoatID];
 	BoatMover->SetParameter(Parameter.MaxSpeed, Parameter.Acceleration, Parameter.Control);
 	this->StaticMesh->SetStaticMesh(Parameter.BoatMesh);
+	this->StaticMesh->SetMassOverrideInKg(NAME_None, Parameter.Mass);
 }
 
 //ƒŒ[ƒX‚Ì€”õ

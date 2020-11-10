@@ -45,6 +45,9 @@ void UBoatMover::TickComponent(float DeltaTime, ELevelTick TickType, FActorCompo
 
 //ƒpƒ‰ƒ[ƒ^İ’è
 void UBoatMover::SetParameter(float MaxMoveSpeed, float Accel, float Control) {
+	this->MoveMaxSpeed = MaxMoveSpeed;
+	this->Acceleration = Accel;
+	this->AngularAcceleration = Control;
 }
 
 //ˆÚ“®ˆ—
