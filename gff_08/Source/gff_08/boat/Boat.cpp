@@ -36,9 +36,16 @@ void ABoat::BeginPlay() {
 	//最初は移動しない設定にする
 	MoveType = EBoatMovableType::NoMove;
 
+	FBoatMoverInitStructure InitStructure;
+	InitStructure.ParentPawn = this;
+	InitStructure.BoatMesh = this->StaticMesh;
+	InitStructure.GenerateWaveLocation = this->GenerateWaveLocation;
+	InitStructure.SteerForceLocation = this->SteerForceLocation;
+	BoatMover->Init(InitStructure);
+
 	//音源オブジェクトの作成
 	const UMyGameInstance* Instance = UMyGameInstance::GetInstance();
-	const USoundSystem* SoundSystem = Instance->GetSoundSystem();
+	USoundSystem* SoundSystem = Instance->GetSoundSystem();
 	MoveSound = SoundSystem->PlaySoundWithAttachOwnerActor(ESoundResourceType::SE_BOAT_MOVE, this, false);
 	ScrewSound = SoundSystem->PlaySoundWithAttachOwnerActor(ESoundResourceType::SE_BOAT_SCREW, this, false);
 }
@@ -62,6 +69,7 @@ void ABoat::ChangeBoat(int32 BoatID) {
 	//パラメータを必要な変数に代入していく
 	const FBoatParameterRecord Parameter = BoatDataAsset->Data[BoatID];
 	BoatMover->SetParameter(Parameter.MaxSpeed, Parameter.Acceleration, Parameter.Control);
+	this->StaticMesh->SetStaticMesh(Parameter.BoatMesh);
 }
 
 //レースの準備

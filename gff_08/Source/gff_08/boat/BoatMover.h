@@ -63,15 +63,14 @@ protected:
 	// Called when the game starts
 	virtual void BeginPlay() override;
 
+public:
+	// Called every frame
+	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
 	/**
 	 * 初期化処理
 	 */
 	UFUNCTION(BlueprintCallable, Category = "BoatMover")
 	void Init(const FBoatMoverInitStructure& InitStructure);
-
-public:
-	// Called every frame
-	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
 
 	/**
 	 * ボートのパラメータ設定
