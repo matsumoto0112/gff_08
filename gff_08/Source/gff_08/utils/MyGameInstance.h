@@ -7,6 +7,7 @@
 #include "gff_08/sound/SoundDataAsset.h"
 #include "gff_08/sound/SoundSystem.h"
 #include "gff_08/utils/GamePlayData.h"
+#include "gff_08/utils/OptionParameter.h"
 
 #include "MyGameInstance.generated.h"
 
@@ -59,6 +60,11 @@ public:
 		this->PlayData = Data;
 	}
 
+	UFUNCTION(BlueprintCallable, Category = "MyGameInstance")
+	UOptionParameter* GetOption() const {
+		return Option;
+	}
+
 protected:
 	//! OnHandleSystemError デリゲート登録時のハンドル
 	FDelegateHandle OnSystemErrorDelegateHandle;
@@ -79,4 +85,7 @@ protected:
 	//! ゲームのプレイ情報
 	UPROPERTY()
 	FGamePlayData PlayData;
+	//! オプション情報
+	UPROPERTY()
+	UOptionParameter* Option;
 };

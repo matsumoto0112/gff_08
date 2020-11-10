@@ -2,7 +2,8 @@
 
 #include "MyGameInstance.h"
 
-#include "Engine/Engine.h"
+#include "Engine.h"
+#include "GameFramework/SaveGame.h"
 
 UMyGameInstance::UMyGameInstance() {
 	SoundSystem = CreateDefaultSubobject<USoundSystem>(TEXT("SoundSystem"));
@@ -13,6 +14,8 @@ void UMyGameInstance::Init() {
 	OnSystemErrorDelegateHandle = FCoreDelegates::OnHandleSystemError.AddUObject(this, &UMyGameInstance::OnSystemError);
 
 	SoundSystem->Init(SoundDataAsset);
+	Option = Cast<UOptionParameter>(UGameplayStatics::CreateSaveGameObject(UOptionParameter::StaticClass()));
+	Option->LoadOptionData();
 }
 
 void UMyGameInstance::Shutdown() {
