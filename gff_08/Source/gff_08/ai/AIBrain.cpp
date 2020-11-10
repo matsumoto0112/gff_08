@@ -52,6 +52,14 @@ FInputInfo UAIBrain::Next() {
 	return Res;
 }
 
+FInputInfo UAIBrain::CurrentInputInfo_Implementation() const {
+	return InputInfo;
+}
+
+void UAIBrain::UpdateInputInfo_Implementation() {
+	InputInfo = Next();
+}
+
 void UAIBrain::UpdateTargetPoint() {
 	const ACheckPoint* NextCheckPoint = Parent->GetNextCheckPoint();
 	const ACheckPoint* NextNextCheckPoint = NextCheckPoint->GetNextPoint();

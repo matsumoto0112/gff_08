@@ -13,7 +13,7 @@
  *
  */
 UCLASS(BlueprintType, Blueprintable)
-class GFF_08_API UAIBrain : public UObject {
+class GFF_08_API UAIBrain : public UObject, public IDriver {
 	GENERATED_BODY()
 
 public:
@@ -22,15 +22,28 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "Brain")
 	void Init(ABoat* Boat);
 
-	UFUNCTION(BlueprintCallable, Category = "Brain")
 	FInputInfo Next();
+	/**
+	 * 現在の移動入力を取得する
+	 * 複数回同一フレームで呼ばれることを考慮し、取得と更新処理を分割
+	 */
+	virtual FInputInfo CurrentInputInfo_Implementation() const override;
+
+	/**
+	 * 入力状態を更新する
+	 */
+	virtual void UpdateInputInfo_Implementation() override;
 
 private:
 	void UpdateTargetPoint();
 
 private:
+	UPROPERTY()
 	ABoat* Parent;
-
+	UPROPERTY()
+	FInputInfo InputInfo;
+	UPROPERTY()
 	FVector CurrentTargetPoint;
+	UPROPERTY()
 	int32 CurrentTargetCheckPointIndex;
 };
