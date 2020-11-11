@@ -18,51 +18,68 @@ struct GFF_08_API FStageData : public FTableRowBase {
 	/**
 	 * デフォルトコンストラクタ
 	 */
-	FStageData() : LapCount(0), StageName(TEXT("Default")) {
+	FStageData() : LapCount(0), StageName(TEXT("Default")), StageImages() {
 	}
 
 	/**
 	 * コンストラクタ
 	 */
-	FStageData(int32 LapCount, const FString& Name) : LapCount(LapCount), StageName(Name) {
+	FStageData(int32 LapCount, const FString& Name, const TArray<UTexture2D*>& Images)
+		: LapCount(LapCount), StageName(Name), StageImages(Images) {
 	}
 
 	//! ゲームのラップ数
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "StageData")
-	int32 LapCount;
-
+	int32 LapCount = 3;
 	//! ステージ名
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "StageData")
 	FString StageName;
+	//! ミニマップ画像
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "StageData")
+	UTexture2D* MinimapImage;
+	//! ステージ外観画像
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "StageData")
+	TArray<UTexture2D*> StageImages;
 };
 
 USTRUCT(BlueprintType)
 struct GFF_08_API FStageDataAssetRecord {
 	GENERATED_USTRUCT_BODY()
 
-	//! ゲームのラップ数
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "StageDataAssetRecord")
-	int32 LapCount;
-
-	//! ステージ名
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "StageDataAssetRecord")
-	FString StageName;
-
 	//! 内部ステージ番号
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "StageDataAssetRecord")
 	int32 StageIndex;
+	//! ゲームのラップ数
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "StageDataAssetRecord")
+	int32 LapCount;
+	//! ステージ名
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "StageDataAssetRecord")
+	FString StageName;
+	//! ミニマップ画像
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "StageDataAssetRecord")
+	UTexture2D* MinimapImage;
+	//! ステージ外観画像
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "StageDataAssetRecord")
+	TArray<UTexture2D*> StageImages;
 };
 
 /**
  *
  */
-UCLASS() class GFF_08_API UStageDataAsset : public UDataAsset {
+UCLASS(BlueprintType)
+class GFF_08_API UStageDataAsset : public UDataAsset {
 	GENERATED_BODY()
 public:
 #if WITH_EDITORONLY_DATA
 	UPROPERTY(EditAnywhere, Category = "StageDataAsset")
 	UDataTable* DataTable;
 #endif
+	/**
+	 * データテーブルからインポートする
+	 */
+	UFUNCTION(meta = (CallInEditor = "true"))
+	void Import();
+
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "StageDataAsset")
 	TArray<FStageDataAssetRecord> Data;
 };
