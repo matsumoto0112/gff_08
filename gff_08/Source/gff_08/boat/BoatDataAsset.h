@@ -75,7 +75,7 @@ struct GFF_08_API FBoatParameterRecord {
 /**
  * ボートのデータアセット
  */
-UCLASS()
+UCLASS(BlueprintType)
 class GFF_08_API UBoatDataAsset : public UDataAsset {
 	GENERATED_BODY()
 
