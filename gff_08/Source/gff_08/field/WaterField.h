@@ -49,30 +49,32 @@ public:
 	// BlueprintReadOnly -> Blueprint上で読み取り可能
 
 	UPROPERTY(VisibleAnywhere)
-	UStaticMeshComponent* visualMesh;	 //メッシュ情報
+	UStaticMeshComponent* VisualMesh;	 //メッシュコンポーネント情報
+	UPROPERTY(EditAnywhere)
+	UStaticMesh* StaticMesh;
 
 	UPROPERTY(BlueprintReadOnly)
-	float width;
+	float Width;
 	UPROPERTY(BlueprintReadOnly)
-	float height;
+	float Height;
 	UPROPERTY(BlueprintReadOnly)
-	float edgeW;
+	float EdgeW;
 	UPROPERTY(BlueprintReadOnly)
-	float edgeH;
+	float EdgeH;
 
 	UPROPERTY(BlueprintReadOnly)
-	float edgeTexW;
+	float EdgeTexW;
 	UPROPERTY(BlueprintReadOnly)
-	float edgeTexH;
+	float EdgeTexH;
 
 	//行
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Index")
-	int row;
+	int Row;
 	//列
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Index")
-	int column;
+	int Column;
 	UPROPERTY(EditAnywhere, Category = "CopyMaterial")
-	UMaterial* copyWaterMaterial;
+	UMaterial* CopyWaterMaterial;
 
 protected:
 	// スタート時
@@ -83,16 +85,16 @@ public:
 	virtual void Tick(float DeltaTime) override;
 
 	UFUNCTION(BlueprintCallable, Category = "WaterField")
-	FVector GetAccelVelocity(const FVector position);
+	FVector GetAccelVelocity(const FVector& position);
 	UFUNCTION(BlueprintCallable, Category = "WaterField")
-	void GenerateAccelWave(const FVector position,const FRotator rotate);
+	void GenerateAccelWave(const FVector&  position,const FRotator& rotate);
 
 private:
 	void Initialize();
 	void CreateTextureAndMaterial();
 	void UpdateTexture();
-	void UpdateFlowMap(FVector fieldGrid);
-	FVector CulcFieldGrid(const FVector position);
+	void UpdateFlowMap(const FVector& fieldGrid);
+	FVector CulcFieldGrid(const FVector& position);
 	int32 CulcGrid(float position, float edge, int32 index);
 
 private:
@@ -100,8 +102,10 @@ private:
 	static constexpr int32 TEXTURE_EDGE_W = 1024;
 	static constexpr int32 TEXTURE_EDGE_H = 1024;
 
-	TArray<Fr8g8b8a8> textureColorData;
-	TArray<TArray<FAccelWaveInfo>> waveArray;
-	UTexture2D* flowMap;
-	bool updateFlag;
+	static constexpr uint8 NEUTRAL = 128;
+
+	TArray<Fr8g8b8a8> TextureColorData;
+	TArray<TArray<FAccelWaveInfo>> WaveArray;
+	UTexture2D* FlowMap;
+	bool UpdateFlag;
 };
