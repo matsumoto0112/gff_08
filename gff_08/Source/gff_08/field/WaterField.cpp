@@ -35,11 +35,6 @@ void AWaterField::Tick(float DeltaTime) {
 	UpdateFlag = false;
 }
 
-/**
- * 位置からグリッド座標を求め、その場所の加速波の情報を取得する
- * @param [position] Actorのworld座標
- * @return 加速度
- */
 FVector AWaterField::GetAccelVelocity(const FVector& position) {
 	FVector grid = CulcFieldGrid(position);
 	if (WaveArray[grid.X][grid.Y].isValid == false) {
@@ -49,11 +44,6 @@ FVector AWaterField::GetAccelVelocity(const FVector& position) {
 	return WaveArray[grid.X][grid.Y].velocity * WaveArray[grid.X][grid.Y].length;
 }
 
-/**
- * 加速波の生成処理
- * @param [position] Actorのworld座標
- * @param [rotate]   Actorの回転
- */
 void AWaterField::GenerateAccelWave(const FVector& position, const FRotator& rotate) {
 	FVector grid = CulcFieldGrid(position);
 
@@ -72,9 +62,6 @@ void AWaterField::GenerateAccelWave(const FVector& position, const FRotator& rot
 	UpdateFlag = true;
 }
 
-/**
- * 初期化処理
- */
 void AWaterField::Initialize() {
 	UpdateFlag = false;
 	//フィールドの縦横の長さ、グリッド1辺の長さを調べる
@@ -106,9 +93,6 @@ void AWaterField::Initialize() {
 	CreateTextureAndMaterial();
 }
 
-/**
- * マテリアルとflowMapの作成
- */
 void AWaterField::CreateTextureAndMaterial() {
 	//マテリアルの作成
 	UPrimitiveComponent* Primitive = Cast<UPrimitiveComponent>(GetComponentByClass(UPrimitiveComponent::StaticClass()));
@@ -124,9 +108,6 @@ void AWaterField::CreateTextureAndMaterial() {
 	VisualMesh->SetMaterial(0, Material);
 }
 
-/**
- * テクスチャの更新を行う
- */
 void AWaterField::UpdateTexture() {
 	auto locked_bulk_data = FlowMap->PlatformData->Mips[0].BulkData.Lock(LOCK_READ_WRITE);
 	FMemory::Memcpy(locked_bulk_data, TextureColorData.GetData(), sizeof(Fr8g8b8a8) * TextureColorData.Num());
@@ -134,10 +115,6 @@ void AWaterField::UpdateTexture() {
 	FlowMap->UpdateResource();
 }
 
-/**
- * flowMapの色情報の更新を行う
- * @param [fieldGrid] ActorのGrid座標
- */
 void AWaterField::UpdateFlowMap(const FVector& fieldGrid) {
 	//テクスチャのグリッド座標
 	int32 texX = FMath::CeilToInt(fieldGrid.Y) * EdgeTexW;
@@ -162,23 +139,10 @@ void AWaterField::UpdateFlowMap(const FVector& fieldGrid) {
 	}
 }
 
-/**
- * 与えられたActorの位置をGrid座標に変換する
- * @param [position] Actorのworld座標
- * @return Grid座標
- */
 FVector AWaterField::CulcFieldGrid(const FVector& position) {
 	return FVector(CulcGrid(position.X, Width, Row), CulcGrid(position.Y, Height, Column), 0);
 }
 
-/**
- * Fieldの辺の長さ、Gridの数から
- * Grid上の座標を求める
- * @param [position] 座標
- * @param [edge]     軸に対する辺の長さ
- * @param [index]    軸に対する幅の数
- * @return 軸に対するGrid座標
- */
 int32 AWaterField::CulcGrid(float position, float edge, int32 index) {
 	//グリッドで調べられる範囲を超えないようClamp処理をしておく
 	float clampPos = FMath::Clamp(position, -edge, edge);

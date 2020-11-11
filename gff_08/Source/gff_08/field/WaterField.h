@@ -84,17 +84,60 @@ public:
 	// 更新
 	virtual void Tick(float DeltaTime) override;
 
+	/**
+	 * 位置からグリッド座標を求め、その場所の加速波の情報を取得する
+	 * @param [position] Actorのworld座標
+	 * @return 加速度
+	 */
 	UFUNCTION(BlueprintCallable, Category = "WaterField")
 	FVector GetAccelVelocity(const FVector& position);
+
+    /**
+	 * 加速波の生成処理
+	 * @param [position] Actorのworld座標
+	 * @param [rotate]   Actorの回転
+	 */
 	UFUNCTION(BlueprintCallable, Category = "WaterField")
 	void GenerateAccelWave(const FVector&  position,const FRotator& rotate);
 
 private:
+
+	/**
+	 * 初期化処理
+	 */
 	void Initialize();
+
+	/**
+	 * マテリアルとflowMapの作成
+	 */
 	void CreateTextureAndMaterial();
+
+	/**
+	 * テクスチャの更新を行う
+	 */
 	void UpdateTexture();
+
+	/**
+	 * flowMapの色情報の更新を行う
+	 * @param [fieldGrid] ActorのGrid座標
+	 */
 	void UpdateFlowMap(const FVector& fieldGrid);
+
+	/**
+	 * 与えられたActorの位置をGrid座標に変換する
+	 * @param [position] Actorのworld座標
+	 * @return Grid座標
+	 */
 	FVector CulcFieldGrid(const FVector& position);
+
+	/**
+	 * Fieldの辺の長さ、Gridの数から
+	 * Grid上の座標を求める
+	 * @param [position] 座標
+	 * @param [edge]     軸に対する辺の長さ
+	 * @param [index]    軸に対する幅の数
+	 * @return 軸に対するGrid座標
+	 */
 	int32 CulcGrid(float position, float edge, int32 index);
 
 private:
