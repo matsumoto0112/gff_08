@@ -15,19 +15,6 @@ USTRUCT(BlueprintType)
 struct GFF_08_API FStageData : public FTableRowBase {
 	GENERATED_USTRUCT_BODY()
 
-	/**
-	 * デフォルトコンストラクタ
-	 */
-	FStageData() : LapCount(0), StageName(TEXT("Default")), StageImages() {
-	}
-
-	/**
-	 * コンストラクタ
-	 */
-	FStageData(int32 LapCount, const FString& Name, const TArray<UTexture2D*>& Images)
-		: LapCount(LapCount), StageName(Name), StageImages(Images) {
-	}
-
 	//! ゲームのラップ数
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "StageData")
 	int32 LapCount = 3;
@@ -42,7 +29,7 @@ struct GFF_08_API FStageData : public FTableRowBase {
 	UTexture2D* MinimapImage;
 	//! ステージ外観画像
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "StageData")
-	TArray<UTexture2D*> StageImages;
+	UTexture2D* StageImage;
 };
 
 USTRUCT(BlueprintType)
@@ -54,19 +41,19 @@ struct GFF_08_API FStageDataAssetRecord {
 	int32 StageIndex;
 	//! ゲームのラップ数
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "StageDataAssetRecord")
-	int32 LapCount;
+	int32 LapCount = 3;
 	//! ステージ名
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "StageDataAssetRecord")
 	FString StageName;
 	//! ステージ名画像
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "StageData")
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "StageDataAssetRecord")
 	UTexture2D* StageNameImage;
 	//! ミニマップ画像
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "StageDataAssetRecord")
 	UTexture2D* MinimapImage;
 	//! ステージ外観画像
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "StageDataAssetRecord")
-	TArray<UTexture2D*> StageImages;
+	UTexture2D* StageImage;
 };
 
 /**
@@ -86,6 +73,7 @@ public:
 	UFUNCTION(meta = (CallInEditor = "true"))
 	void Import();
 
+	//! データ
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "StageDataAsset")
 	TArray<FStageDataAssetRecord> Data;
 };

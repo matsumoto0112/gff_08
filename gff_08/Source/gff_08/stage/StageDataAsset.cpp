@@ -22,7 +22,7 @@ void UStageDataAsset::Import() {
 		Asset.LapCount = Record->LapCount;
 		Asset.StageName = Record->StageName;
 		Asset.StageNameImage = Record->StageNameImage;
-		Asset.StageImages = Record->StageImages;
+		Asset.StageImage = Record->StageImage;
 		Asset.MinimapImage = Record->MinimapImage;
 		Data.Push(Asset);
 	}
