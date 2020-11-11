@@ -13,11 +13,8 @@ USTRUCT(BlueprintType)
 struct GFF_08_API FGamePlayData {
 	GENERATED_USTRUCT_BODY()
 
-	FGamePlayData() : Ranking(-1), PlayTime(0.0) {
-	}
-
-	FGamePlayData(int32 Ranking, float PlayTime) : Ranking(Ranking), PlayTime(PlayTime) {
-	}
+	UPROPERTY(EditAnyWhere, BlueprintReadWrite, Category = "GamePlayData")
+	int32 PlayStageIndex;
 
 	UPROPERTY(EditAnyWhere, BlueprintReadWrite, Category = "GamePlayData")
 	int32 Ranking;
