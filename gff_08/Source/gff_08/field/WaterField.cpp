@@ -36,6 +36,9 @@ void AWaterField::Tick(float DeltaTime) {
 }
 
 FVector AWaterField::GetAccelVelocity(const FVector& position) {
+	if (this == nullptr) {
+		return FVector::ZeroVector;
+	}
 	FVector grid = CulcFieldGrid(position);
 	if (WaveArray[grid.X][grid.Y].isValid == false) {
 		return FVector::ZeroVector;
@@ -45,6 +48,9 @@ FVector AWaterField::GetAccelVelocity(const FVector& position) {
 }
 
 void AWaterField::GenerateAccelWave(const FVector& position, const FRotator& rotate) {
+	if (this == nullptr) {
+		return;
+	}
 	FVector grid = CulcFieldGrid(position);
 
 	//Ç∑Ç≈Ç…îgÇ™ê∂ê¨Ç≥ÇÍÇƒÇ¢ÇΩÇÁ
