@@ -31,6 +31,12 @@ struct GFF_08_API FBoatParameter : public FTableRowBase {
 	//! ボートのメッシュ
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "BoatParameter")
 	UStaticMesh* BoatMesh;
+	//! ボートの名前
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "BoatParameter")
+	FString BoatName;
+	//! ボートの名前画像
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "BoatParameter")
+	UTexture2D* BoatNameImage;
 	//! 最高速度
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "BoatParameter")
 	float MaxSpeed;
@@ -58,6 +64,12 @@ struct GFF_08_API FBoatParameterRecord {
 	//! ボートのメッシュ
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "BoatParameter")
 	UStaticMesh* BoatMesh;
+	//! ボートの名前
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "BoatParameter")
+	FString BoatName;
+	//! ボートの名前画像
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "BoatParameter")
+	UTexture2D* BoatNameImage;
 	//! 最高速度
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "BoatParameter")
 	float MaxSpeed;

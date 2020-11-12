@@ -8,6 +8,7 @@
 #include "gff_08/sound/SoundSystem.h"
 #include "gff_08/utils/GamePlayData.h"
 #include "gff_08/utils/OptionParameter.h"
+#include "gff_08/utils/PlayUserData.h"
 
 #include "MyGameInstance.generated.h"
 
@@ -64,6 +65,10 @@ public:
 	UOptionParameter* GetOption() const {
 		return Option;
 	}
+	UFUNCTION(BlueprintCallable, Category = "MyGameInstance")
+	UPlayUserData* GetUserData() const {
+		return UserData;
+	}
 
 protected:
 	//! OnHandleSystemError デリゲート登録時のハンドル
@@ -88,4 +93,7 @@ protected:
 	//! オプション情報
 	UPROPERTY()
 	UOptionParameter* Option;
+	//! ユーザーの情報
+	UPROPERTY()
+	UPlayUserData* UserData;
 };

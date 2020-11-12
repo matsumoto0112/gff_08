@@ -22,6 +22,8 @@ void UBoatDataAsset::Import() {
 		FBoatParameterRecord Asset;
 		Asset.BoatID = i;
 		Asset.BoatMesh = Record->BoatMesh;
+		Asset.BoatName = Record->BoatName;
+		Asset.BoatNameImage = Record->BoatNameImage;
 		Asset.MaxSpeed = Record->MaxSpeed;
 		Asset.Acceleration = Record->Acceleration;
 		Asset.Control = Record->Control;

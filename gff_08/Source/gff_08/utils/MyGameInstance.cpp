@@ -7,6 +7,7 @@
 
 UMyGameInstance::UMyGameInstance() {
 	SoundSystem = CreateDefaultSubobject<USoundSystem>(TEXT("SoundSystem"));
+	UserData = CreateDefaultSubobject<UPlayUserData>(TEXT("PlayUserData"));
 }
 
 void UMyGameInstance::Init() {

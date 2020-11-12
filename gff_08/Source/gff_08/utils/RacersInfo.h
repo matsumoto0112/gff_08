@@ -23,9 +23,9 @@ USTRUCT(BlueprintType)
 struct GFF_08_API FRacerInfo {
 	GENERATED_USTRUCT_BODY()
 
-	//! レーサーのID
+	//! ボートのインデックス
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "RacerInfo")
-	int32 RacerID;
+	int32 BoatIndex;
 	//! レーサーの種類
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "RacerInfo")
 	ERacerType RacerType;

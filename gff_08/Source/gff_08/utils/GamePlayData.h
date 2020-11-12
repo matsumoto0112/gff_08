@@ -14,9 +14,6 @@ struct GFF_08_API FGamePlayData {
 	GENERATED_USTRUCT_BODY()
 
 	UPROPERTY(EditAnyWhere, BlueprintReadWrite, Category = "GamePlayData")
-	int32 PlayStageIndex;
-
-	UPROPERTY(EditAnyWhere, BlueprintReadWrite, Category = "GamePlayData")
 	int32 Ranking;
 	UPROPERTY(EditAnyWhere, BlueprintReadWrite, Category = "GamePlayData")
 	float PlayTime;

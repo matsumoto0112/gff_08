@@ -51,6 +51,7 @@ TArray<ABoat*> USetupRacers::Setup(const FAllRacerInfo& RacersInfo) {
 		} else {
 			Boat->SpawnDefaultController();
 		}
+		Boat->ChangeBoat(Racer.BoatIndex);
 		Res.Push(Boat);
 	}
 
