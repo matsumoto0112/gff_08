@@ -28,6 +28,14 @@ void UBoatMover::BeginPlay() {
 	}
 }
 
+void UBoatMover::EndPlay(const EEndPlayReason::Type EndPlayReason) {
+	if (CurrentWaveTimerHandle.IsValid()) {
+		FTimerManager& TimerManager = GetWorld()->GetTimerManager();
+		TimerManager.ClearTimer(CurrentWaveTimerHandle);
+		CurrentWaveTimerHandle.Invalidate();
+	}
+}
+
 //‰Šú‰»
 void UBoatMover::Init(const FBoatMoverInitStructure& InitStructure) {
 	ParentPawn = InitStructure.ParentPawn;
