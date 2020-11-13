@@ -25,6 +25,11 @@ protected:
 public:
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
+	UFUNCTION(BlueprintCallable, Category = "RaceManager")
+	void RaceSetup(const FAllRacerInfo& RacersInfo);
+
+	UFUNCTION(BlueprintCallable, Category = "RaceManager")
+	void RaceStart();
 
 protected:
 	//! レースのセットアップ処理担当

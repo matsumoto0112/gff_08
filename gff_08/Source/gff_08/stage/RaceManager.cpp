@@ -34,15 +34,15 @@ void ARaceManager::BeginPlay() {
 		return;
 	}
 
-	FAllRacerInfo RacersInfo;
-	RacersInfo.Racers.Push(FRacerInfo{0, 0, ERacerType::Player});
-	RacersInfo.Racers.Push(FRacerInfo{1, 0, ERacerType::AI});
-	Boats = Setup->Setup(RacersInfo);
+	//シングルプレイ用設定
+	FAllRacerInfo Racers;
+	Racers.Racers.Push(FRacerInfo{0, 0, ERacerType::Player});
+	Racers.Racers.Push(FRacerInfo{1, 2, ERacerType::AI});
+	Racers.Racers.Push(FRacerInfo{2, 3, ERacerType::AI});
+	Racers.Racers.Push(FRacerInfo{3, 1, ERacerType::AI});
 
-	ACheckPoint* StartPoint = CheckPointManager->GetStartPoint();
-	for (auto&& Boat : Boats) {
-		Boat->RaceReady(StartPoint);
-	}
+	RaceSetup(Racers);
+	RaceStart();
 }
 
 // Called every frame
@@ -57,5 +57,21 @@ void ARaceManager::Tick(float DeltaTime) {
 		for (auto&& Boat : Boats) {
 			Boat->RaceStart();
 		}
+	}
+}
+
+void ARaceManager::RaceSetup(const FAllRacerInfo& RacersInfo) {
+	Boats = Setup->Setup(RacersInfo);
+}
+
+void ARaceManager::RaceStart() {
+	if (Boats.Num() == 0) {
+		GEngine->AddOnScreenDebugMessage(-1, 10.0f, FColor::Red, TEXT("RaceStart must be called after Setup Function!!"));
+		UE_LOG(LogTemp, Error, TEXT("RaceStart must be called after Setup Function!!"));
+		return;
+	}
+	ACheckPoint* StartPoint = CheckPointManager->GetStartPoint();
+	for (auto&& Boat : Boats) {
+		Boat->RaceReady(StartPoint);
 	}
 }

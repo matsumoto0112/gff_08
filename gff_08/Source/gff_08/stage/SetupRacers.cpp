@@ -29,8 +29,9 @@ void USetupRacers::TickComponent(float DeltaTime, ELevelTick TickType, FActorCom
 
 TArray<ABoat*> USetupRacers::Setup(const FAllRacerInfo& RacersInfo) {
 	if (RacersInfo.Racers.Num() > StartPoints.Num()) {
-		GEngine->AddOnScreenDebugMessage(-1, 3.0f, FColor::Red, TEXT("レーサーの数がスタート地点の数より多く設定されています。"));
-		UE_LOG(LogRace, Error, TEXT("レーサーの数がスタート地点の数より多く設定されています。"));
+		GEngine->AddOnScreenDebugMessage(
+			-1, 3.0f, FColor::Red, TEXT("The number of racers is set higher than the number of starting points."));
+		UE_LOG(LogRace, Error, TEXT("The number of racers is set higher than the number of starting points."));
 		return TArray<ABoat*>();
 	}
 

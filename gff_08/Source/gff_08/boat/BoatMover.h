@@ -172,7 +172,7 @@ protected:
 	float WaveSpawnableSpeed = 30.0f;
 	//! 波の加速度を受けて加わる力の影響度
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Wave")
-	float WaveInfluence = 200000.0f;
+	float WaveInfluence = 150000.0f;
 
 	//! 波の生成タイマー
 	FTimerHandle CurrentWaveTimerHandle;
