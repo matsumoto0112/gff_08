@@ -25,6 +25,9 @@ FInputInfo UAIBrain::Next() {
 	FInputInfo Res{0.1f, 0.1f};
 
 	ACheckPoint* NextCheckPoint = Parent->GetNextCheckPoint();
+	if (NextCheckPoint == nullptr) {
+		return Res;
+	}
 	if (NextCheckPoint->GetIndex() != CurrentTargetCheckPointIndex) {
 		UpdateTargetPoint();
 	}

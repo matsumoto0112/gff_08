@@ -31,6 +31,23 @@ public:
 	void SetSelectStageIndex(int32 Index) {
 		SelectStageIndex = Index;
 	}
+	UFUNCTION(BlueprintGetter, Category = "PlayUserData")
+	int32 GetPlayerIndex() const {
+		return PlayerIndex;
+	}
+	UFUNCTION(BlueprintSetter, Category = "PlayUserData")
+	void SetPlayerIndex(int32 Index) {
+		PlayerIndex = Index;
+	}
+	UFUNCTION(BlueprintGetter, Category = "PlayUserData")
+	int32 GetChannelID() const {
+		return ChannelID;
+	}
+	UFUNCTION(BlueprintSetter, Category = "PlayUserData")
+	void SetChannelID(int32 ID) {
+		ChannelID = ID;
+	}
+
 
 protected:
 	UPROPERTY(VisibleAnywhere, BlueprintGetter = GetBoatIndex, BlueprintSetter = SetBoatIndex, Category = "PlayUserData")
@@ -38,4 +55,8 @@ protected:
 	UPROPERTY(
 		VisibleAnywhere, BlueprintGetter = GetSelectStageIndex, BlueprintSetter = SetSelectStageIndex, Category = "PlayUserData")
 	int32 SelectStageIndex;
+	UPROPERTY(VisibleAnywhere, BlueprintGetter = GetPlayerIndex, BlueprintSetter = SetPlayerIndex, Category = "PlayUserData")
+	int32 PlayerIndex;
+	UPROPERTY(VisibleAnywhere, BlueprintGetter = GetChannelID, BlueprintSetter = SetChannelID, Category = "PlayUserData")
+	int32 ChannelID;
 };
