@@ -34,6 +34,8 @@ void ARaceManager::BeginPlay() {
 		return;
 	}
 
+	bRaceAlreadySetup = false;
+
 	//シングルプレイ用設定
 	FAllRacerInfo Racers;
 	Racers.Racers.Push(FRacerInfo{0, 0, ERacerType::Player});
@@ -42,12 +44,16 @@ void ARaceManager::BeginPlay() {
 	Racers.Racers.Push(FRacerInfo{3, 1, ERacerType::AI});
 
 	RaceSetup(Racers);
+
 	RaceStart();
 }
 
 // Called every frame
 void ARaceManager::Tick(float DeltaTime) {
 	Super::Tick(DeltaTime);
+
+	if (!bRaceAlreadySetup)
+		return;
 	CountDownTime -= DeltaTime;
 
 	CountDownUI->SetCountDownImage(CountDownTime + 1);
@@ -62,10 +68,11 @@ void ARaceManager::Tick(float DeltaTime) {
 
 void ARaceManager::RaceSetup(const FAllRacerInfo& RacersInfo) {
 	Boats = Setup->Setup(RacersInfo);
+	bRaceAlreadySetup = true;
 }
 
 void ARaceManager::RaceStart() {
-	if (Boats.Num() == 0) {
+	if (!bRaceAlreadySetup) {
 		GEngine->AddOnScreenDebugMessage(-1, 10.0f, FColor::Red, TEXT("RaceStart must be called after Setup Function!!"));
 		UE_LOG(LogTemp, Error, TEXT("RaceStart must be called after Setup Function!!"));
 		return;

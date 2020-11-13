@@ -31,6 +31,11 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "RaceManager")
 	void RaceStart();
 
+	UFUNCTION(BlueprintGetter, Category = "RaceManager")
+	bool GetRaceAlreadySetup() const {
+		return bRaceAlreadySetup;
+	}
+
 protected:
 	//! レースのセットアップ処理担当
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components")
@@ -45,4 +50,8 @@ protected:
 	float CountDownTime;
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Components")
 	TArray<ABoat*> Boats;
+
+protected:
+	UPROPERTY(VisibleAnywhere, BlueprintGetter = GetRaceAlreadySetup, Category = "RaceManager")
+	bool bRaceAlreadySetup;
 };
