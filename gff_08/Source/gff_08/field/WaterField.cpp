@@ -2,6 +2,8 @@
 
 #include "WaterField.h"
 
+#include "kismet/GamePlayStatics.h"
+
 // Sets default values
 AWaterField::AWaterField() {
 	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
@@ -44,7 +46,7 @@ FVector AWaterField::GetAccelVelocity(const FVector& position) {
 		return FVector::ZeroVector;
 	}
 
-	return WaveArray[grid.X][grid.Y].velocity * WaveArray[grid.X][grid.Y].length;
+	return WaveArray[grid.X][grid.Y].velocity;
 }
 
 void AWaterField::GenerateAccelWave(const FVector& position, const FRotator& rotate) {
@@ -57,12 +59,15 @@ void AWaterField::GenerateAccelWave(const FVector& position, const FRotator& rot
 	if (WaveArray[grid.X][grid.Y].isValid == true) {
 		return;
 	}
-	FVector vel(FMath::Cos(rotate.Yaw), FMath::Sin(rotate.Yaw), 0.0f);
+	// UE_LOG(LogTemp, Log, TEXT("Yaw:%f"), rotate.Yaw);
+	FVector vel(FMath::Cos(FMath::DegreesToRadians(rotate.Yaw)), FMath::Sin(FMath::DegreesToRadians(rotate.Yaw)), 0.0f);
 	vel.Normalize();
 	WaveArray[grid.X][grid.Y].velocity = vel;
 	WaveArray[grid.X][grid.Y].length = 700.0f;
 	WaveArray[grid.X][grid.Y].startTime = FDateTime::Now();
 	WaveArray[grid.X][grid.Y].isValid = true;
+	UKismetSystemLibrary::DrawDebugLine(GetWorld(), position, position + vel * 100.0f, FColor::Green, 100.0f, 2.0f);
+	UKismetSystemLibrary::DrawDebugLine(GetWorld(), position + vel * 100.0f, position + vel * 100.0f + FVector(10,0,0), FColor::Green, 100.0f, 2.0f);
 
 	UpdateFlowMap(grid);
 	UpdateFlag = true;
@@ -91,7 +96,7 @@ void AWaterField::Initialize() {
 		TextureColorData[i].r = NEUTRAL;
 		TextureColorData[i].g = NEUTRAL;
 		TextureColorData[i].b = 0;
-		TextureColorData[i].a = 0;
+		TextureColorData[i].a = 255;
 	}
 	EdgeTexW = TEXTURE_EDGE_W * 1.0f / Row;
 	EdgeTexH = TEXTURE_EDGE_H * 1.0f / Column;
@@ -130,7 +135,7 @@ void AWaterField::UpdateFlowMap(const FVector& fieldGrid) {
 
 	FVector vel = WaveArray[fieldGrid.X][fieldGrid.Y].velocity;
 	vel *= 50;
-	//uint8 x = 
+
 	int32 forCount = 0;
 	for (int i = index; i < index + EdgeTexW; i++) {
 		int startPoint = index + (TEXTURE_EDGE_W * forCount);
@@ -139,7 +144,7 @@ void AWaterField::UpdateFlowMap(const FVector& fieldGrid) {
 				continue;
 			}
 			TextureColorData[j].r = FMath::CeilToInt(vel.Y) + NEUTRAL;
-			TextureColorData[j].g = FMath::CeilToInt(vel.X) + NEUTRAL;
+			TextureColorData[j].g = FMath::CeilToInt(vel.X * -1) + NEUTRAL;
 		}
 		forCount++;
 	}
@@ -155,5 +160,5 @@ int32 AWaterField::CulcGrid(float position, float edge, int32 index) {
 	float gridF = ((position + edge) / (edge * 2.0f)) * index;
 	int32 grid = FMath::CeilToInt(gridF);
 	grid = FMath::Clamp(grid, 0, index - 1);
-	return grid;
+	return grid - 1;
 }
