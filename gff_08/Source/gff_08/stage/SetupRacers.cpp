@@ -38,7 +38,7 @@ TArray<ABoat*> USetupRacers::Setup(const FAllRacerInfo& RacersInfo) {
 	TArray<ABoat*> Res;
 	for (int32 i = 0; i < RacersNum; i++) {
 		const FRacerInfo& Racer = RacersInfo.Racers[i];
-		const ATargetPoint* Point = StartPoints[i];
+		const ATargetPoint* Point = StartPoints[Racer.PlayerIndex];
 		const FVector Location = Point->GetActorLocation();
 		const FRotator Rotation = Point->GetActorRotation();
 

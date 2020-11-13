@@ -35,8 +35,8 @@ void ARaceManager::BeginPlay() {
 	}
 
 	FAllRacerInfo RacersInfo;
-	RacersInfo.Racers.Push(FRacerInfo{0, ERacerType::Player});
-	RacersInfo.Racers.Push(FRacerInfo{1, ERacerType::AI});
+	RacersInfo.Racers.Push(FRacerInfo{0, 0, ERacerType::Player});
+	RacersInfo.Racers.Push(FRacerInfo{1, 0, ERacerType::AI});
 	Boats = Setup->Setup(RacersInfo);
 
 	ACheckPoint* StartPoint = CheckPointManager->GetStartPoint();
