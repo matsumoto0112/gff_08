@@ -58,3 +58,22 @@ TArray<ABoat*> USetupRacers::Setup(const FAllRacerInfo& RacersInfo) {
 
 	return Res;
 }
+
+ABoat* USetupRacers::SetupRacer(const FRacerInfo& RacersInfo) {
+	const ATargetPoint* Point = StartPoints[RacersInfo.PlayerIndex];
+	const FVector Location = Point->GetActorLocation();
+	const FRotator Rotation = Point->GetActorRotation();
+
+	ABoat* Boat = GetWorld()->SpawnActor<ABoat>(BoatClasses[RacersInfo.RacerType].Get(), Location, Rotation);
+
+	//プレイヤーならプレイヤーコントローラをセットしてあげる
+	//そうしないと入力が受け取れないため
+	if (RacersInfo.RacerType == ERacerType::Player) {
+		GetWorld()->GetFirstPlayerController()->Possess(Boat);
+	} else {
+		Boat->SpawnDefaultController();
+	}
+	Boat->ChangeBoat(RacersInfo.BoatIndex);
+
+	return Boat;
+}

@@ -126,6 +126,9 @@ void ABoat::CalcMovementValues(float& MoveValue, float& LeftValue, float& RightV
 
 //”½‘Î•ûŒü‚ÉˆÚ“®’†‚©
 bool ABoat::IsReverseDriving() const {
+	if (NextCheckPoint == nullptr) {
+		return false;
+	}
 	//³–Ê‚Æ‚ÌƒxƒNƒgƒ‹‚Å”»’è‚·‚é
 	const FVector ForwardVector = GetActorForwardVector();
 	const FVector To = NextCheckPoint->GetActorLocation() - GetActorLocation();

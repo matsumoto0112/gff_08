@@ -36,6 +36,9 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "SetUpRacers")
 	TArray<ABoat*> Setup(const FAllRacerInfo& RacersInfo);
 
+	UFUNCTION(BlueprintCallable, Category = "SetUpRacers")
+	ABoat* SetupRacer(const FRacerInfo& RacersInfo);
+
 protected:
 	//! 開始地点
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "SetupRacers")

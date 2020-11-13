@@ -4,6 +4,9 @@
 
 #include "kismet/GamePlayStatics.h"
 
+#include <StrixBlueprintFunctionLibrary.h>
+#include"../utils/MyGameInstance.h"
+
 // Sets default values
 ARaceManager::ARaceManager() {
 	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
@@ -35,17 +38,30 @@ void ARaceManager::BeginPlay() {
 	}
 
 	bRaceAlreadySetup = false;
+	if (UStrixBlueprintFunctionLibrary::IsMasterServerConnected(GWorld) == true) {
+		//StrixCloudでバグが起きないようネットワークのポーズを解除する
+		//参照:https://www.strixengine.com/doc/unreal/guide/ja/howtos/object_sync/howto_scene_change.html
+		UStrixBlueprintFunctionLibrary::UnpauseNetworkObjectManager(
+			GWorld, UMyGameInstance::GetInstance()->GetUserData()->GetChannelID());
 
-	//シングルプレイ用設定
-	FAllRacerInfo Racers;
-	Racers.Racers.Push(FRacerInfo{0, 0, ERacerType::Player});
-	Racers.Racers.Push(FRacerInfo{1, 2, ERacerType::AI});
-	Racers.Racers.Push(FRacerInfo{2, 3, ERacerType::AI});
-	Racers.Racers.Push(FRacerInfo{3, 1, ERacerType::AI});
+		GEngine->AddOnScreenDebugMessage(-1, 3.0f, FColor::White, "Connected MasterServer");
+		int32 BoatIndex = UMyGameInstance::GetInstance()->GetUserData()->GetBoatIndex();
+		int32 PlayerIndex = UMyGameInstance::GetInstance()->GetUserData()->GetPlayerIndex();
+		MultiRaceSetup(FRacerInfo{PlayerIndex, BoatIndex, ERacerType::Player});
 
-	RaceSetup(Racers);
+	} else {
+		GEngine->AddOnScreenDebugMessage(-1, 3.0f, FColor::White, "No Connected MasterServer");
+		//シングルプレイ用設定
+		FAllRacerInfo Racers;
+		Racers.Racers.Push(FRacerInfo{0, 0, ERacerType::Player});
+		Racers.Racers.Push(FRacerInfo{1, 2, ERacerType::AI});
+		Racers.Racers.Push(FRacerInfo{2, 3, ERacerType::AI});
+		Racers.Racers.Push(FRacerInfo{3, 1, ERacerType::AI});
 
-	RaceStart();
+		RaceSetup(Racers);
+
+		RaceStart();
+	}
 }
 
 // Called every frame
@@ -69,6 +85,20 @@ void ARaceManager::Tick(float DeltaTime) {
 void ARaceManager::RaceSetup(const FAllRacerInfo& RacersInfo) {
 	Boats = Setup->Setup(RacersInfo);
 	bRaceAlreadySetup = true;
+}
+
+void ARaceManager::MultiRaceSetup(const FRacerInfo& Info) {
+	Boats.Push(Setup->SetupRacer(Info));
+	if (Boats.Num() >= 4) {
+		bRaceAlreadySetup = true;
+	}
+}
+
+void ARaceManager::ReplicateRaceSetup(ABoat* Boat) {
+	Boats.Push(Boat);
+	if (Boats.Num() >= 4) {
+		bRaceAlreadySetup = true;
+	}
 }
 
 void ARaceManager::RaceStart() {
