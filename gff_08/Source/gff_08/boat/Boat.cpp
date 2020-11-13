@@ -75,6 +75,7 @@ void ABoat::ChangeBoat(int32 BoatID) {
 
 //レースの準備
 void ABoat::RaceReady(ACheckPoint* StartCheckPoint) {
+	GEngine->AddOnScreenDebugMessage(-1, 30.0f, FColor::Red, TEXT("RaceReady Called!"));
 	//最初のチェックポイントを設定する
 	NextCheckPoint = StartCheckPoint;
 	//直線移動するよう設定
