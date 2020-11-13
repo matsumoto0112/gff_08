@@ -4,7 +4,7 @@
 #include "NetworkConnectUtility.h"
 
 bool UNetworkConnectUtility::IsOwner(const AActor* target) {
-	if (target == nullptr) {
+	if (target != nullptr) {
 		UStrixReplicatorComponent* replicator = target->FindComponentByClass<UStrixReplicatorComponent>();
 		if (replicator == nullptr) {
 			return false;
@@ -12,4 +12,8 @@ bool UNetworkConnectUtility::IsOwner(const AActor* target) {
 		return replicator->GetIsOwner();
 	}
 	return false;
+}
+
+bool UNetworkConnectUtility::IsMultiGame(const UObject* worldContextObject) {
+	return IsMasterServerConnected(worldContextObject);
 }

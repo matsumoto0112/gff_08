@@ -21,4 +21,12 @@ class GFF_08_API UNetworkConnectUtility : public UStrixBlueprintFunctionLibrary 
 	*/
 	UFUNCTION(BlueprintCallable, Category = "StrixSDKUtility")
 	static bool IsOwner(const AActor* target);
+
+	/**
+	* シングルプレイかどうか
+	* @param [worldContextObject]
+	* @return true:マルチプレイ false:シングルプレイ
+	*/
+	UFUNCTION(BlueprintCallable, Category = "StrixSDKUtility")
+	static bool IsMultiGame(const UObject* worldContextObject);
 };
