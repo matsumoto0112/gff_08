@@ -16,6 +16,14 @@ class GFF_08_API UPlayUserData : public UObject {
 
 public:
 	UFUNCTION(BlueprintGetter, Category = "PlayUserData")
+	FName GetPlayerName() const {
+		return PlayerName;
+	}
+	UFUNCTION(BlueprintSetter, Category = "PlayUserData")
+	void SetPlayerName(const FName& Name) {
+		PlayerName = Name;
+	}
+	UFUNCTION(BlueprintGetter, Category = "PlayUserData")
 	int32 GetBoatIndex() const {
 		return BoatIndex;
 	}
@@ -48,8 +56,9 @@ public:
 		ChannelID = ID;
 	}
 
-
 protected:
+	UPROPERTY(VisibleAnywhere, BlueprintGetter = GetPlayerName, BlueprintSetter = SetPlayerName, Category = "PlayUserData")
+	FName PlayerName;
 	UPROPERTY(VisibleAnywhere, BlueprintGetter = GetBoatIndex, BlueprintSetter = SetBoatIndex, Category = "PlayUserData")
 	int32 BoatIndex;
 	UPROPERTY(

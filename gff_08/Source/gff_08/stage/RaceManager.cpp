@@ -2,10 +2,10 @@
 
 #include "RaceManager.h"
 
+#include "../utils/MyGameInstance.h"
 #include "kismet/GamePlayStatics.h"
 
 #include <StrixBlueprintFunctionLibrary.h>
-#include"../utils/MyGameInstance.h"
 
 // Sets default values
 ARaceManager::ARaceManager() {
@@ -23,6 +23,8 @@ ARaceManager::ARaceManager() {
 void ARaceManager::BeginPlay() {
 	Super::BeginPlay();
 
+	bRaceStarted = false;
+
 	const FString Path = "/Game/Blueprints/UI/BP_CountDownTimer.BP_CountDownTimer_C";
 	TSubclassOf<UCountDownTimer> WidgetClass = TSoftClassPtr<UCountDownTimer>(FSoftObjectPath(*Path)).LoadSynchronous();
 	CountDownUI = CreateWidget<UCountDownTimer>(GetWorld(), WidgetClass);
@@ -39,7 +41,7 @@ void ARaceManager::BeginPlay() {
 
 	bRaceAlreadySetup = false;
 	if (UStrixBlueprintFunctionLibrary::IsMasterServerConnected(GWorld) == true) {
-		//StrixCloudでバグが起きないようネットワークのポーズを解除する
+		// StrixCloudでバグが起きないようネットワークのポーズを解除する
 		//参照:https://www.strixengine.com/doc/unreal/guide/ja/howtos/object_sync/howto_scene_change.html
 		UStrixBlueprintFunctionLibrary::UnpauseNetworkObjectManager(
 			GWorld, UMyGameInstance::GetInstance()->GetUserData()->GetChannelID());
@@ -62,6 +64,15 @@ void ARaceManager::BeginPlay() {
 
 		RaceStart();
 	}
+
+	//メインのUIの中ではプレイヤーを参照する必要があるため、Setupの完了後に呼ぶ
+	//TODO:MyHUDクラス内にプレイヤーの取得機能を作成し、Setup後に呼ぶようにする
+	MainUI = CreateWidget<UMyHUD>(GetWorld(), HUDClass);
+	if (!MainUI) {
+		UE_LOG(LogTemp, Error, TEXT("MainUI can not create."));
+		return;
+	}
+	MainUI->AddToViewport(0);
 }
 
 // Called every frame
@@ -70,6 +81,10 @@ void ARaceManager::Tick(float DeltaTime) {
 
 	if (!bRaceAlreadySetup)
 		return;
+
+	if (bRaceStarted)
+		return;
+
 	CountDownTime -= DeltaTime;
 
 	CountDownUI->SetCountDownImage(CountDownTime + 1);
@@ -79,6 +94,8 @@ void ARaceManager::Tick(float DeltaTime) {
 		for (auto&& Boat : Boats) {
 			Boat->RaceStart();
 		}
+		MainUI->GetRaceInfo()->GetRaceTimer()->Start();
+		bRaceStarted = true;
 	}
 }
 

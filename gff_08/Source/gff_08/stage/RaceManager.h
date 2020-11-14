@@ -7,6 +7,7 @@
 #include "gff_08/field/CheckPointManager.h"
 #include "gff_08/stage/SetupRacers.h"
 #include "gff_08/ui/CountDownTimer.h"
+#include "gff_08/ui/MyHUD.h"
 
 #include "RaceManager.generated.h"
 
@@ -58,6 +59,15 @@ protected:
 	TArray<ABoat*> Boats;
 
 protected:
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "RaceManager")
+	TSubclassOf<UMyHUD> HUDClass;
+
+protected:
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "RaceManager")
+	UMyHUD* MainUI;
+
 	UPROPERTY(VisibleAnywhere, BlueprintGetter = GetRaceAlreadySetup, Category = "RaceManager")
 	bool bRaceAlreadySetup;
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "RaceManager")
+	bool bRaceStarted;
 };
