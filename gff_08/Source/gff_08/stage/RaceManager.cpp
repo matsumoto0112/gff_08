@@ -50,18 +50,19 @@ void ARaceManager::BeginPlay() {
 			GWorld, UMyGameInstance::GetInstance()->GetUserData()->GetChannelID());
 
 		GEngine->AddOnScreenDebugMessage(-1, 3.0f, FColor::White, "Connected MasterServer");
-		int32 BoatIndex = UMyGameInstance::GetInstance()->GetUserData()->GetBoatIndex();
-		int32 PlayerIndex = UMyGameInstance::GetInstance()->GetUserData()->GetPlayerIndex();
-		MultiRaceSetup(FRacerInfo{PlayerIndex, BoatIndex, ERacerType::Player});
+		const int32 BoatIndex = UMyGameInstance::GetInstance()->GetUserData()->GetBoatIndex();
+		const int32 PlayerIndex = UMyGameInstance::GetInstance()->GetUserData()->GetPlayerIndex();
+		const FName PlayerName = UMyGameInstance::GetInstance()->GetUserData()->GetPlayerName();
+		MultiRaceSetup(FRacerInfo{PlayerName, PlayerIndex, BoatIndex, ERacerType::Player});
 
 	} else {
 		GEngine->AddOnScreenDebugMessage(-1, 3.0f, FColor::White, "No Connected MasterServer");
 		//シングルプレイ用設定
 		FAllRacerInfo Racers;
-		Racers.Racers.Push(FRacerInfo{0, 0, ERacerType::Player});
-		Racers.Racers.Push(FRacerInfo{1, 2, ERacerType::AI});
-		Racers.Racers.Push(FRacerInfo{2, 3, ERacerType::AI});
-		Racers.Racers.Push(FRacerInfo{3, 1, ERacerType::AI});
+		Racers.Racers.Push(FRacerInfo{TEXT("Player"), 0, 0, ERacerType::Player});
+		Racers.Racers.Push(FRacerInfo{TEXT("AI_1"), 1, 2, ERacerType::AI});
+		Racers.Racers.Push(FRacerInfo{TEXT("AI_2"), 2, 3, ERacerType::AI});
+		Racers.Racers.Push(FRacerInfo{TEXT("AI_3"), 3, 1, ERacerType::AI});
 
 		RaceSetup(Racers);
 
@@ -91,25 +92,21 @@ void ARaceManager::Tick(float DeltaTime) {
 		}
 		RaceEndRemainTime -= DeltaTime;
 		if (!bRaceEnded && RaceEndRemainTime <= 0.0f) {
-			ABoat* PlayerBoat = nullptr;
-			if (UNetworkConnectUtility::IsMultiGame(GetWorld())) {
-				for (auto&& Boat : Boats) {
-					if (UNetworkConnectUtility::IsOwner(Boat)) {
-						PlayerBoat = Boat;
-						break;
-					}
-				}
-
-			} else {
-				//シングルプレイなら先頭がプレイヤーボート
-				//先頭がプレイヤーであることが仕様的に保証されているわけではない
-				// TODO:先頭がプレイヤーでない場合への対処
-				PlayerBoat = Boats[0];
+			FAllRacersGamePlayData Data;
+			if (!UNetworkConnectUtility::IsMultiGame(GetWorld())) {
+				Data.MyBoatIndex = 0;
 			}
 
-			FGamePlayData Data;
-			Data.Ranking = PlayerBoat->GetLapCounter()->GetRanking();
-			Data.LapTimes = PlayerBoat->GetLapCounter()->GetLapTimes();
+			for (int32 i = 0; i < Boats.Num(); i++) {
+				const auto& Boat = Boats[i];
+				const FName Name = Boat->GetRacerName();
+				const int32 Ranking = Boat->GetLapCounter()->GetRanking();
+				const TArray<float> LapTimes = Boat->GetLapCounter()->GetLapTimes();
+				Data.AllRacersData.Emplace(Name, Ranking, LapTimes);
+				if (UNetworkConnectUtility::IsMultiGame(GetWorld()) && UNetworkConnectUtility::IsOwner(Boat)) {
+					Data.MyBoatIndex = i;
+				}
+			}
 			UMyGameInstance::GetInstance()->SetPlayData(Data);
 			UGameplayStatics::OpenLevel(GetWorld(), NEXT_LEVEL_NAME);
 			bRaceEnded = true;

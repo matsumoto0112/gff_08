@@ -10,6 +10,7 @@
 #include "gff_08/boat/LapCounter.h"
 #include "gff_08/field/CheckPoint.h"
 #include "gff_08/sound/SoundObject.h"
+#include "gff_08/utils/GamePlayData.h"
 
 #include "Boat.generated.h"
 
@@ -101,6 +102,15 @@ public:
 		return LapCounter;
 	}
 
+	UFUNCTION(BlueprintSetter, Category = "Boat")
+	void SetRacerName(const FName& Name) {
+		RacerName = Name;
+	}
+	UFUNCTION(BlueprintGetter, Category = "Boat")
+	FName GetRacerName() const {
+		return RacerName;
+	}
+
 protected:
 	//! ボートメッシュ
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Components")
@@ -137,4 +147,7 @@ protected:
 	//! 運転手
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Boat")
 	TScriptInterface<IDriver> Driver;
+	//! レーサーの名前
+	UPROPERTY(VisibleAnywhere, BlueprintGetter = GetRacerName, BlueprintSetter = SetRacerName, Category = "Boat")
+	FName RacerName;
 };

@@ -53,6 +53,8 @@ TArray<ABoat*> USetupRacers::Setup(const FAllRacerInfo& RacersInfo) {
 			Boat->SpawnDefaultController();
 		}
 		Boat->ChangeBoat(Racer.BoatIndex);
+		Boat->SetRacerName(Racer.RacerName);
+
 		Res.Push(Boat);
 	}
 
@@ -74,6 +76,7 @@ ABoat* USetupRacers::SetupRacer(const FRacerInfo& RacersInfo) {
 		Boat->SpawnDefaultController();
 	}
 	Boat->ChangeBoat(RacersInfo.BoatIndex);
+	Boat->SetRacerName(RacersInfo.RacerName);
 
 	return Boat;
 }
