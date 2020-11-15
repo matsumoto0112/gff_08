@@ -55,6 +55,14 @@ public:
 	void SetChannelID(int32 ID) {
 		ChannelID = ID;
 	}
+	UFUNCTION(BlueprintGetter, Category = "PlayUserData")
+	int32 GetPlayerID() const {
+		return PlayerID;
+	}
+	UFUNCTION(BlueprintSetter, Category = "PlayUserData")
+	void SetPlayerID(int32 ID) {
+		PlayerID = ID;
+	}
 
 protected:
 	UPROPERTY(VisibleAnywhere, BlueprintGetter = GetPlayerName, BlueprintSetter = SetPlayerName, Category = "PlayUserData")
@@ -68,4 +76,7 @@ protected:
 	int32 PlayerIndex;
 	UPROPERTY(VisibleAnywhere, BlueprintGetter = GetChannelID, BlueprintSetter = SetChannelID, Category = "PlayUserData")
 	int32 ChannelID;
+	UPROPERTY(VisibleAnywhere, BlueprintGetter = GetPlayerID, BlueprintSetter = SetPlayerID, Category = "PlayUserData")
+	int32 PlayerID;
+
 };
