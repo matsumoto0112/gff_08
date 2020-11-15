@@ -58,11 +58,13 @@ void ARaceManager::BeginPlay() {
 	} else {
 		GEngine->AddOnScreenDebugMessage(-1, 3.0f, FColor::White, "No Connected MasterServer");
 		//シングルプレイ用設定
+		const int32 PlayerBoatIndex = UMyGameInstance::GetInstance()->GetUserData()->GetBoatIndex();
 		FAllRacerInfo Racers;
-		Racers.Racers.Push(FRacerInfo{TEXT("Player"), 0, 0, ERacerType::Player});
-		Racers.Racers.Push(FRacerInfo{TEXT("AI_1"), 1, 2, ERacerType::AI});
-		Racers.Racers.Push(FRacerInfo{TEXT("AI_2"), 2, 3, ERacerType::AI});
-		Racers.Racers.Push(FRacerInfo{TEXT("AI_3"), 3, 1, ERacerType::AI});
+		Racers.Racers.Push(FRacerInfo{TEXT("Player"), 0, PlayerBoatIndex, ERacerType::Player});
+
+		Racers.Racers.Push(FRacerInfo{TEXT("AI_1"), 1, FMath::RandRange(0, 3), ERacerType::AI});
+		Racers.Racers.Push(FRacerInfo{TEXT("AI_2"), 2, FMath::RandRange(0, 3), ERacerType::AI});
+		Racers.Racers.Push(FRacerInfo{TEXT("AI_3"), 3, FMath::RandRange(0, 3), ERacerType::AI});
 
 		RaceSetup(Racers);
 
