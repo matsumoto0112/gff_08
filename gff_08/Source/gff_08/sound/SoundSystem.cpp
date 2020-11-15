@@ -11,6 +11,17 @@ void USoundSystem::Init(USoundDataAsset* Asset) {
 	this->SoundDataAsset = Asset;
 }
 
+void USoundSystem::PlayBGM(ESoundResourceType Sound) {
+	StopBGM();
+	BGMComp = UGameplayStatics::SpawnSound2D(GetWorld(), GetRecord(Sound)->Sound, 1.0f, 1.0f, 0.0f, nullptr, true);
+}
+
+void USoundSystem::StopBGM() {
+	if (BGMComp) {
+		BGMComp->Stop();
+	}
+}
+
 // ‰¹Œ¹‚ÌÄ¶
 ASoundObject* USoundSystem::PlaySound2D(ESoundResourceType Sound, bool bAutoDelete) {
 	FSoundDataAssetRecord* Asset = GetRecord(Sound);
@@ -43,6 +54,10 @@ ASoundObject* USoundSystem::PlaySoundAtLocation(ESoundResourceType Sound, const 
 	ASoundObject* SoundObject = GetWorld()->SpawnActor<ASoundObject>();
 	SoundObject->Init(Asset->Sound, Asset->SoundAttenuation, Location, bAutoDelete);
 	return SoundObject;
+}
+
+void USoundSystem::RegisterBGMPlayPercent(const USoundWave* SoundWave, float Percent) {
+	this->LastPlayedLocation = Percent;
 }
 
 FSoundDataAssetRecord* USoundSystem::GetRecord(ESoundResourceType Sound) const {

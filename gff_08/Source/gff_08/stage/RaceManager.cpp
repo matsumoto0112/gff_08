@@ -26,6 +26,7 @@ ARaceManager::ARaceManager() {
 void ARaceManager::BeginPlay() {
 	Super::BeginPlay();
 
+	UMyGameInstance::GetInstance()->GetSoundSystem()->StopBGM();
 	bRaceStarted = false;
 
 	const FString Path = "/Game/Blueprints/UI/BP_CountDownTimer.BP_CountDownTimer_C";
@@ -173,6 +174,7 @@ void ARaceManager::CountdownUpdate() {
 		}
 		MainUI->GetRaceInfo()->GetRaceTimer()->Start();
 		bRaceStarted = true;
+		UMyGameInstance::GetInstance()->GetSoundSystem()->PlayBGM(ESoundResourceType::BGM_RACE);
 	}
 }
 

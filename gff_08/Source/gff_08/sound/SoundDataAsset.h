@@ -26,6 +26,8 @@ enum class ESoundResourceType : uint8 {
 	SE_RACE_GOAL,
 	SE_RACE_LAP_COUNT,
 	SE_RACE_START,
+
+	NONE
 };
 
 /**
