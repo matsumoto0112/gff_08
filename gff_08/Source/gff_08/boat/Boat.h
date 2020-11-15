@@ -76,7 +76,7 @@ public:
 	 * @param BoatID ボートのID
 	 */
 	UFUNCTION(BlueprintCallable, Category = "Boat")
-	void ChangeBoat(int32 BoatID);
+	void ChangeBoat(int32 BoatID, int32 PlayerIndex);
 	/**
 	 * レース準備
 	 * @param StartCheckPoint スタート時のチェックポイント

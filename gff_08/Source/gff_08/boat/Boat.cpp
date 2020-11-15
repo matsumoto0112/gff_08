@@ -59,7 +59,7 @@ void ABoat::EndPlay(const EEndPlayReason::Type EndPlayReason) {
 }
 
 //機体の変更
-void ABoat::ChangeBoat(int32 BoatID) {
+void ABoat::ChangeBoat(int32 BoatID, int32 PlayerIndex) {
 	// IDからパラメータを取得する
 	if (!BoatDataAsset->Data.IsValidIndex(BoatID)) {
 		UE_LOG(LogBoat, Error, TEXT("Boat parameter is not defined."));
@@ -70,6 +70,7 @@ void ABoat::ChangeBoat(int32 BoatID) {
 	const FBoatParameterRecord Parameter = BoatDataAsset->Data[BoatID];
 	BoatMover->SetParameter(Parameter.MaxSpeed, Parameter.Acceleration, Parameter.Control);
 	this->StaticMesh->SetStaticMesh(Parameter.BoatMesh);
+	this->StaticMesh->SetMaterial(0, Parameter.Materials[PlayerIndex]);
 	this->StaticMesh->SetMassOverrideInKg(NAME_None, Parameter.Mass);
 }
 

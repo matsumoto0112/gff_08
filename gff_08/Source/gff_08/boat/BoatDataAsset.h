@@ -18,19 +18,24 @@ struct GFF_08_API FBoatParameter : public FTableRowBase {
 	/**
 	 * デフォルトコンストラクタ
 	 */
-	FBoatParameter() : BoatMesh(nullptr), MaxSpeed(0.0f), Acceleration(0.0f), Control(0.0f), Mass(0.0f) {
+	FBoatParameter() : BoatMesh(nullptr), Materials(), MaxSpeed(0.0f), Acceleration(0.0f), Control(0.0f), Mass(0.0f) {
 	}
 
 	/**
 	 * コンストラクタ
 	 */
-	FBoatParameter(UStaticMesh* BoatMesh, float MaxSpeed, float Acceleration, float Control, float Mass)
-		: BoatMesh(nullptr), MaxSpeed(MaxSpeed), Acceleration(Acceleration), Control(Control), Mass(Mass) {
+	FBoatParameter(
+		UStaticMesh* BoatMesh, const TArray<UMaterial*>& Materials, float MaxSpeed, float Acceleration, float Control, float Mass)
+		: BoatMesh(nullptr), Materials(Materials), MaxSpeed(MaxSpeed), Acceleration(Acceleration), Control(Control), Mass(Mass) {
 	}
 
 	//! ボートのメッシュ
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "BoatParameter")
 	UStaticMesh* BoatMesh;
+	//! ボートのプレイヤー番号に応じたメッシュマテリアル
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "BoatParameter")
+	TArray<UMaterial*> Materials;
+
 	//! ボートの名前
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "BoatParameter")
 	FString BoatName;
@@ -64,6 +69,9 @@ struct GFF_08_API FBoatParameterRecord {
 	//! ボートのメッシュ
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "BoatParameter")
 	UStaticMesh* BoatMesh;
+	//! ボートのプレイヤー番号に応じたメッシュマテリアル
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "BoatParameter")
+	TArray<UMaterial*> Materials;
 	//! ボートの名前
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "BoatParameter")
 	FString BoatName;
