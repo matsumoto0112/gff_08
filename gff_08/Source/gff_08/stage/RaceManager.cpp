@@ -92,21 +92,29 @@ void ARaceManager::Tick(float DeltaTime) {
 		}
 		RaceEndRemainTime -= DeltaTime;
 		if (!bRaceEnded && RaceEndRemainTime <= 0.0f) {
-			FAllRacersGamePlayData Data;
-			if (!UNetworkConnectUtility::IsMultiGame(GetWorld())) {
-				Data.MyBoatIndex = 0;
-			}
-
+			TArray<TPair<bool, FGamePlayData>> RacersData;
 			for (int32 i = 0; i < Boats.Num(); i++) {
 				const auto& Boat = Boats[i];
 				const FName Name = Boat->GetRacerName();
 				const int32 Ranking = Boat->GetLapCounter()->GetRanking();
 				const TArray<float> LapTimes = Boat->GetLapCounter()->GetLapTimes();
-				Data.AllRacersData.Emplace(Name, Ranking, LapTimes);
-				if (UNetworkConnectUtility::IsMultiGame(GetWorld()) && UNetworkConnectUtility::IsOwner(Boat)) {
+				if (UNetworkConnectUtility::IsMultiGame(GetWorld())) {
+					RacersData.Emplace(UNetworkConnectUtility::IsOwner(Boat), FGamePlayData{Name, Ranking, LapTimes});
+				} else {
+					RacersData.Emplace(i == 0, FGamePlayData{Name, Ranking, LapTimes});
+				}
+			}
+
+			RacersData.Sort([](const auto& A, const auto& B) { return A.Value.Ranking < B.Value.Ranking; });
+
+			FAllRacersGamePlayData Data;
+			for (int32 i = 0; i < RacersData.Num(); i++) {
+				Data.AllRacersData.Emplace(RacersData[i].Value);
+				if (RacersData[i].Key) {
 					Data.MyBoatIndex = i;
 				}
 			}
+
 			UMyGameInstance::GetInstance()->SetPlayData(Data);
 			UGameplayStatics::OpenLevel(GetWorld(), NEXT_LEVEL_NAME);
 			bRaceEnded = true;
