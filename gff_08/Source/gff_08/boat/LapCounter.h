@@ -50,9 +50,15 @@ public:
 	int32 GetCurrentCheckPointIndex() const {
 		return CurrentIndex;
 	}
+
+	UFUNCTION(BlueprintGetter, Category = "LapCounter")
+	int32 GetRanking() const {
+		return Ranking;
+	}
 	/**
 	 * ランキングをセットする
 	 */
+	UFUNCTION(BlueprintSetter, Category = "LapCounter")
 	void SetRanking(int32 Rank) {
 		Ranking = Rank;
 	}
@@ -87,7 +93,7 @@ protected:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "LapCounter")
 	ARaceManager* RaceManager;
 	//現在のランキング
-	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "LapCounter")
+	UPROPERTY(VisibleAnywhere, BlueprintGetter = GetRanking, BlueprintSetter = SetRanking, Category = "LapCounter")
 	int32 Ranking;
 
 	//! このゲームにおける各週のラップタイム

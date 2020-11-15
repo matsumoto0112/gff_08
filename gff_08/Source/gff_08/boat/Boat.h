@@ -93,6 +93,13 @@ public:
 	 */
 	UFUNCTION(BlueprintCallable, Category = "Boat")
 	virtual float GetPlayerSpeed() const;
+	/**
+	 * 周回計測機能の取得
+	 */
+	UFUNCTION(BlueprintGetter, Category = "Boat")
+	ULapCounter* GetLapCounter() const {
+		return LapCounter;
+	}
 
 protected:
 	//! ボートメッシュ
@@ -102,7 +109,7 @@ protected:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Components")
 	UBoatMover* BoatMover;
 	//! 周回計測
-	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Components")
+	UPROPERTY(EditDefaultsOnly, BlueprintGetter = GetLapCounter, BlueprintReadOnly, Category = "Components")
 	ULapCounter* LapCounter;
 	//! 回転の力を加える地点
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Components")

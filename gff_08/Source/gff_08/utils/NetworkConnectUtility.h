@@ -13,20 +13,20 @@
 UCLASS()
 class GFF_08_API UNetworkConnectUtility : public UStrixBlueprintFunctionLibrary {
 	GENERATED_BODY()
-
+public:
 	/**
-	* プレイヤーがオーナー(操作しているもの)かどうか
-	* @param [target] 調べるアクタ
-	* @return オーナーかどうか
-	*/
+	 * プレイヤーがオーナー(操作しているもの)かどうか
+	 * @param [target] 調べるアクタ
+	 * @return オーナーかどうか
+	 */
 	UFUNCTION(BlueprintCallable, Category = "StrixSDKUtility")
 	static bool IsOwner(const AActor* target);
 
 	/**
-	* シングルプレイかどうか
-	* @param [worldContextObject]
-	* @return true:マルチプレイ false:シングルプレイ
-	*/
+	 * シングルプレイかどうか
+	 * @param [worldContextObject]
+	 * @return true:マルチプレイ false:シングルプレイ
+	 */
 	UFUNCTION(BlueprintCallable, Category = "StrixSDKUtility")
 	static bool IsMultiGame(const UObject* worldContextObject);
 };

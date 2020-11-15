@@ -2,10 +2,13 @@
 
 #include "RaceManager.h"
 
-#include "../utils/MyGameInstance.h"
+#include "gff_08/utils/MyGameInstance.h"
+#include "gff_08/utils/NetworkConnectUtility.h"
 #include "kismet/GamePlayStatics.h"
 
 #include <StrixBlueprintFunctionLibrary.h>
+
+const FName ARaceManager::NEXT_LEVEL_NAME = TEXT("Result");
 
 // Sets default values
 ARaceManager::ARaceManager() {
@@ -82,20 +85,37 @@ void ARaceManager::Tick(float DeltaTime) {
 	if (!bRaceAlreadySetup)
 		return;
 
-	if (bRaceStarted)
-		return;
-
-	CountDownTime -= DeltaTime;
-
-	CountDownUI->SetCountDownImage(CountDownTime + 1);
-	if (CountDownTime <= 0.0f) {
-		CountDownUI->RemoveFromParent();
-
-		for (auto&& Boat : Boats) {
-			Boat->RaceStart();
+	if (bRaceStarted) {
+		if (!IsAnyBoatGoaled()) {
+			return;
 		}
-		MainUI->GetRaceInfo()->GetRaceTimer()->Start();
-		bRaceStarted = true;
+		RaceEndRemainTime -= DeltaTime;
+		if (!bRaceEnded && RaceEndRemainTime <= 0.0f) {
+			ABoat* PlayerBoat = nullptr;
+			if (UNetworkConnectUtility::IsMultiGame(GetWorld())) {
+				for (auto&& Boat : Boats) {
+					if (UNetworkConnectUtility::IsOwner(Boat)) {
+						PlayerBoat = Boat;
+						break;
+					}
+				}
+
+			} else {
+				//シングルプレイなら先頭がプレイヤーボート
+				//先頭がプレイヤーであることが仕様的に保証されているわけではない
+				// TODO:先頭がプレイヤーでない場合への対処
+				PlayerBoat = Boats[0];
+			}
+
+			FGamePlayData Data;
+			Data.Ranking = PlayerBoat->GetLapCounter()->GetRanking();
+			Data.LapTimes = PlayerBoat->GetLapCounter()->GetLapTimes();
+			UMyGameInstance::GetInstance()->SetPlayData(Data);
+			UGameplayStatics::OpenLevel(GetWorld(), NEXT_LEVEL_NAME);
+			bRaceEnded = true;
+		}
+	} else {
+		CountdownUpdate();
 	}
 }
 
@@ -132,4 +152,31 @@ void ARaceManager::RaceStart() {
 
 URaceTimer* ARaceManager::GetRaceTimer() const {
 	return MainUI->GetRaceInfo()->GetRaceTimer();
+}
+
+void ARaceManager::CountdownUpdate() {
+	CountDownTime -= GetWorld()->GetDeltaSeconds();
+
+	CountDownUI->SetCountDownImage(CountDownTime + 1);
+	if (CountDownTime <= 0.0f) {
+		CountDownUI->RemoveFromParent();
+
+		for (auto&& Boat : Boats) {
+			Boat->RaceStart();
+		}
+		MainUI->GetRaceInfo()->GetRaceTimer()->Start();
+		bRaceStarted = true;
+	}
+}
+
+bool ARaceManager::IsAnyBoatGoaled() const {
+	//周回数を3周として決め打つ
+	// TODO:現在のステージ情報から読み取る
+	constexpr int32 LAP_END_NUM = 4;
+	for (auto&& Boat : Boats) {
+		if (Boat->GetLapCounter()->GetLapCount() == LAP_END_NUM) {
+			return true;
+		}
+	}
+	return false;
 }
