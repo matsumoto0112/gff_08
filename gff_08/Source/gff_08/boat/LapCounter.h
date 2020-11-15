@@ -8,6 +8,8 @@
 
 #include "LapCounter.generated.h"
 
+class ARaceManager;
+
 /**
  * 周回計測機能
  * 周回計測と言いつつ、順位の判定に使う変数も持たせているため役割が不明瞭になってきた
@@ -59,7 +61,7 @@ public:
 	 * 全体のラップタイムを取得する
 	 */
 	UFUNCTION(BlueprintCallable, Category = "LapCounter")
-	float GetTotalLapTime() const;
+	TArray<float> GetLapTimes() const;
 
 protected:
 	//! 最も進んだ時のチェックポイントのインデックス
@@ -82,13 +84,12 @@ protected:
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "LapCounter")
 	int32 MaxCheckPointIndex;
 
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "LapCounter")
+	ARaceManager* RaceManager;
 	//現在のランキング
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "LapCounter")
 	int32 Ranking;
 
-	//現在のラップタイム
-	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "LapCounter")
-	float CurrentLapTime;
 	//! このゲームにおける各週のラップタイム
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "LapCounter")
 	TArray<float> LapTimes;

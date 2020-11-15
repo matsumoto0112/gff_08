@@ -66,7 +66,7 @@ void ARaceManager::BeginPlay() {
 	}
 
 	//メインのUIの中ではプレイヤーを参照する必要があるため、Setupの完了後に呼ぶ
-	//TODO:MyHUDクラス内にプレイヤーの取得機能を作成し、Setup後に呼ぶようにする
+	// TODO:MyHUDクラス内にプレイヤーの取得機能を作成し、Setup後に呼ぶようにする
 	MainUI = CreateWidget<UMyHUD>(GetWorld(), HUDClass);
 	if (!MainUI) {
 		UE_LOG(LogTemp, Error, TEXT("MainUI can not create."));
@@ -128,4 +128,8 @@ void ARaceManager::RaceStart() {
 	for (auto&& Boat : Boats) {
 		Boat->RaceReady(StartPoint);
 	}
+}
+
+URaceTimer* ARaceManager::GetRaceTimer() const {
+	return MainUI->GetRaceInfo()->GetRaceTimer();
 }

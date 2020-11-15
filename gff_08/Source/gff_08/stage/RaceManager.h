@@ -43,6 +43,9 @@ public:
 		return bRaceAlreadySetup;
 	}
 
+	UFUNCTION(BlueprintCallable, Category = "RaceManager")
+	URaceTimer* GetRaceTimer() const;
+
 protected:
 	//! レースのセットアップ処理担当
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components")
