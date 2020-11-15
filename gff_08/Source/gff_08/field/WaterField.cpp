@@ -95,8 +95,8 @@ void AWaterField::Initialize() {
 	for (int32 i = 0; i < TEXTURE_EDGE_W * TEXTURE_EDGE_H; i++) {
 		TextureColorData[i].r = NEUTRAL;
 		TextureColorData[i].g = NEUTRAL;
-		TextureColorData[i].b = 0;
-		TextureColorData[i].a = 255;
+		TextureColorData[i].b = NEUTRAL;
+		TextureColorData[i].a = NEUTRAL;
 	}
 	EdgeTexW = TEXTURE_EDGE_W * 1.0f / Row;
 	EdgeTexH = TEXTURE_EDGE_H * 1.0f / Column;

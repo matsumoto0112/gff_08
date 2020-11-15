@@ -46,11 +46,11 @@ void ARaceManager::BeginPlay() {
 		UStrixBlueprintFunctionLibrary::UnpauseNetworkObjectManager(
 			GWorld, UMyGameInstance::GetInstance()->GetUserData()->GetChannelID());
 
+
 		GEngine->AddOnScreenDebugMessage(-1, 3.0f, FColor::White, "Connected MasterServer");
 		int32 BoatIndex = UMyGameInstance::GetInstance()->GetUserData()->GetBoatIndex();
 		int32 PlayerIndex = UMyGameInstance::GetInstance()->GetUserData()->GetPlayerIndex();
 		MultiRaceSetup(FRacerInfo{PlayerIndex, BoatIndex, ERacerType::Player});
-
 	} else {
 		GEngine->AddOnScreenDebugMessage(-1, 3.0f, FColor::White, "No Connected MasterServer");
 		//シングルプレイ用設定
@@ -111,7 +111,8 @@ void ARaceManager::MultiRaceSetup(const FRacerInfo& Info) {
 	}
 }
 
-void ARaceManager::ReplicateRaceSetup(ABoat* Boat) {
+void ARaceManager::ReplicateRaceSetup(ABoat* Boat,const int32 BoatIndex) {
+	Boat->ChangeBoat(BoatIndex);
 	Boats.Push(Boat);
 	if (Boats.Num() >= 4) {
 		bRaceAlreadySetup = true;

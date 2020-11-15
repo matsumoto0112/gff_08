@@ -78,5 +78,4 @@ protected:
 	int32 ChannelID;
 	UPROPERTY(VisibleAnywhere, BlueprintGetter = GetPlayerID, BlueprintSetter = SetPlayerID, Category = "PlayUserData")
 	int32 PlayerID;
-
 };

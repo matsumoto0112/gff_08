@@ -33,7 +33,7 @@ public:
 	void MultiRaceSetup(const FRacerInfo& Info);
 
 	UFUNCTION(BlueprintCallable, Category = "RaceManager")
-	void ReplicateRaceSetup(ABoat* Boat);
+	void ReplicateRaceSetup(ABoat* Boat,const int32 BoatIndex);
 
 	UFUNCTION(BlueprintCallable, Category = "RaceManager")
 	void RaceStart();
