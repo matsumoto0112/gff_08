@@ -110,6 +110,9 @@ public:
 	FName GetRacerName() const {
 		return RacerName;
 	}
+	int32 GetPlayerIndex_() const {
+		return PlayerIndex_;
+	}
 
 protected:
 	//! ボートメッシュ
@@ -150,4 +153,6 @@ protected:
 	//! レーサーの名前
 	UPROPERTY(VisibleAnywhere, BlueprintGetter = GetRacerName, BlueprintSetter = SetRacerName, Category = "Boat")
 	FName RacerName;
+	//! プレイヤー番号
+	int32 PlayerIndex_;
 };

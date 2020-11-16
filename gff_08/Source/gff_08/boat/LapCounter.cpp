@@ -3,6 +3,8 @@
 #include "LapCounter.h"
 
 #include "gff_08/stage/RaceManager.h"
+#include "gff_08/utils/MyGameInstance.h"
+#include "gff_08/utils/NetworkConnectUtility.h"
 #include "kismet/GamePlayStatics.h"
 
 #include <numeric>
@@ -49,6 +51,11 @@ void ULapCounter::PassCheckPoint(ACheckPoint* PassedCheckPoint) {
 	const int32 PassedCheckPointIndex = PassedCheckPoint->GetIndex();
 	constexpr int32 START_CHECKPOINT_INDEX = 0;
 
+	auto PlayLapIncrementSound = [](int32 NextLapCount) {
+		ESoundResourceType Sound = NextLapCount == 4 ? ESoundResourceType::SE_RACE_GOAL : ESoundResourceType::SE_RACE_LAP_COUNT;
+		UMyGameInstance::GetInstance()->GetSoundSystem()->PlaySound2D(Sound);
+	};
+
 	// スタート地点のチェックポイント
 	if (PassedCheckPointIndex == START_CHECKPOINT_INDEX) {
 		// 今までに進んだ最大のチェックポイントがコースの最後のインデックスなら1週してきたということ
@@ -59,8 +66,18 @@ void ULapCounter::PassCheckPoint(ACheckPoint* PassedCheckPoint) {
 			float Time = RaceManager->GetRaceTimer()->GetCurrentTime();
 			LapTimes.Add(GetLapTime(Time, LapTimes));
 			MostAdvancedIndex = PassedCheckPointIndex;
-		}
 
+			AActor* ParentActor = GetOwner();
+			if (UNetworkConnectUtility::IsMultiGame(GetWorld())) {
+				if (UNetworkConnectUtility::IsOwner(ParentActor)) {
+					PlayLapIncrementSound(MostAdcancedLapCount);
+				}
+			} else {
+				if (Cast<ABoat>(ParentActor)->GetPlayerIndex_() == 0) {
+					PlayLapIncrementSound(MostAdcancedLapCount);
+				}
+			}
+		}
 	} else {
 		// 次のチェックポイントに触れたらその情報で更新
 		if (MostAdvancedIndex + 1 == PassedCheckPointIndex) {

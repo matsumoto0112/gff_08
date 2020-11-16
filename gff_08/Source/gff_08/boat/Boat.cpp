@@ -66,6 +66,8 @@ void ABoat::ChangeBoat(int32 BoatID, int32 PlayerIndex) {
 		return;
 	}
 
+	this->PlayerIndex_ = PlayerIndex;
+
 	//パラメータを必要な変数に代入していく
 	const FBoatParameterRecord Parameter = BoatDataAsset->Data[BoatID];
 	BoatMover->SetParameter(Parameter.MaxSpeed, Parameter.Acceleration, Parameter.Control);
