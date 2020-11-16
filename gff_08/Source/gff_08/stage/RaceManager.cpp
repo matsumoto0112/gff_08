@@ -170,7 +170,7 @@ void ARaceManager::CountdownUpdate() {
 
 	CountDownUI->SetCountDownImage(CountDownTime + 1);
 	if (CountDownTime <= 0.0f) {
-		CountDownUI->RemoveFromParent();
+		CountDownUI->SetStartUI();
 
 		for (auto&& Boat : Boats) {
 			Boat->RaceStart();
@@ -178,6 +178,11 @@ void ARaceManager::CountdownUpdate() {
 		MainUI->GetRaceInfo()->GetRaceTimer()->Start();
 		bRaceStarted = true;
 		UMyGameInstance::GetInstance()->GetSoundSystem()->PlayBGM(ESoundResourceType::BGM_RACE);
+		UMyGameInstance::GetInstance()->GetSoundSystem()->PlaySound2D(ESoundResourceType::SE_RACE_START);
+
+		FTimerHandle Handle;
+		GetWorld()->GetTimerManager().SetTimer(
+			Handle, [&]() { CountDownUI->RemoveFromParent(); }, 3.0f, false);
 	}
 }
 

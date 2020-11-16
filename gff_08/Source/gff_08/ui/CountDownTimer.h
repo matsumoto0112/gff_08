@@ -17,4 +17,6 @@ class GFF_08_API UCountDownTimer : public UUserWidget {
 public:
 	UFUNCTION(BlueprintImplementableEvent, BlueprintCallable, Category = "CountDownTimer")
 	void SetCountDownImage(int32 Time);
+	UFUNCTION(BlueprintImplementableEvent, BlueprintCallable, Category = "CountDownTimer")
+	void SetStartUI();
 };
