@@ -92,16 +92,15 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "WaterField")
 	FVector GetAccelVelocity(const FVector& position);
 
-    /**
+	/**
 	 * ‰Á‘¬”g‚Ì¶¬ˆ—
 	 * @param [position] Actor‚ÌworldÀ•W
 	 * @param [rotate]   Actor‚Ì‰ñ“]
 	 */
 	UFUNCTION(BlueprintCallable, Category = "WaterField")
-	void GenerateAccelWave(const FVector&  position,const FRotator& rotate);
+	void GenerateAccelWave(const FVector& position, const FRotator& rotate);
 
 private:
-
 	/**
 	 * ‰Šú‰»ˆ—
 	 */
@@ -145,7 +144,7 @@ private:
 	static constexpr int32 TEXTURE_EDGE_W = 1024;
 	static constexpr int32 TEXTURE_EDGE_H = 1024;
 
-	static constexpr uint8 NEUTRAL = 128;
+	static constexpr uint8 NEUTRAL = 0300;
 
 	TArray<Fr8g8b8a8> TextureColorData;
 	TArray<TArray<FAccelWaveInfo>> WaveArray;

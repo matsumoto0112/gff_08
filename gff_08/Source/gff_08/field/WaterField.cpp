@@ -67,7 +67,8 @@ void AWaterField::GenerateAccelWave(const FVector& position, const FRotator& rot
 	WaveArray[grid.X][grid.Y].startTime = FDateTime::Now();
 	WaveArray[grid.X][grid.Y].isValid = true;
 	UKismetSystemLibrary::DrawDebugLine(GetWorld(), position, position + vel * 100.0f, FColor::Green, 100.0f, 2.0f);
-	UKismetSystemLibrary::DrawDebugLine(GetWorld(), position + vel * 100.0f, position + vel * 100.0f + FVector(10,0,0), FColor::Green, 100.0f, 2.0f);
+	UKismetSystemLibrary::DrawDebugLine(
+		GetWorld(), position + vel * 100.0f, position + vel * 100.0f + FVector(10, 0, 0), FColor::Green, 100.0f, 2.0f);
 
 	UpdateFlowMap(grid);
 	UpdateFlag = true;
