@@ -114,6 +114,10 @@ public:
 		return PlayerIndex_;
 	}
 
+private:
+	UFUNCTION()
+	void PushMovementValue();
+
 protected:
 	//! ボートメッシュ
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Components")
@@ -155,4 +159,8 @@ protected:
 	FName RacerName;
 	//! プレイヤー番号
 	int32 PlayerIndex_;
+
+	FTimerHandle PrevMotorValueStockHandle;
+	TArray<TPair<float, float>> PrevMotorValues;
+	float PostureSameTime;
 };

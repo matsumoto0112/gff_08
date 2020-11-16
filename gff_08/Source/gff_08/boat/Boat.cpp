@@ -7,6 +7,27 @@
 #include "gff_08/utils/SpeedConverter.h"
 #include "kismet/KismetSystemLibrary.h"
 
+namespace {
+bool IsOK(const TArray<TPair<float, float>>& MotorValues) {
+	if (MotorValues.Num() < 5) {
+		return false;
+	}
+
+	float Left_Min = MotorValues[0].Key;
+	float Left_Max = MotorValues[0].Key;
+	float Right_Min = MotorValues[0].Value;
+	float Right_Max = MotorValues[0].Value;
+	for (int32 i = 1; i < MotorValues.Num(); i++) {
+		Left_Min = FMath::Min(Left_Min, MotorValues[i].Key);
+		Left_Max = FMath::Max(Left_Max, MotorValues[i].Key);
+		Right_Min = FMath::Min(Right_Min, MotorValues[i].Value);
+		Right_Max = FMath::Max(Right_Max, MotorValues[i].Value);
+	}
+
+	return Left_Max - Left_Min < 0.01f && Right_Max - Right_Min < 0.01f;
+}
+}	 // namespace
+
 // Sets default values
 ABoat::ABoat() {
 	// Set this pawn to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
@@ -83,6 +104,8 @@ void ABoat::RaceReady(ACheckPoint* StartCheckPoint) {
 	NextCheckPoint = StartCheckPoint;
 	//直線移動するよう設定
 	MoveType = EBoatMovableType::StraightOnly;
+
+	GetWorld()->GetTimerManager().SetTimer(PrevMotorValueStockHandle, this, &ABoat::PushMovementValue, 0.1f, true);
 }
 
 //レースの開始
@@ -97,14 +120,25 @@ float ABoat::GetPlayerSpeed() const {
 	return USpeedConverter::ToSpeedKilometerPerHour(GetVelocity().Size());
 }
 
+void ABoat::PushMovementValue() {
+	const FInputInfo InputInfo = IDriver::Execute_CurrentInputInfo(Driver.GetObject());
+	PrevMotorValues.Emplace(InputInfo.LeftMotorValue, InputInfo.RightMotorValue);
+
+	if (PrevMotorValues.Num() > 5) {
+		PrevMotorValues.RemoveAt(0);
+	}
+}
+
 //移動力を計算する
 void ABoat::CalcMovementValues(float& MoveValue, float& LeftValue, float& RightValue) const {
 	const FInputInfo InputInfo = IDriver::Execute_CurrentInputInfo(Driver.GetObject());
 	const float MinValue = FMath::Min(InputInfo.LeftMotorValue, InputInfo.RightMotorValue);
+	const float MaxValue = FMath::Max(InputInfo.LeftMotorValue, InputInfo.RightMotorValue);
+	const float T = FMath::Lerp(MinValue, MaxValue, FMath::Max(1.0f, PostureSameTime));
 
 	switch (MoveType) {
 		case EBoatMovableType::Default:
-			MoveValue = MinValue;
+			MoveValue = T;
 			LeftValue = InputInfo.LeftMotorValue - MinValue;
 			RightValue = InputInfo.RightMotorValue - MinValue;
 			break;
@@ -152,6 +186,12 @@ void ABoat::Tick(float DeltaTime) {
 	float RightValue;
 	CalcMovementValues(MoveValue, LeftValue, RightValue);
 	BoatMover->Move(MoveValue, LeftValue, RightValue);
+
+	if (IsOK(PrevMotorValues)) {
+		PostureSameTime += GetWorld()->GetDeltaSeconds();
+	} else {
+		PostureSameTime = 0;
+	}
 
 	//音源に対するパラメータ設定
 	MoveSound->GetAudioComponent()->SetFloatParameter(TEXT("Speed"), GetPlayerSpeed());
