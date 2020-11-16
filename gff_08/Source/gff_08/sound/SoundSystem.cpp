@@ -23,15 +23,13 @@ void USoundSystem::StopBGM() {
 }
 
 // ‰¹Œ¹‚ÌÄ¶
-ASoundObject* USoundSystem::PlaySound2D(ESoundResourceType Sound, bool bAutoDelete) {
+void USoundSystem::PlaySound2D(ESoundResourceType Sound) {
 	FSoundDataAssetRecord* Asset = GetRecord(Sound);
 	if (!Asset) {
-		return nullptr;
+		return;
 	}
 
-	ASoundObject* SoundObject = GetWorld()->SpawnActor<ASoundObject>();
-	SoundObject->Init(Asset->Sound, bAutoDelete);
-	return SoundObject;
+	UGameplayStatics::SpawnSound2D(GetWorld(), Asset->Sound, 1.0f, 1.0f, 0.0f, nullptr, true);
 }
 
 ASoundObject* USoundSystem::PlaySoundWithAttachOwnerActor(ESoundResourceType Sound, AActor* OwnerActor, bool bAutoDelete) {

@@ -38,7 +38,7 @@ public:
 	 * @param Sound 音源の種類
 	 */
 	UFUNCTION(BlueprintCallable, Category = "SoundSystem")
-	ASoundObject* PlaySound2D(ESoundResourceType Sound, bool bAutoDelete = true);
+	void PlaySound2D(ESoundResourceType Sound);
 	/**
 	 * アクターに追従し、音を再生する
 	 * @param Sound 音源の種類
