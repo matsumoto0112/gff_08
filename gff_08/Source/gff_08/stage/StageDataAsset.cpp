@@ -24,6 +24,7 @@ void UStageDataAsset::Import() {
 		Asset.StageNameImage = Record->StageNameImage;
 		Asset.StageImage = Record->StageImage;
 		Asset.MinimapImage = Record->MinimapImage;
+		Asset.StageSpaheLevelName = Record->StageSpaheLevelName;
 		Data.Push(Asset);
 	}
 #endif

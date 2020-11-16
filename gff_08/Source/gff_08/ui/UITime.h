@@ -18,6 +18,6 @@ public:
 	/**
 	 * float‚ÅŽžŠÔ‚ðƒZƒbƒg‚·‚é
 	 */
-	UFUNCTION(BlueprintImplementableEvent, Category = "UITime")
+	UFUNCTION(BlueprintCallable, BlueprintImplementableEvent, Category = "UITime")
 	void SetTimeFloat(float Time);
 };

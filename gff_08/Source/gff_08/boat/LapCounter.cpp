@@ -2,6 +2,21 @@
 
 #include "LapCounter.h"
 
+#include "gff_08/stage/RaceManager.h"
+#include "kismet/GamePlayStatics.h"
+
+#include <numeric>
+
+namespace {
+/**
+ * この周回での時間を取得する
+ */
+float GetLapTime(float Time, const TArray<float>& LapTimes) {
+	//今までのゲーム時間から前回までのラップタイムの合計値を引くことで、今回のラップタイムを計算する
+	return Time - std::accumulate(LapTimes.begin(), LapTimes.end(), 0.0f);
+}
+}	 // namespace
+
 // Sets default values for this component's properties
 ULapCounter::ULapCounter() {
 	// Set this component to be initialized when the game starts, and to be ticked every frame.  You can turn these features
@@ -19,12 +34,14 @@ void ULapCounter::BeginPlay() {
 	MostAdcancedLapCount = 1;
 	CurrentIndex = 0;
 	CurrentLapCount = 1;
+
+	AActor* RaceManagerActor = UGameplayStatics::GetActorOfClass(GetWorld(), ARaceManager::StaticClass());
+	RaceManager = Cast<ARaceManager>(RaceManagerActor);
 }
 
 // Called every frame
 void ULapCounter::TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) {
 	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
-	CurrentLapTime += DeltaTime;
 }
 
 // チェックポイントを通過した
@@ -37,8 +54,10 @@ void ULapCounter::PassCheckPoint(ACheckPoint* PassedCheckPoint) {
 		// 今までに進んだ最大のチェックポイントがコースの最後のインデックスなら1週してきたということ
 		if (MostAdvancedIndex == MaxCheckPointIndex) {
 			MostAdcancedLapCount++;
-			LapTimes.Add(CurrentLapTime);
-			CurrentLapTime = 0.0f;
+
+			//現在の時間から今回のラップタイムを取得し、ラップタイムに追加する
+			float Time = RaceManager->GetRaceTimer()->GetCurrentTime();
+			LapTimes.Add(GetLapTime(Time, LapTimes));
 			MostAdvancedIndex = PassedCheckPointIndex;
 		}
 
@@ -64,10 +83,6 @@ void ULapCounter::PassCheckPoint(ACheckPoint* PassedCheckPoint) {
 	CurrentIndex = PassedCheckPointIndex;
 }
 
-float ULapCounter::GetTotalLapTime() const {
-	float TotalTime = 0.0f;
-	for (auto&& Time : LapTimes) {
-		TotalTime += Time;
-	}
-	return TotalTime;
+TArray<float> ULapCounter::GetLapTimes() const {
+	return LapTimes;
 }

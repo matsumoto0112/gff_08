@@ -2,10 +2,13 @@
 
 #include "RaceManager.h"
 
-#include "../utils/MyGameInstance.h"
+#include "gff_08/utils/MyGameInstance.h"
+#include "gff_08/utils/NetworkConnectUtility.h"
 #include "kismet/GamePlayStatics.h"
 
 #include <StrixBlueprintFunctionLibrary.h>
+
+const FName ARaceManager::NEXT_LEVEL_NAME = TEXT("Result");
 
 // Sets default values
 ARaceManager::ARaceManager() {
@@ -23,6 +26,7 @@ ARaceManager::ARaceManager() {
 void ARaceManager::BeginPlay() {
 	Super::BeginPlay();
 
+	UMyGameInstance::GetInstance()->GetSoundSystem()->StopBGM();
 	bRaceStarted = false;
 
 	const FString Path = "/Game/Blueprints/UI/BP_CountDownTimer.BP_CountDownTimer_C";
@@ -46,19 +50,23 @@ void ARaceManager::BeginPlay() {
 		UStrixBlueprintFunctionLibrary::UnpauseNetworkObjectManager(
 			GWorld, UMyGameInstance::GetInstance()->GetUserData()->GetChannelID());
 
-
 		GEngine->AddOnScreenDebugMessage(-1, 3.0f, FColor::White, "Connected MasterServer");
-		int32 BoatIndex = UMyGameInstance::GetInstance()->GetUserData()->GetBoatIndex();
-		int32 PlayerIndex = UMyGameInstance::GetInstance()->GetUserData()->GetPlayerIndex();
-		MultiRaceSetup(FRacerInfo{PlayerIndex, BoatIndex, ERacerType::Player});
+
+		const int32 BoatIndex = UMyGameInstance::GetInstance()->GetUserData()->GetBoatIndex();
+		const int32 PlayerIndex = UMyGameInstance::GetInstance()->GetUserData()->GetPlayerIndex();
+		const FName PlayerName = UMyGameInstance::GetInstance()->GetUserData()->GetPlayerName();
+		MultiRaceSetup(FRacerInfo{PlayerName, PlayerIndex, BoatIndex, ERacerType::Player});
+
 	} else {
 		GEngine->AddOnScreenDebugMessage(-1, 3.0f, FColor::White, "No Connected MasterServer");
 		//シングルプレイ用設定
+		const int32 PlayerBoatIndex = UMyGameInstance::GetInstance()->GetUserData()->GetBoatIndex();
 		FAllRacerInfo Racers;
-		Racers.Racers.Push(FRacerInfo{0, 0, ERacerType::Player});
-		Racers.Racers.Push(FRacerInfo{1, 2, ERacerType::AI});
-		Racers.Racers.Push(FRacerInfo{2, 3, ERacerType::AI});
-		Racers.Racers.Push(FRacerInfo{3, 1, ERacerType::AI});
+		Racers.Racers.Push(FRacerInfo{TEXT("Player"), 0, PlayerBoatIndex, ERacerType::Player});
+
+		Racers.Racers.Push(FRacerInfo{TEXT("AI_1"), 1, FMath::RandRange(0, 3), ERacerType::AI});
+		Racers.Racers.Push(FRacerInfo{TEXT("AI_2"), 2, FMath::RandRange(0, 3), ERacerType::AI});
+		Racers.Racers.Push(FRacerInfo{TEXT("AI_3"), 3, FMath::RandRange(0, 3), ERacerType::AI});
 
 		RaceSetup(Racers);
 
@@ -66,7 +74,7 @@ void ARaceManager::BeginPlay() {
 	}
 
 	//メインのUIの中ではプレイヤーを参照する必要があるため、Setupの完了後に呼ぶ
-	//TODO:MyHUDクラス内にプレイヤーの取得機能を作成し、Setup後に呼ぶようにする
+	// TODO:MyHUDクラス内にプレイヤーの取得機能を作成し、Setup後に呼ぶようにする
 	MainUI = CreateWidget<UMyHUD>(GetWorld(), HUDClass);
 	if (!MainUI) {
 		UE_LOG(LogTemp, Error, TEXT("MainUI can not create."));
@@ -82,20 +90,41 @@ void ARaceManager::Tick(float DeltaTime) {
 	if (!bRaceAlreadySetup)
 		return;
 
-	if (bRaceStarted)
-		return;
-
-	CountDownTime -= DeltaTime;
-
-	CountDownUI->SetCountDownImage(CountDownTime + 1);
-	if (CountDownTime <= 0.0f) {
-		CountDownUI->RemoveFromParent();
-
-		for (auto&& Boat : Boats) {
-			Boat->RaceStart();
+	if (bRaceStarted) {
+		if (!IsAnyBoatGoaled()) {
+			return;
 		}
-		MainUI->GetRaceInfo()->GetRaceTimer()->Start();
-		bRaceStarted = true;
+		RaceEndRemainTime -= DeltaTime;
+		if (!bRaceEnded && RaceEndRemainTime <= 0.0f) {
+			TArray<TPair<bool, FGamePlayData>> RacersData;
+			for (int32 i = 0; i < Boats.Num(); i++) {
+				const auto& Boat = Boats[i];
+				const FName Name = Boat->GetRacerName();
+				const int32 Ranking = Boat->GetLapCounter()->GetRanking();
+				const TArray<float> LapTimes = Boat->GetLapCounter()->GetLapTimes();
+				if (UNetworkConnectUtility::IsMultiGame(GetWorld())) {
+					RacersData.Emplace(UNetworkConnectUtility::IsOwner(Boat), FGamePlayData{Name, Ranking, LapTimes});
+				} else {
+					RacersData.Emplace(i == 0, FGamePlayData{Name, Ranking, LapTimes});
+				}
+			}
+
+			RacersData.Sort([](const auto& A, const auto& B) { return A.Value.Ranking < B.Value.Ranking; });
+
+			FAllRacersGamePlayData Data;
+			for (int32 i = 0; i < RacersData.Num(); i++) {
+				Data.AllRacersData.Emplace(RacersData[i].Value);
+				if (RacersData[i].Key) {
+					Data.MyBoatIndex = i;
+				}
+			}
+
+			UMyGameInstance::GetInstance()->SetPlayData(Data);
+			UGameplayStatics::OpenLevel(GetWorld(), NEXT_LEVEL_NAME);
+			bRaceEnded = true;
+		}
+	} else {
+		CountdownUpdate();
 	}
 }
 
@@ -111,8 +140,9 @@ void ARaceManager::MultiRaceSetup(const FRacerInfo& Info) {
 	}
 }
 
-void ARaceManager::ReplicateRaceSetup(ABoat* Boat,const int32 BoatIndex) {
-	Boat->ChangeBoat(BoatIndex);
+void ARaceManager::ReplicateRaceSetup(ABoat* Boat, const int32 BoatIndex) {
+	//複製されたボートのプレイヤー番号を0に固定しておく
+	Boat->ChangeBoat(BoatIndex, 0);
 	Boats.Push(Boat);
 	if (Boats.Num() >= 4) {
 		bRaceAlreadySetup = true;
@@ -129,4 +159,36 @@ void ARaceManager::RaceStart() {
 	for (auto&& Boat : Boats) {
 		Boat->RaceReady(StartPoint);
 	}
+}
+
+URaceTimer* ARaceManager::GetRaceTimer() const {
+	return MainUI->GetRaceInfo()->GetRaceTimer();
+}
+
+void ARaceManager::CountdownUpdate() {
+	CountDownTime -= GetWorld()->GetDeltaSeconds();
+
+	CountDownUI->SetCountDownImage(CountDownTime + 1);
+	if (CountDownTime <= 0.0f) {
+		CountDownUI->RemoveFromParent();
+
+		for (auto&& Boat : Boats) {
+			Boat->RaceStart();
+		}
+		MainUI->GetRaceInfo()->GetRaceTimer()->Start();
+		bRaceStarted = true;
+		UMyGameInstance::GetInstance()->GetSoundSystem()->PlayBGM(ESoundResourceType::BGM_RACE);
+	}
+}
+
+bool ARaceManager::IsAnyBoatGoaled() const {
+	//周回数を3周として決め打つ
+	// TODO:現在のステージ情報から読み取る
+	constexpr int32 LAP_END_NUM = 4;
+	for (auto&& Boat : Boats) {
+		if (Boat->GetLapCounter()->GetLapCount() == LAP_END_NUM) {
+			return true;
+		}
+	}
+	return false;
 }

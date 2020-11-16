@@ -22,6 +22,9 @@ enum class ERacerType : uint8 {
 USTRUCT(BlueprintType)
 struct GFF_08_API FRacerInfo {
 	GENERATED_USTRUCT_BODY()
+	//! レーサーの名前
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "RacerInfo")
+	FName RacerName;
 	//! プレイヤー番号
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "RacerInfo")
 	int32 PlayerIndex;

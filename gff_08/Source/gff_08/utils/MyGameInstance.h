@@ -52,12 +52,12 @@ public:
 	USoundSystem* GetSoundSystem() const;
 
 	UFUNCTION(BlueprintCallable, Category = "MyGameInstance")
-	FGamePlayData GetPlayData() const {
+	FAllRacersGamePlayData GetPlayData() const {
 		return PlayData;
 	}
 
 	UFUNCTION(BlueprintCallable, Category = "MyGameInstance")
-	void SetPlayData(const FGamePlayData& Data) {
+	void SetPlayData(const FAllRacersGamePlayData& Data) {
 		this->PlayData = Data;
 	}
 
@@ -89,7 +89,7 @@ protected:
 	USoundSystem* SoundSystem;
 	//! ゲームのプレイ情報
 	UPROPERTY()
-	FGamePlayData PlayData;
+	FAllRacersGamePlayData PlayData;
 	//! オプション情報
 	UPROPERTY()
 	UOptionParameter* Option;

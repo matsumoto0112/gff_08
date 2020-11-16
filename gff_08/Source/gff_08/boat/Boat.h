@@ -10,6 +10,7 @@
 #include "gff_08/boat/LapCounter.h"
 #include "gff_08/field/CheckPoint.h"
 #include "gff_08/sound/SoundObject.h"
+#include "gff_08/utils/GamePlayData.h"
 
 #include "Boat.generated.h"
 
@@ -75,7 +76,7 @@ public:
 	 * @param BoatID ボートのID
 	 */
 	UFUNCTION(BlueprintCallable, Category = "Boat")
-	void ChangeBoat(int32 BoatID);
+	void ChangeBoat(int32 BoatID, int32 PlayerIndex);
 	/**
 	 * レース準備
 	 * @param StartCheckPoint スタート時のチェックポイント
@@ -93,6 +94,22 @@ public:
 	 */
 	UFUNCTION(BlueprintCallable, Category = "Boat")
 	virtual float GetPlayerSpeed() const;
+	/**
+	 * 周回計測機能の取得
+	 */
+	UFUNCTION(BlueprintGetter, Category = "Boat")
+	ULapCounter* GetLapCounter() const {
+		return LapCounter;
+	}
+
+	UFUNCTION(BlueprintSetter, Category = "Boat")
+	void SetRacerName(const FName& Name) {
+		RacerName = Name;
+	}
+	UFUNCTION(BlueprintGetter, Category = "Boat")
+	FName GetRacerName() const {
+		return RacerName;
+	}
 
 protected:
 	//! ボートメッシュ
@@ -102,7 +119,7 @@ protected:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Components")
 	UBoatMover* BoatMover;
 	//! 周回計測
-	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Components")
+	UPROPERTY(EditDefaultsOnly, BlueprintGetter = GetLapCounter, BlueprintReadOnly, Category = "Components")
 	ULapCounter* LapCounter;
 	//! 回転の力を加える地点
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Components")
@@ -130,4 +147,7 @@ protected:
 	//! 運転手
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Boat")
 	TScriptInterface<IDriver> Driver;
+	//! レーサーの名前
+	UPROPERTY(VisibleAnywhere, BlueprintGetter = GetRacerName, BlueprintSetter = SetRacerName, Category = "Boat")
+	FName RacerName;
 };
