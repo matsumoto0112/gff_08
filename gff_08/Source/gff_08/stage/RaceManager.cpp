@@ -142,7 +142,7 @@ void ARaceManager::MultiRaceSetup(const FRacerInfo& Info) {
 
 void ARaceManager::ReplicateRaceSetup(ABoat* Boat, const int32 BoatIndex) {
 	//複製されたボートのプレイヤー番号を0に固定しておく
-	Boat->ChangeBoat(BoatIndex, 0);
+	Boat->ChangeBoat(BoatIndex, BoatIndex);
 	Boats.Push(Boat);
 	if (Boats.Num() >= 4) {
 		bRaceAlreadySetup = true;
