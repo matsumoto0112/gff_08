@@ -160,7 +160,16 @@ protected:
 	//! プレイヤー番号
 	int32 PlayerIndex_;
 
+	//! モーターの回転量を保存するタイマーのハンドル
 	FTimerHandle PrevMotorValueStockHandle;
+	//!モーターの回転量を保存するタイマーの間隔
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Boat")
+	float PrevMotorValueStockInterval = 0.1f;
+	//! 姿勢を維持しているときに最高速に達するまでにかかる時間
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Boat")
+	float MaxInfluencePostureMaintainingTime = 1.0f;
+	//! 以前のモーターの回転量の値
 	TArray<TPair<float, float>> PrevMotorValues;
-	float PostureSameTime;
+	//! 姿勢維持時間
+	float PostureMaintainingTime;
 };

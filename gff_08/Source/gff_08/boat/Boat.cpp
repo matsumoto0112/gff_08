@@ -8,8 +8,9 @@
 #include "kismet/KismetSystemLibrary.h"
 
 namespace {
-bool IsOK(const TArray<TPair<float, float>>& MotorValues) {
-	if (MotorValues.Num() < 5) {
+constexpr int32 NEED_MOTOR_VALUE_NUM = 5;
+bool IsMaintaining(const TArray<TPair<float, float>>& MotorValues) {
+	if (MotorValues.Num() < NEED_MOTOR_VALUE_NUM) {
 		return false;
 	}
 
@@ -74,6 +75,11 @@ void ABoat::BeginPlay() {
 void ABoat::EndPlay(const EEndPlayReason::Type EndPlayReason) {
 	Super::EndPlay(EndPlayReason);
 
+	if (PrevMotorValueStockHandle.IsValid()) {
+		GetWorld()->GetTimerManager().ClearTimer(PrevMotorValueStockHandle);
+		PrevMotorValueStockHandle.Invalidate();
+	}
+
 	//音源の停止
 	MoveSound->Stop();
 	ScrewSound->Stop();
@@ -105,7 +111,9 @@ void ABoat::RaceReady(ACheckPoint* StartCheckPoint) {
 	//直線移動するよう設定
 	MoveType = EBoatMovableType::StraightOnly;
 
-	GetWorld()->GetTimerManager().SetTimer(PrevMotorValueStockHandle, this, &ABoat::PushMovementValue, 0.1f, true);
+	//現在のモーターの値を保存していくタイマーの設定
+	GetWorld()->GetTimerManager().SetTimer(
+		PrevMotorValueStockHandle, this, &ABoat::PushMovementValue, PrevMotorValueStockInterval, true);
 }
 
 //レースの開始
@@ -124,7 +132,7 @@ void ABoat::PushMovementValue() {
 	const FInputInfo InputInfo = IDriver::Execute_CurrentInputInfo(Driver.GetObject());
 	PrevMotorValues.Emplace(InputInfo.LeftMotorValue, InputInfo.RightMotorValue);
 
-	if (PrevMotorValues.Num() > 5) {
+	if (PrevMotorValues.Num() > NEED_MOTOR_VALUE_NUM) {
 		PrevMotorValues.RemoveAt(0);
 	}
 }
@@ -134,11 +142,14 @@ void ABoat::CalcMovementValues(float& MoveValue, float& LeftValue, float& RightV
 	const FInputInfo InputInfo = IDriver::Execute_CurrentInputInfo(Driver.GetObject());
 	const float MinValue = FMath::Min(InputInfo.LeftMotorValue, InputInfo.RightMotorValue);
 	const float MaxValue = FMath::Max(InputInfo.LeftMotorValue, InputInfo.RightMotorValue);
-	const float T = FMath::Lerp(MinValue, MaxValue, FMath::Max(1.0f, PostureSameTime));
+
+	//姿勢を維持している時間が長ければ長いほどMaxValueの値に近づく
+	const float MovementValue =
+		FMath::Lerp(MinValue, MaxValue, FMath::Max(1.0f, PostureMaintainingTime / MaxInfluencePostureMaintainingTime));
 
 	switch (MoveType) {
 		case EBoatMovableType::Default:
-			MoveValue = T;
+			MoveValue = MovementValue;
 			LeftValue = InputInfo.LeftMotorValue - MinValue;
 			RightValue = InputInfo.RightMotorValue - MinValue;
 			break;
@@ -187,10 +198,10 @@ void ABoat::Tick(float DeltaTime) {
 	CalcMovementValues(MoveValue, LeftValue, RightValue);
 	BoatMover->Move(MoveValue, LeftValue, RightValue);
 
-	if (IsOK(PrevMotorValues)) {
-		PostureSameTime += GetWorld()->GetDeltaSeconds();
+	if (IsMaintaining(PrevMotorValues)) {
+		PostureMaintainingTime += GetWorld()->GetDeltaSeconds();
 	} else {
-		PostureSameTime = 0;
+		PostureMaintainingTime = 0;
 	}
 
 	//音源に対するパラメータ設定
