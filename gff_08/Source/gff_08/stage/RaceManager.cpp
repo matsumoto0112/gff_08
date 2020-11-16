@@ -47,8 +47,6 @@ void ARaceManager::BeginPlay() {
 	if (UStrixBlueprintFunctionLibrary::IsMasterServerConnected(GWorld) == true) {
 		// StrixCloudでバグが起きないようネットワークのポーズを解除する
 		//参照:https://www.strixengine.com/doc/unreal/guide/ja/howtos/object_sync/howto_scene_change.html
-		UStrixBlueprintFunctionLibrary::UnpauseNetworkObjectManager(
-			GWorld, UMyGameInstance::GetInstance()->GetUserData()->GetChannelID());
 
 		GEngine->AddOnScreenDebugMessage(-1, 3.0f, FColor::White, "Connected MasterServer");
 
@@ -56,6 +54,9 @@ void ARaceManager::BeginPlay() {
 		const int32 PlayerIndex = UMyGameInstance::GetInstance()->GetUserData()->GetPlayerIndex();
 		const FName PlayerName = UMyGameInstance::GetInstance()->GetUserData()->GetPlayerName();
 		MultiRaceSetup(FRacerInfo{PlayerName, PlayerIndex, BoatIndex, ERacerType::Player});
+		//UStrixBlueprintFunctionLibrary::UnpauseNetworkObjectManager(
+		//	GWorld, UMyGameInstance::GetInstance()->GetUserData()->GetChannelID());
+		GEngine->AddOnScreenDebugMessage(-1, 3.0f, FColor::Red, "Create OwnerShip!!!");
 
 	} else {
 		GEngine->AddOnScreenDebugMessage(-1, 3.0f, FColor::White, "No Connected MasterServer");
@@ -142,7 +143,7 @@ void ARaceManager::MultiRaceSetup(const FRacerInfo& Info) {
 
 void ARaceManager::ReplicateRaceSetup(ABoat* Boat, const int32 BoatIndex) {
 	//複製されたボートのプレイヤー番号を0に固定しておく
-	Boat->ChangeBoat(BoatIndex, BoatIndex);
+	Boat->ChangeBoat(BoatIndex, 0);
 	Boats.Push(Boat);
 	if (Boats.Num() >= 4) {
 		bRaceAlreadySetup = true;
