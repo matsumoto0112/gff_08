@@ -32,7 +32,7 @@ struct GFF_08_API FStageData : public FTableRowBase {
 	UTexture2D* StageImage;
 	//! ステージの形状レベル名
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "StageData")
-	FName StageSpaheLevelName;
+	FName StageShapeLevelName;
 };
 
 USTRUCT(BlueprintType)
@@ -59,7 +59,7 @@ struct GFF_08_API FStageDataAssetRecord {
 	UTexture2D* StageImage;
 	//! ステージの形状レベル名
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "StageDataAssetRecord")
-	FName StageSpaheLevelName;
+	FName StageShapeLevelName;
 };
 
 /**
