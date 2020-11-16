@@ -166,7 +166,11 @@ URaceTimer* ARaceManager::GetRaceTimer() const {
 }
 
 void ARaceManager::CountdownUpdate() {
+	const float PrevCountDownTime = CountDownTime;
 	CountDownTime -= GetWorld()->GetDeltaSeconds();
+	if ((int32) CountDownTime != (int32) PrevCountDownTime && (int32) CountDownTime >= 0) {
+		UMyGameInstance::GetInstance()->GetSoundSystem()->PlaySound2D(ESoundResourceType::SE_RACE_COUNTDOWN);
+	}
 
 	CountDownUI->SetCountDownImage(CountDownTime + 1);
 	if (CountDownTime <= 0.0f) {
