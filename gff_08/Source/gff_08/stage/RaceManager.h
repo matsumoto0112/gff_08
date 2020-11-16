@@ -45,8 +45,13 @@ public:
 	 * レプリケートされたボートのセットアップ処理
 	 */
 	UFUNCTION(BlueprintCallable, Category = "RaceManager")
-	void ReplicateRaceSetup(ABoat* Boat,const int32 BoatIndex);
+	void ReplicateRaceSetup(ABoat* Boat,const int32 BoatIndex,const int32 PlayerIndex);
 
+	UFUNCTION(BlueprintCallable, Category = "RaceManager")
+	bool IsStart();
+
+	UFUNCTION(BlueprintCallable, Category = "RaceManager")
+	void StartRaceSetUp();
 	/**
 	 * レース開始処理
 	 */
