@@ -33,9 +33,13 @@ struct FSynchroParameters {
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "SynchroParameters")
 	int32 LapCount;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "SynchroParameters")
+	int32 MostAdvancedLapCount;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "SynchroParameters")
 	int32 CurrentCheckPointIndex;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "SynchroParameters")
 	int32 Ranking;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "SynchroParameters")
+	TArray<float> LapTimes;
 };
 
 /**
