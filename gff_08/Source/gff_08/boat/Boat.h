@@ -174,4 +174,6 @@ protected:
 	TArray<TPair<float, float>> PrevMotorValues;
 	//! p¨ˆÛŠÔ
 	float PostureMaintainingTime;
+	//! X²‰ñ“]—Ê‚Ì—š—ğ
+	TArray<float> RotationXHistory;
 };

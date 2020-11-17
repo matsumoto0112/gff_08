@@ -27,6 +27,30 @@ bool IsMaintaining(const TArray<TPair<float, float>>& MotorValues) {
 
 	return Left_Max - Left_Min < 0.01f && Right_Max - Right_Min < 0.01f;
 }
+
+constexpr int32 NEED_HISTORY_NUM = 20;
+
+/**
+ * Ε‘ε•³—Ν‚π’΄‚¦‚½‰ρ“]‚π‚µ‚Δ‚Ά‚ι‚©
+ * X²‚Ικ’θ‚Μ‰ρ“]—Κ‚π‚Α‚Δ‚Ά‚ι‚ΖA‹@‘Μ‚Μ•³—Ν‚π’΄‚¦‚ι
+ */
+bool IsOverMaxRestoreForce(const TArray<float>& RotationXHistory) {
+	if (RotationXHistory.Num() < NEED_HISTORY_NUM) {
+		return false;
+	}
+
+	float Min = RotationXHistory[0];
+	float Max = RotationXHistory[0];
+	for (int32 i = 1; i < RotationXHistory.Num(); i++) {
+		Min = FMath::Min(Min, RotationXHistory[i]);
+		Max = FMath::Max(Max, RotationXHistory[i]);
+	}
+
+	//•³‚Ε‚«‚Θ‚Ά‚Ζ”»’f‚·‚ιθ‡’l
+	//ΐ‘ª’l
+	constexpr float THRESHOLD = 58.0f;
+	return Min >= THRESHOLD;
+}
 }	 // namespace
 
 // Sets default values
@@ -141,6 +165,11 @@ void ABoat::PushMovementValue() {
 	if (PrevMotorValues.Num() > NEED_MOTOR_VALUE_NUM) {
 		PrevMotorValues.RemoveAt(0);
 	}
+
+	RotationXHistory.Push(FMath::Abs(GetActorRotation().Euler().X));
+	if (RotationXHistory.Num() > NEED_HISTORY_NUM) {
+		RotationXHistory.RemoveAt(0);
+	}
 }
 
 //Ϊ“®—Ν‚πvZ‚·‚ι
@@ -214,6 +243,11 @@ void ABoat::Tick(float DeltaTime) {
 		PostureMaintainingTime += GetWorld()->GetDeltaSeconds();
 	} else {
 		PostureMaintainingTime = 0;
+	}
+
+	if (IsOverMaxRestoreForce(RotationXHistory)) {
+		//ReturnPrevCheckPoint();
+		//RotationXHistory.Empty();
 	}
 
 	//‰ΉΉ‚Ι‘Ξ‚·‚ιƒpƒ‰ƒ[ƒ^έ’θ
