@@ -140,6 +140,9 @@ void ABoat::PushMovementValue() {
 //ˆÚ“®—Í‚ðŒvŽZ‚·‚é
 void ABoat::CalcMovementValues(float& MoveValue, float& LeftValue, float& RightValue) const {
 	const FInputInfo InputInfo = IDriver::Execute_CurrentInputInfo(Driver.GetObject());
+
+	const float Coef = InputInfo.bBack ? -1.0f : 1.0f;
+
 	const float MinValue = FMath::Min(InputInfo.LeftMotorValue, InputInfo.RightMotorValue);
 	const float MaxValue = FMath::Max(InputInfo.LeftMotorValue, InputInfo.RightMotorValue);
 
@@ -149,9 +152,9 @@ void ABoat::CalcMovementValues(float& MoveValue, float& LeftValue, float& RightV
 
 	switch (MoveType) {
 		case EBoatMovableType::Default:
-			MoveValue = MovementValue;
-			LeftValue = InputInfo.LeftMotorValue - MinValue;
-			RightValue = InputInfo.RightMotorValue - MinValue;
+			MoveValue = Coef * MovementValue;
+			LeftValue = Coef * (InputInfo.LeftMotorValue - MinValue);
+			RightValue = Coef * (InputInfo.RightMotorValue - MinValue);
 			break;
 			//ˆÚ“®‚È‚µ
 		case EBoatMovableType::NoMove:
@@ -198,6 +201,7 @@ void ABoat::Tick(float DeltaTime) {
 	CalcMovementValues(MoveValue, LeftValue, RightValue);
 	BoatMover->Move(MoveValue, LeftValue, RightValue);
 
+	//Žp¨‚ðˆÛŽ‚µ‚Ä‚¢‚é‚Æ‚«‚ÉŽžŠÔ‚ð‰ÁŽZ‚µ‚Ä‚¢‚­
 	if (IsMaintaining(PrevMotorValues)) {
 		PostureMaintainingTime += GetWorld()->GetDeltaSeconds();
 	} else {

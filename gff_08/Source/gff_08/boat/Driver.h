@@ -16,15 +16,18 @@ struct FInputInfo {
 	GENERATED_USTRUCT_BODY()
 
 public:
-	FInputInfo() : LeftMotorValue(0.0f), RightMotorValue(0.0f) {
+	FInputInfo() : LeftMotorValue(0.0f), RightMotorValue(0.0f), bBack(false) {
 	}
-	FInputInfo(float LeftMotorValue, float RightMotorValue) : LeftMotorValue(LeftMotorValue), RightMotorValue(RightMotorValue) {
+	FInputInfo(float LeftMotorValue, float RightMotorValue, bool bBack)
+		: LeftMotorValue(LeftMotorValue), RightMotorValue(RightMotorValue), bBack(bBack) {
 	}
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "InputInfo")
 	float LeftMotorValue;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "InputInfo")
 	float RightMotorValue;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "InputInfo")
+	bool bBack;
 };
 
 // This class does not need to be modified.

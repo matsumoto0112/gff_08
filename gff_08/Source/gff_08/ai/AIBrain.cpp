@@ -22,7 +22,7 @@ void UAIBrain::Init(ABoat* Boat) {
 }
 
 FInputInfo UAIBrain::Next() {
-	FInputInfo Res{0.1f, 0.1f};
+	FInputInfo Res{0.1f, 0.1f, false};
 
 	ACheckPoint* NextCheckPoint = Parent->GetNextCheckPoint();
 	if (NextCheckPoint == nullptr) {

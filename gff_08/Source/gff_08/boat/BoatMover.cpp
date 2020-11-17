@@ -104,7 +104,7 @@ void UBoatMover::AddForwardForce(float MoveValue) {
 	const float ForcePower = MoveValue * Mass * Acceleration * Coef;
 
 	const FVector ForwardVector = BoatMesh->GetForwardVector();
-	BoatMesh->AddForce(ForwardVector * ForcePower);
+	BoatMesh->AddForce(FVector(ForwardVector.X, ForwardVector.Y, 0.0f) * ForcePower);
 }
 
 //右方向に力を加える
@@ -118,8 +118,8 @@ void UBoatMover::AddRightForce(float LeftMotorValue, float RightMotorValue) {
 
 	const FVector RightVector = SteerForceLocation->GetRightVector();
 	const FVector SteerLocation = SteerForceLocation->GetComponentLocation();
-
-	BoatMesh->AddForceAtLocation(RightVector * ForcePower, SteerLocation);
+	const FVector V = FVector(RightVector.X, RightVector.Y, 0.0f) * ForcePower;
+	BoatMesh->AddForceAtLocation(V, SteerLocation);
 }
 
 //波の生成タイマー処理
