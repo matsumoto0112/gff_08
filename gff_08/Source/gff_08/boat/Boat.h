@@ -130,9 +130,9 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "Boat")
 	void ReturnPrevCheckPoint();
 
-	UFUNCTION(BlueprintImplementableEvent, Category = "Boat")
+	UFUNCTION(BlueprintImplementableEvent, BlueprintCallable, Category = "Boat")
 	FSynchroParameters GetSynchroParameters() const;
-	UFUNCTION(BlueprintImplementableEvent, Category = "Boat")
+	UFUNCTION(BlueprintImplementableEvent, BlueprintCallable, Category = "Boat")
 	void SetSynchroParameters(const FSynchroParameters& Parameters);
 
 private:
