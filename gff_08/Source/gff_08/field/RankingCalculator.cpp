@@ -59,7 +59,5 @@ void URankingCalculator::TickComponent(float DeltaTime, ELevelTick TickType, FAc
 
 	for (int32 i = 0; i < Boats.Num(); i++) {
 		Cast<ABoat>(Boats[i])->GetLapCounter()->SetRanking(i + 1);
-		GEngine->AddOnScreenDebugMessage(
-			-1, 0.0f, FColor::Red, FString::Format(TEXT("{0}: {1}"), {i, Boats[i]->GetSynchroParameters().CurrentCheckPointIndex}));
 	}
 }
