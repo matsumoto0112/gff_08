@@ -4,6 +4,7 @@
 
 #include "Components/ActorComponent.h"
 #include "CoreMinimal.h"
+#include "gff_08/boat/Boat.h"
 #include "gff_08/boat/LapCounter.h"
 #include "gff_08/field/CheckPointManager.h"
 
@@ -22,6 +23,9 @@ protected:
 	virtual void BeginPlay() override;
 
 public:
+	UFUNCTION()
+	void Setup(const TArray<ABoat*>& Boats);
+
 	// Called every frame
 	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
 

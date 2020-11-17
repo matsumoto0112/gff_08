@@ -16,11 +16,10 @@ URankingCalculator::URankingCalculator() {
 // Called when the game starts
 void URankingCalculator::BeginPlay() {
 	Super::BeginPlay();
+}
 
-	// ...
-	TArray<AActor*> Boats;
-	UGameplayStatics::GetAllActorsOfClass(GetWorld(), BoatClass, Boats);
-
+void URankingCalculator::Setup(const TArray<ABoat*>& Boats) {
+	LapCounters.Empty();
 	LapCounters.Reserve(Boats.Num());
 	for (auto&& Boat : Boats) {
 		LapCounters.Emplace(Cast<ULapCounter>(Boat->GetComponentByClass(ULapCounter::StaticClass())));

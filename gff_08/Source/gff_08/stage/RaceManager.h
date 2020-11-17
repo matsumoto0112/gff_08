@@ -5,6 +5,7 @@
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
 #include "gff_08/field/CheckPointManager.h"
+#include "gff_08/field/RankingCalculator.h"
 #include "gff_08/stage/SetupRacers.h"
 #include "gff_08/ui/CountDownTimer.h"
 #include "gff_08/ui/MyHUD.h"
@@ -45,7 +46,7 @@ public:
 	 * レプリケートされたボートのセットアップ処理
 	 */
 	UFUNCTION(BlueprintCallable, Category = "RaceManager")
-	void ReplicateRaceSetup(ABoat* Boat,const int32 BoatIndex,const int32 PlayerIndex);
+	void ReplicateRaceSetup(ABoat* Boat, const int32 BoatIndex, const int32 PlayerIndex);
 
 	UFUNCTION(BlueprintCallable, Category = "RaceManager")
 	bool IsStart();
@@ -86,15 +87,18 @@ protected:
 	//! レースのセットアップ処理担当
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components")
 	USetupRacers* Setup;
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components")
+	URankingCalculator* RankingCalculator;
+
 	//! チェックポイント管理者
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Components")
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "RaceManager")
 	ACheckPointManager* CheckPointManager;
 
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components")
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "RaceManager")
 	UCountDownTimer* CountDownUI;
-	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Components")
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "RaceManager")
 	float CountDownTime;
-	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Components")
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "RaceManager")
 	TArray<ABoat*> Boats;
 
 protected:

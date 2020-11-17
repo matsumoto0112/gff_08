@@ -94,7 +94,7 @@ void ULapCounter::PassCheckPoint(ACheckPoint* PassedCheckPoint) {
 	} else if (PassedCheckPointIndex == MaxCheckPointIndex) {
 		// 戻ったタイミングで減算
 		if (CurrentIndex == START_CHECKPOINT_INDEX) {
-			CurrentLapCount = FMath::Max(CurrentLapCount - 1, 1);
+			CurrentLapCount = FMath::Max(CurrentLapCount - 1, 0);
 		}
 	}
 	CurrentIndex = PassedCheckPointIndex;

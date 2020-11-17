@@ -20,6 +20,9 @@ ARaceManager::ARaceManager() {
 
 	Setup = CreateDefaultSubobject<USetupRacers>(TEXT("SetupRacers"));
 	AddOwnedComponent(Setup);
+
+	RankingCalculator = CreateDefaultSubobject<URankingCalculator>(TEXT("RankingCalculator"));
+	AddOwnedComponent(RankingCalculator);
 }
 
 // Called when the game starts or when spawned
@@ -68,6 +71,9 @@ void ARaceManager::BeginPlay() {
 
 		RaceStart();
 	}
+
+	//シングルプレイだったらここで大丈夫
+	RankingCalculator->Setup(Boats);
 
 	//メインのUIの中ではプレイヤーを参照する必要があるため、Setupの完了後に呼ぶ
 	// TODO:MyHUDクラス内にプレイヤーの取得機能を作成し、Setup後に呼ぶようにする
@@ -167,6 +173,9 @@ void ARaceManager::RaceStart() {
 	for (auto&& Boat : Boats) {
 		Boat->RaceReady(StartPoint);
 	}
+
+	//マルチプレイ用
+	RankingCalculator->Setup(Boats);
 }
 
 URaceTimer* ARaceManager::GetRaceTimer() const {
