@@ -77,8 +77,12 @@ private:
 	 * カウントダウンの更新処理
 	 */
 	void CountdownUpdate();
-
+	/**
+	 * いずれかのボートがゴールしたかどうか
+	 */
 	bool IsAnyBoatGoaled() const;
+
+	FAllRacersGamePlayData CalculateResult();
 
 protected:
 	static const FName NEXT_LEVEL_NAME;
@@ -87,6 +91,7 @@ protected:
 	//! レースのセットアップ処理担当
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components")
 	USetupRacers* Setup;
+	//! 順位計測
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components")
 	URankingCalculator* RankingCalculator;
 

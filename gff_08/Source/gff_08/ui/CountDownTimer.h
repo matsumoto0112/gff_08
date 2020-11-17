@@ -19,4 +19,12 @@ public:
 	void SetCountDownImage(int32 Time);
 	UFUNCTION(BlueprintImplementableEvent, BlueprintCallable, Category = "CountDownTimer")
 	void SetStartUI();
+
+	UFUNCTION(BlueprintImplementableEvent, BlueprintCallable, Category = "CountDownTimer")
+	void SetGoalUI();
+
+	UFUNCTION(BlueprintImplementableEvent, BlueprintCallable, Category = "CountDownTimer")
+	void SetAnyBoatGoaledUI();
+	UFUNCTION(BlueprintImplementableEvent, BlueprintCallable, Category = "CountDownTimer")
+	void ClearUI();
 };
