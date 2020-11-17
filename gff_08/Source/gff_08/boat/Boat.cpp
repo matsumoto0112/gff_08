@@ -154,7 +154,7 @@ void ABoat::CalcMovementValues(float& MoveValue, float& LeftValue, float& RightV
 
 	//p¨‚ğˆÛ‚µ‚Ä‚¢‚éŠÔ‚ª’·‚¯‚ê‚Î’·‚¢‚Ù‚ÇMaxValue‚Ì’l‚É‹ß‚Ã‚­
 	const float MovementValue =
-		FMath::Lerp(MinValue, MaxValue, FMath::Max(1.0f, PostureMaintainingTime / MaxInfluencePostureMaintainingTime));
+		FMath::Lerp(MinValue, MaxValue, FMath::Min(1.0f, PostureMaintainingTime / MaxInfluencePostureMaintainingTime));
 
 	switch (MoveType) {
 		case EBoatMovableType::Default:
