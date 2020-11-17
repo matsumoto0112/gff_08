@@ -181,10 +181,15 @@ bool ABoat::IsReverseDriving() const {
 		return false;
 	}
 	//³–Ê‚Æ‚ÌƒxƒNƒgƒ‹‚Å”»’è‚·‚é
-	const FVector ForwardVector = GetActorForwardVector();
-	const FVector To = NextCheckPoint->GetActorLocation() - GetActorLocation();
-	const float Dot = ForwardVector.CosineAngle2D(To);
-	return Dot < 0.0f;
+	const FVector ForwardVector = GetActorForwardVector().GetSafeNormal2D();
+	const FVector To = (NextCheckPoint->GetActorLocation() - GetActorLocation()).GetSafeNormal2D();
+	// const float Dot = ForwardVector.CosineAngle2D(To);
+	const float DotProduct = FVector::DotProduct(To, ForwardVector);
+	const float Dot = FMath::Acos(DotProduct);
+	const float Deg = FMath::RadiansToDegrees(Dot);
+	//GEngine->AddOnScreenDebugMessage(
+	//	-1, 0.0f, FColor::Red, FString::Format(TEXT("{0}: {1}"), {GetName(), FMath::RadiansToDegrees(Dot)}));
+	return Deg > 120.0f;
 }
 
 // Called every frame
