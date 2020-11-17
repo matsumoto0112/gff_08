@@ -11,28 +11,41 @@ USTRUCT(BlueprintType)
 struct GFF_08_API Fr8g8b8a8 {
 	GENERATED_USTRUCT_BODY()
 
-	uint8 r = 255, g = 255, b = 255, a = 255;
+	Fr8g8b8a8() : R(0), G(0), B(0), A(0) {
+	}
+	Fr8g8b8a8(uint8 col) : R(col), G(col), B(col), A(col) {
+	}
+	Fr8g8b8a8(uint8 r,uint8 g,uint8 b,uint8 a) : R(r), G(g), B(b), A(a) {
+	}
+	uint8 R = 255, G = 255, B = 255, A = 255;
 };
 
 USTRUCT(BlueprintType)
 struct GFF_08_API FAccelWaveInfo {
 	GENERATED_USTRUCT_BODY()
 
-	FAccelWaveInfo() : velocity(FVector::ZeroVector), length(0.0f), startTime(), isValid(false) {
+	FAccelWaveInfo() : Velocity(FVector::ZeroVector), Length(0.0f), StartTime(0.0f), IsValid(false) {
 	}
 
-	FAccelWaveInfo(FVector velocity, float length, FDateTime startTime, bool isValid)
-		: velocity(velocity), length(length), startTime(startTime), isValid(isValid) {
+	FAccelWaveInfo(const FVector& velocity, const float length, const float startTime, const bool isValid)
+		: Velocity(velocity), Length(length), StartTime(startTime), IsValid(isValid) {
+	}
+
+	void Initialize(const FVector& velocity, const float length, const float startTime, const bool isValid) {
+		Velocity = velocity;
+		Length = length;
+		StartTime = startTime;
+		IsValid = isValid;
 	}
 
 	//波の向き
-	FVector velocity;
+	FVector Velocity;
 	//波の強さ
-	float length;
+	float Length;
 	//生成されてからの時間
-	FDateTime startTime;
+	float StartTime;
 	//存在するかどうか
-	bool isValid;
+	bool IsValid;
 };
 
 UCLASS()
@@ -68,17 +81,20 @@ public:
 	float EdgeTexH;
 
 	//行
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Index")
-	int Row;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Wave")
+	int32 Row = 200;
 	//列
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Index")
-	int Column;
-	UPROPERTY(EditAnywhere, Category = "CopyMaterial")
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Wave")
+	int32 Column = 200;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Wave")
+	float WaveLifespan = 45.0f;
+	UPROPERTY(EditAnywhere, Category = "Wave")
 	UMaterial* CopyWaterMaterial;
 
 protected:
 	// スタート時
 	virtual void BeginPlay() override;
+	virtual void EndPlay(const EEndPlayReason::Type EndPlayReason) override;
 
 public:
 	// 更新
@@ -110,6 +126,11 @@ private:
 	 * マテリアルとflowMapの作成
 	 */
 	void CreateTextureAndMaterial();
+
+	/**
+	 * 波情報の更新
+	 */
+	void UpdateWaveInfo();
 
 	/**
 	 * テクスチャの更新を行う
@@ -144,10 +165,14 @@ private:
 	static constexpr int32 TEXTURE_EDGE_W = 1024;
 	static constexpr int32 TEXTURE_EDGE_H = 1024;
 
+	static constexpr int32 LIMIT_TIME = 1;
 	static constexpr uint8 NEUTRAL = 0300;
 
 	TArray<Fr8g8b8a8> TextureColorData;
 	TArray<TArray<FAccelWaveInfo>> WaveArray;
 	UTexture2D* FlowMap;
 	bool UpdateFlag;
+	float Timer;
+	int32 ColumnArrayIndex;
+	FTimerHandle handle;
 };
