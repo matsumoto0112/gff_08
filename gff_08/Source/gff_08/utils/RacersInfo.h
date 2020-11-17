@@ -34,6 +34,10 @@ struct GFF_08_API FRacerInfo {
 	//! ÉåÅ[ÉTÅ[ÇÃéÌóﬁ
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "RacerInfo")
 	ERacerType RacerType;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "RacerInfo")
+	int32 PlayerNetworkID;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "RacerInfo")
+	bool bIsSetOwner;
 };
 
 /**

@@ -54,7 +54,7 @@ TArray<ABoat*> USetupRacers::Setup(const FAllRacerInfo& RacersInfo) {
 		}
 		Boat->ChangeBoat(Racer.BoatIndex, Racer.PlayerIndex);
 		Boat->SetRacerName(Racer.RacerName);
-
+		Boat->SetRacerInfo(Racer);
 		Res.Push(Boat);
 	}
 

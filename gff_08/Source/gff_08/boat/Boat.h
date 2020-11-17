@@ -11,6 +11,7 @@
 #include "gff_08/field/CheckPoint.h"
 #include "gff_08/sound/SoundObject.h"
 #include "gff_08/utils/GamePlayData.h"
+#include "gff_08/utils/RacersInfo.h"
 
 #include "Boat.generated.h"
 
@@ -115,6 +116,11 @@ public:
 	}
 	UFUNCTION(BlueprintCallable, Category = "Boat")
 	void ReturnPrevCheckPoint();
+
+	UFUNCTION(BlueprintImplementableEvent, BlueprintCallable, Category = "Boat")
+	FRacerInfo GetRacerInfo() const;
+	UFUNCTION(BlueprintImplementableEvent, BlueprintCallable, Category = "Boat")
+	void SetRacerInfo(const FRacerInfo& Info);
 
 private:
 	UFUNCTION()
