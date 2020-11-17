@@ -77,6 +77,7 @@ ABoat* USetupRacers::SetupRacer(const FRacerInfo& RacersInfo) {
 	}
 	Boat->ChangeBoat(RacersInfo.BoatIndex, RacersInfo.PlayerIndex);
 	Boat->SetRacerName(RacersInfo.RacerName);
+	Boat->SetRacerInfo(RacersInfo);
 
 	return Boat;
 }
