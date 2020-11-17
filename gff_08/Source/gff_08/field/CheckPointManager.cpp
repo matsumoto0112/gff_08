@@ -21,7 +21,12 @@ void ACheckPointManager::Tick(float DeltaTime) {
 }
 
 ACheckPoint* ACheckPointManager::GetNextPoint(int32 CurrentIndex) const {
-	int32 NextIndex = (CurrentIndex + 1) % CheckPoints.Num();
+	const int32 NextIndex = (CurrentIndex + 1) % CheckPoints.Num();
+	return *CheckPoints.Find(NextIndex);
+}
+
+ACheckPoint* ACheckPointManager::GetPrevPoint(int32 CurrentIndex) const {
+	const int32 NextIndex = (CurrentIndex - 1 + CheckPoints.Num()) % CheckPoints.Num();
 	return *CheckPoints.Find(NextIndex);
 }
 

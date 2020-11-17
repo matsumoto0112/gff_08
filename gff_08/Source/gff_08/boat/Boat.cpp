@@ -128,6 +128,12 @@ float ABoat::GetPlayerSpeed() const {
 	return USpeedConverter::ToSpeedKilometerPerHour(GetVelocity().Size());
 }
 
+void ABoat::ReturnPrevCheckPoint() {
+	ACheckPoint* PrevCheckPoint = NextCheckPoint->GetPrevPoint();
+	SetActorLocationAndRotation(PrevCheckPoint->GetActorLocation() + FVector(0.0f, 0.0f, 100.0f),
+		PrevCheckPoint->GetActorRotation() + FRotator::MakeFromEuler(FVector(0, 0, -90.0f)));
+}
+
 void ABoat::PushMovementValue() {
 	const FInputInfo InputInfo = IDriver::Execute_CurrentInputInfo(Driver.GetObject());
 	PrevMotorValues.Emplace(InputInfo.LeftMotorValue, InputInfo.RightMotorValue);
@@ -148,7 +154,7 @@ void ABoat::CalcMovementValues(float& MoveValue, float& LeftValue, float& RightV
 
 	//姿勢を維持している時間が長ければ長いほどMaxValueの値に近づく
 	const float MovementValue =
-		FMath::Lerp(MinValue, MaxValue, FMath::Min(1.0f, PostureMaintainingTime / MaxInfluencePostureMaintainingTime));
+		FMath::Lerp(MinValue, MaxValue, FMath::Max(1.0f, PostureMaintainingTime / MaxInfluencePostureMaintainingTime));
 
 	switch (MoveType) {
 		case EBoatMovableType::Default:
@@ -183,12 +189,9 @@ bool ABoat::IsReverseDriving() const {
 	//正面とのベクトルで判定する
 	const FVector ForwardVector = GetActorForwardVector().GetSafeNormal2D();
 	const FVector To = (NextCheckPoint->GetActorLocation() - GetActorLocation()).GetSafeNormal2D();
-	// const float Dot = ForwardVector.CosineAngle2D(To);
 	const float DotProduct = FVector::DotProduct(To, ForwardVector);
 	const float Dot = FMath::Acos(DotProduct);
 	const float Deg = FMath::RadiansToDegrees(Dot);
-	//GEngine->AddOnScreenDebugMessage(
-	//	-1, 0.0f, FColor::Red, FString::Format(TEXT("{0}: {1}"), {GetName(), FMath::RadiansToDegrees(Dot)}));
 	return Deg > 120.0f;
 }
 

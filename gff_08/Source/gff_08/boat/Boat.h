@@ -113,6 +113,8 @@ public:
 	int32 GetPlayerIndex_() const {
 		return PlayerIndex_;
 	}
+	UFUNCTION(BlueprintCallable, Category = "Boat")
+	void ReturnPrevCheckPoint();
 
 private:
 	UFUNCTION()

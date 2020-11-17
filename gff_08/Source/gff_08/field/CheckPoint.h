@@ -41,6 +41,11 @@ public:
 	 */
 	UFUNCTION(BlueprintCallable, Category = "CheckPoint")
 	ACheckPoint* GetNextPoint() const;
+	/**
+	 * 前のチェックポイントを返す
+	 */
+	UFUNCTION(BlueprintCallable, Category = "CheckPoint")
+	ACheckPoint* GetPrevPoint() const;
 
 protected:
 	UPROPERTY(EditDefaultsOnly)

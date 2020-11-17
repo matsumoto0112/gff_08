@@ -37,3 +37,11 @@ ACheckPoint* ACheckPoint::GetNextPoint() const {
 		return nullptr;
 	}
 }
+
+ACheckPoint* ACheckPoint::GetPrevPoint() const {
+	if (Manager) {
+		return Manager->GetPrevPoint(Index);
+	} else {
+		return nullptr;
+	}
+}
