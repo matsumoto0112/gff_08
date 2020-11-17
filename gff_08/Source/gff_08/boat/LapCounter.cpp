@@ -49,6 +49,7 @@ void ULapCounter::TickComponent(float DeltaTime, ELevelTick TickType, FActorComp
 // チェックポイントを通過した
 void ULapCounter::PassCheckPoint(ACheckPoint* PassedCheckPoint) {
 	const int32 PassedCheckPointIndex = PassedCheckPoint->GetIndex();
+	int32 Random = FMath::RandRange(0, 10000);
 	constexpr int32 START_CHECKPOINT_INDEX = 0;
 
 	auto PlayLapIncrementSound = [](int32 NextLapCount) {
