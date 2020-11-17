@@ -202,9 +202,16 @@ FAllRacersGamePlayData ARaceManager::CalculateResult() {
 	TArray<TPair<bool, FGamePlayData>> RacersData;
 	for (int32 i = 0; i < Boats.Num(); i++) {
 		const auto& Boat = Boats[i];
-		const FName Name = Boat->GetRacerName();
+		const FName Name = Boat->GetSynchroParameters().PlayerName;
 		const int32 Ranking = Boat->GetLapCounter()->GetRanking();
-		const TArray<float> LapTimes = Boat->GetSynchroParameters().LapTimes;
+		const TArray<float> LapTimes = {
+			Boat->GetSynchroParameters().LapTime_1, Boat->GetSynchroParameters().LapTime_2, Boat->GetSynchroParameters().LapTime_3};
+
+		FString str = FString::Format(TEXT("{0} History:"), {Name.ToString()});
+		for (int32 j = 0; j < LapTimes.Num(); j++) {
+			str += FString::Format(TEXT("{0}: {1}"), {j, LapTimes[j]});
+		}
+		GEngine->AddOnScreenDebugMessage(-1, 60.0f, FColor::Red, str);
 		if (UNetworkConnectUtility::IsMultiGame(GetWorld())) {
 			RacersData.Emplace(UNetworkConnectUtility::IsOwner(Boat), FGamePlayData{Name, Ranking, LapTimes});
 		} else {

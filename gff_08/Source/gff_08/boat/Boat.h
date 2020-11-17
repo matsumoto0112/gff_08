@@ -31,6 +31,8 @@ struct FSynchroParameters {
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "SynchroParameters")
 	int32 PlayerIndex;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "SynchroParameters")
+	FName PlayerName;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "SynchroParameters")
 	int32 LapCount;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "SynchroParameters")
 	int32 MostAdvancedLapCount;
@@ -39,7 +41,11 @@ struct FSynchroParameters {
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "SynchroParameters")
 	int32 Ranking;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "SynchroParameters")
-	TArray<float> LapTimes;
+	float LapTime_1;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "SynchroParameters")
+	float LapTime_2;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "SynchroParameters")
+	float LapTime_3;
 };
 
 /**
