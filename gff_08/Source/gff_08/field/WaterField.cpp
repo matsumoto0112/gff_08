@@ -23,11 +23,17 @@ void AWaterField::BeginPlay() {
 	Super::BeginPlay();
 
 	Initialize();
+	GetWorld()->GetTimerManager().SetTimer(handle, this, &AWaterField::UpdateWaveInfo, LIMIT_TIME, true);
+}
+
+void AWaterField::EndPlay(const EEndPlayReason::Type EndPlayReason) {
+	GetWorld()->GetTimerManager().ClearTimer(handle);
 }
 
 // Called every frame
 void AWaterField::Tick(float DeltaTime) {
 	Super::Tick(DeltaTime);
+	Timer += DeltaTime;
 	if (UpdateFlag == false) {
 		return;
 	}
@@ -42,11 +48,11 @@ FVector AWaterField::GetAccelVelocity(const FVector& position) {
 		return FVector::ZeroVector;
 	}
 	FVector grid = CulcFieldGrid(position);
-	if (WaveArray[grid.X][grid.Y].isValid == false) {
+	if (WaveArray[grid.X][grid.Y].IsValid == false) {
 		return FVector::ZeroVector;
 	}
 
-	return WaveArray[grid.X][grid.Y].velocity;
+	return WaveArray[grid.X][grid.Y].Velocity;
 }
 
 void AWaterField::GenerateAccelWave(const FVector& position, const FRotator& rotate) {
@@ -56,19 +62,14 @@ void AWaterField::GenerateAccelWave(const FVector& position, const FRotator& rot
 	FVector grid = CulcFieldGrid(position);
 
 	//Ç∑Ç≈Ç…îgÇ™ê∂ê¨Ç≥ÇÍÇƒÇ¢ÇΩÇÁ
-	if (WaveArray[grid.X][grid.Y].isValid == true) {
+	if (WaveArray[grid.X][grid.Y].IsValid == true) {
 		return;
 	}
-	// UE_LOG(LogTemp, Log, TEXT("Yaw:%f"), rotate.Yaw);
+
 	FVector vel(FMath::Cos(FMath::DegreesToRadians(rotate.Yaw)), FMath::Sin(FMath::DegreesToRadians(rotate.Yaw)), 0.0f);
 	vel.Normalize();
-	WaveArray[grid.X][grid.Y].velocity = vel;
-	WaveArray[grid.X][grid.Y].length = 700.0f;
-	WaveArray[grid.X][grid.Y].startTime = FDateTime::Now();
-	WaveArray[grid.X][grid.Y].isValid = true;
+	WaveArray[grid.X][grid.Y].Initialize(vel, 700.0f, Timer, true);
 	UKismetSystemLibrary::DrawDebugLine(GetWorld(), position, position + vel * 100.0f, FColor::Green, 100.0f, 2.0f);
-	UKismetSystemLibrary::DrawDebugLine(
-		GetWorld(), position + vel * 100.0f, position + vel * 100.0f + FVector(10, 0, 0), FColor::Green, 100.0f, 2.0f);
 
 	UpdateFlowMap(grid);
 	UpdateFlag = true;
@@ -92,17 +93,14 @@ void AWaterField::Initialize() {
 	}
 
 	//âÊëúêFèÓïÒèâä˙âª
-	TextureColorData.Init(Fr8g8b8a8(), TEXTURE_EDGE_W * TEXTURE_EDGE_H);
-	for (int32 i = 0; i < TEXTURE_EDGE_W * TEXTURE_EDGE_H; i++) {
-		TextureColorData[i].r = NEUTRAL;
-		TextureColorData[i].g = NEUTRAL;
-		TextureColorData[i].b = NEUTRAL;
-		TextureColorData[i].a = NEUTRAL;
-	}
+	TextureColorData.Init(Fr8g8b8a8(NEUTRAL), TEXTURE_EDGE_W * TEXTURE_EDGE_H);
 	EdgeTexW = TEXTURE_EDGE_W * 1.0f / Row;
 	EdgeTexH = TEXTURE_EDGE_H * 1.0f / Column;
 
 	CreateTextureAndMaterial();
+
+	Timer = 0.0f;
+	ColumnArrayIndex = 0;
 }
 
 void AWaterField::CreateTextureAndMaterial() {
@@ -120,6 +118,35 @@ void AWaterField::CreateTextureAndMaterial() {
 	VisualMesh->SetMaterial(0, Material);
 }
 
+void AWaterField::UpdateWaveInfo() {
+	bool updateFlag = false;
+	int32 addColumnIndex = 50;
+	for (int32 i = 0; i < WaveArray.Num(); i++) {
+		for (int32 j = ColumnArrayIndex; j < ColumnArrayIndex + addColumnIndex; j++) {
+			if (j >= WaveArray[i].Num()) {
+				break;
+			}
+			if (WaveArray[i][j].IsValid == false) {
+				continue;
+			}
+			float t = Timer - WaveArray[i][j].StartTime;
+			if (t >= WaveLifespan) {
+				WaveArray[i][j].Initialize(FVector::ZeroVector, 0.0f, 0.0f, false);
+				UpdateFlowMap(FVector(i, j, 0));
+				updateFlag = true;
+			}
+		}
+	}
+	ColumnArrayIndex += addColumnIndex;
+	if (ColumnArrayIndex >= Column) {
+		ColumnArrayIndex = 0;
+	}
+
+	if (updateFlag == true) {
+		UpdateTexture();
+	}
+}
+
 void AWaterField::UpdateTexture() {
 	auto locked_bulk_data = FlowMap->PlatformData->Mips[0].BulkData.Lock(LOCK_READ_WRITE);
 	FMemory::Memcpy(locked_bulk_data, TextureColorData.GetData(), sizeof(Fr8g8b8a8) * TextureColorData.Num());
@@ -134,18 +161,18 @@ void AWaterField::UpdateFlowMap(const FVector& fieldGrid) {
 
 	int32 index = (TEXTURE_EDGE_W * texX) + texY;
 
-	FVector vel = WaveArray[fieldGrid.X][fieldGrid.Y].velocity;
+	FVector vel = WaveArray[fieldGrid.X][fieldGrid.Y].Velocity;
 	vel *= 50;
 
 	int32 forCount = 0;
-	for (int i = index; i < index + EdgeTexW; i++) {
-		int startPoint = index + (TEXTURE_EDGE_W * forCount);
-		for (int j = startPoint; j < startPoint + EdgeTexH; j++) {
+	for (int32 i = index; i < index + EdgeTexW; i++) {
+		int32 startPoint = index + (TEXTURE_EDGE_W * forCount);
+		for (int32 j = startPoint; j < startPoint + EdgeTexH; j++) {
 			if (TextureColorData.Num() <= j) {
 				continue;
 			}
-			TextureColorData[j].r = FMath::CeilToInt(vel.Y) + NEUTRAL;
-			TextureColorData[j].g = FMath::CeilToInt(vel.X * -1) + NEUTRAL;
+			TextureColorData[j].R = FMath::CeilToInt(vel.X) + NEUTRAL;
+			TextureColorData[j].G = FMath::CeilToInt(vel.Y * -1) + NEUTRAL;
 		}
 		forCount++;
 	}
