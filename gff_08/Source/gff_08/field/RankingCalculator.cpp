@@ -49,19 +49,17 @@ void URankingCalculator::TickComponent(float DeltaTime, ELevelTick TickType, FAc
 
 		//チェックポイントまでの距離順で最終決定
 		const ACheckPoint* CheckPoint_A = CheckPointManager->GetNextPoint(CheckPointIndex_A);
-		const float Distance_A_NextCheckPoint =
-			FVector::Distance(CheckPoint_A->GetActorLocation(), A.GetOwner()->GetActorLocation());
+		const float Distance_A_NextCheckPoint = FVector::Distance(CheckPoint_A->GetActorLocation(), A.GetActorLocation());
 
 		const ACheckPoint* CheckPoint_B = CheckPointManager->GetNextPoint(CheckPointIndex_B);
-		const float Distance_B_NextCheckPoint =
-			FVector::Distance(CheckPoint_B->GetActorLocation(), B.GetOwner()->GetActorLocation());
+		const float Distance_B_NextCheckPoint = FVector::Distance(CheckPoint_B->GetActorLocation(), B.GetActorLocation());
 
 		return Distance_A_NextCheckPoint < Distance_B_NextCheckPoint;
 	});
 
 	for (int32 i = 0; i < Boats.Num(); i++) {
-		FSynchroParameters Parameters = Boats[i]->GetSynchroParameters();
-		Parameters.Ranking = i + 1;
-		Boats[i]->SetSynchroParameters(Parameters);
+		Cast<ABoat>(Boats[i])->GetLapCounter()->SetRanking(i + 1);
+		GEngine->AddOnScreenDebugMessage(
+			-1, 0.0f, FColor::Red, FString::Format(TEXT("{0}: {1}"), {i, Boats[i]->GetSynchroParameters().CurrentCheckPointIndex}));
 	}
 }

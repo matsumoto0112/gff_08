@@ -132,8 +132,6 @@ public:
 
 	UFUNCTION(BlueprintImplementableEvent, BlueprintCallable, Category = "Boat")
 	FSynchroParameters GetSynchroParameters() const;
-	UFUNCTION(BlueprintImplementableEvent, BlueprintCallable, Category = "Boat")
-	void SetSynchroParameters(const FSynchroParameters& Parameters);
 
 private:
 	UFUNCTION()
