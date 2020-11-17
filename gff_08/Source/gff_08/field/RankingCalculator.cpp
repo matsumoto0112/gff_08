@@ -18,13 +18,9 @@ void URankingCalculator::BeginPlay() {
 	Super::BeginPlay();
 }
 
-void URankingCalculator::Setup(const TArray<ABoat*>& Boats) {
-	LapCounters.Empty();
-	LapCounters.Reserve(Boats.Num());
-	for (auto&& Boat : Boats) {
-		LapCounters.Emplace(Cast<ULapCounter>(Boat->GetComponentByClass(ULapCounter::StaticClass())));
-	}
-
+void URankingCalculator::Setup(const TArray<ABoat*>& InBoats) {
+	this->Boats.Empty();
+	this->Boats = InBoats;
 	AActor* ManagerActor = UGameplayStatics::GetActorOfClass(GetWorld(), ACheckPointManager::StaticClass());
 	CheckPointManager = Cast<ACheckPointManager>(ManagerActor);
 }
@@ -34,16 +30,18 @@ void URankingCalculator::TickComponent(float DeltaTime, ELevelTick TickType, FAc
 	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
 
 	//ボートをルールによってソートし、順位を設定する
-	LapCounters.Sort([&](const ULapCounter& A, const ULapCounter& B) {
-		const int32 LapCount_A = A.GetLapCount();
-		const int32 LapCount_B = B.GetLapCount();
+	Boats.Sort([&](const ABoat& A, const ABoat& B) {
+		const FSynchroParameters Parameters_A = A.GetSynchroParameters();
+		const FSynchroParameters Parameters_B = B.GetSynchroParameters();
+		const int32 LapCount_A = Parameters_A.LapCount;
+		const int32 LapCount_B = Parameters_B.LapCount;
 		// ラップ数での降順
 		if (LapCount_A != LapCount_B) {
 			return LapCount_A > LapCount_B;
 		}
 
-		const int32 CheckPointIndex_A = A.GetCurrentCheckPointIndex();
-		const int32 CheckPointIndex_B = B.GetCurrentCheckPointIndex();
+		const int32 CheckPointIndex_A = Parameters_A.CurrentCheckPointIndex;
+		const int32 CheckPointIndex_B = Parameters_B.CurrentCheckPointIndex;
 		// チェックポイントインデックスでの降順
 		if (CheckPointIndex_A != CheckPointIndex_B) {
 			return CheckPointIndex_A > CheckPointIndex_B;
@@ -61,7 +59,9 @@ void URankingCalculator::TickComponent(float DeltaTime, ELevelTick TickType, FAc
 		return Distance_A_NextCheckPoint < Distance_B_NextCheckPoint;
 	});
 
-	for (int32 i = 0; i < LapCounters.Num(); i++) {
-		LapCounters[i]->SetRanking(i + 1);
+	for (int32 i = 0; i < Boats.Num(); i++) {
+		FSynchroParameters Parameters = Boats[i]->GetSynchroParameters();
+		Parameters.Ranking = i + 1;
+		Boats[i]->SetSynchroParameters(Parameters);
 	}
 }

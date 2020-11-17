@@ -24,6 +24,20 @@ enum class EBoatMovableType : uint8 {
 	StraightOnly,
 };
 
+USTRUCT(BlueprintType)
+struct FSynchroParameters {
+	GENERATED_USTRUCT_BODY()
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "SynchroParameters")
+	int32 PlayerIndex;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "SynchroParameters")
+	int32 LapCount;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "SynchroParameters")
+	int32 CurrentCheckPointIndex;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "SynchroParameters")
+	int32 Ranking;
+};
+
 /**
  * ボートクラス
  */
@@ -115,6 +129,11 @@ public:
 	}
 	UFUNCTION(BlueprintCallable, Category = "Boat")
 	void ReturnPrevCheckPoint();
+
+	UFUNCTION(BlueprintImplementableEvent, Category = "Boat")
+	FSynchroParameters GetSynchroParameters() const;
+	UFUNCTION(BlueprintImplementableEvent, Category = "Boat")
+	void SetSynchroParameters(const FSynchroParameters& Parameters);
 
 private:
 	UFUNCTION()

@@ -24,7 +24,7 @@ protected:
 
 public:
 	UFUNCTION()
-	void Setup(const TArray<ABoat*>& Boats);
+	void Setup(const TArray<ABoat*>& InBoats);
 
 	// Called every frame
 	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
@@ -34,7 +34,7 @@ protected:
 	TSubclassOf<APawn> BoatClass;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "RankingCalculator")
-	TArray<ULapCounter*> LapCounters;
+	TArray<ABoat*> Boats;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "RankingCalculator")
 	ACheckPointManager* CheckPointManager;
