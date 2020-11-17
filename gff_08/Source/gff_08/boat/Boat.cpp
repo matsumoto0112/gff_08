@@ -28,7 +28,7 @@ bool IsMaintaining(const TArray<TPair<float, float>>& MotorValues) {
 	return Left_Max - Left_Min < 0.01f && Right_Max - Right_Min < 0.01f;
 }
 
-constexpr int32 NEED_HISTORY_NUM = 20;
+constexpr int32 NEED_HISTORY_NUM = 15;
 
 /**
  * Å‘å•œŒ³—Í‚ð’´‚¦‚½‰ñ“]‚ð‚µ‚Ä‚¢‚é‚©
@@ -246,8 +246,8 @@ void ABoat::Tick(float DeltaTime) {
 	}
 
 	if (IsOverMaxRestoreForce(RotationXHistory)) {
-		//ReturnPrevCheckPoint();
-		//RotationXHistory.Empty();
+		ReturnPrevCheckPoint();
+		RotationXHistory.Empty();
 	}
 
 	//‰¹Œ¹‚É‘Î‚·‚éƒpƒ‰ƒ[ƒ^Ý’è
