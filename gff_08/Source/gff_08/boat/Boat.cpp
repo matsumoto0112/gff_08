@@ -208,6 +208,9 @@ void ABoat::CalcMovementValues(float& MoveValue, float& LeftValue, float& RightV
 			UE_LOG(LogTemp, Error, TEXT("Unconfirmed enum EBoatMovableType encounter."));
 			break;
 	}
+	if (bFlipInput) {
+		std::swap(LeftValue, RightValue);
+	}
 }
 
 //”½‘Î•ûŒü‚ÉˆÚ“®’†‚©

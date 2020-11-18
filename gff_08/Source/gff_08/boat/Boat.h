@@ -188,6 +188,9 @@ protected:
 	FName RacerName;
 	//! プレイヤー番号
 	int32 PlayerIndex_;
+	//! 反転入力が有効か
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Boat")
+	bool bFlipInput;
 
 	//! モーターの回転量を保存するタイマーのハンドル
 	FTimerHandle PrevMotorValueStockHandle;
