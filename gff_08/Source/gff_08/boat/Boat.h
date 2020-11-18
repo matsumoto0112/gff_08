@@ -46,6 +46,8 @@ struct FSynchroParameters {
 	float LapTime_2;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "SynchroParameters")
 	float LapTime_3;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "SynchroParameters")
+	FVector Velocity;
 };
 
 /**
@@ -146,6 +148,33 @@ public:
 private:
 	UFUNCTION()
 	void PushMovementValue();
+	/**
+	 * 波生成タイマーのセッティング
+	 */
+	UFUNCTION()
+	void SettingWaveGenerateTimer();
+
+	/**
+	 * 波の生成処理
+	 * @note 波の生成処理はBP上でしか行えないため、BPに処理を移譲する
+	 * 後々Cpp上で呼べるようになった時にはcpp上で処理する
+	 */
+	UFUNCTION(BlueprintCallable, Category = "BoatMover")
+	void GenerateWave() const;
+
+	/**
+	 * 波の加速度の取得
+	 * @note 波の加速度取得処理はBP上でしか行えないため、BPに処理を移譲する
+	 * 後々Cpp上で呼べるようになった時にはcpp上で処理する
+	 */
+	UFUNCTION(BlueprintCallable, Category = "BoatMover")
+	FVector GetWaveAccelVelocity() const;
+
+public:
+	UFUNCTION(BlueprintCallable, Category = "Boat")
+	bool GetSpawnWave() const {
+		return bSpawnWave;
+	}
 
 protected:
 	//! ボートメッシュ
@@ -206,4 +235,23 @@ protected:
 	float PostureMaintainingTime;
 	//! X軸回転量の履歴
 	TArray<float> RotationXHistory;
+
+	//! フィールド
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Field")
+	AWaterField* Field;
+
+	//! 波の生成間隔(秒)
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Wave")
+	float WaveSpawnSeconds = 0.1f;
+	//! 波の生成可能最低速度
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Wave")
+	float WaveSpawnableSpeed = 30.0f;
+	//! 波の加速度を受けて加わる力の影響度
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Wave")
+	float WaveInfluence = 150000.0f;
+	float CurrentWaveSecond;
+	//! 波の生成タイマー
+	FTimerHandle CurrentWaveTimerHandle;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Wave")
+	bool bSpawnWave = false;
 };
