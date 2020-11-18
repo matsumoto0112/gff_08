@@ -138,6 +138,9 @@ bool ARaceManager::IsStart() {
 }
 
 void ARaceManager::StartRaceSetUp() {
+	if (bRaceAlreadySetup == true) {
+		return;
+	}
 	bRaceAlreadySetup = true;
 	RaceStart();
 }
