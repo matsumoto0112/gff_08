@@ -27,6 +27,6 @@ public:
 	 * @param [worldContextObject]
 	 * @return true:マルチプレイ false:シングルプレイ
 	 */
-	UFUNCTION(BlueprintCallable, Category = "StrixSDKUtility")
+	UFUNCTION(BlueprintCallable, Category = "StrixSDKUtility", meta = (WorldContext = "worldContextObject"))
 	static bool IsMultiGame(const UObject* worldContextObject);
 };
