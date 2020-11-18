@@ -200,18 +200,13 @@ bool ARaceManager::IsAnyBoatGoaled() const {
 
 FAllRacersGamePlayData ARaceManager::CalculateResult() {
 	TArray<TPair<bool, FGamePlayData>> RacersData;
+
 	for (int32 i = 0; i < Boats.Num(); i++) {
 		const auto& Boat = Boats[i];
 		const FName Name = Boat->GetSynchroParameters().PlayerName;
 		const int32 Ranking = Boat->GetLapCounter()->GetRanking();
 		const TArray<float> LapTimes = {
 			Boat->GetSynchroParameters().LapTime_1, Boat->GetSynchroParameters().LapTime_2, Boat->GetSynchroParameters().LapTime_3};
-
-		FString str = FString::Format(TEXT("{0} History:"), {Name.ToString()});
-		for (int32 j = 0; j < LapTimes.Num(); j++) {
-			str += FString::Format(TEXT("{0}: {1}"), {j, LapTimes[j]});
-		}
-		GEngine->AddOnScreenDebugMessage(-1, 60.0f, FColor::Red, str);
 		if (UNetworkConnectUtility::IsMultiGame(GetWorld())) {
 			RacersData.Emplace(UNetworkConnectUtility::IsOwner(Boat), FGamePlayData{Name, Ranking, LapTimes});
 		} else {
@@ -219,7 +214,30 @@ FAllRacersGamePlayData ARaceManager::CalculateResult() {
 		}
 	}
 
-	RacersData.Sort([](const auto& A, const auto& B) { return A.Value.Ranking < B.Value.Ranking; });
+	auto Sum = [](const TArray<float>& A) {
+		float res = 0.0f;
+		for (auto&& Item : A) {
+			if (Item == 0.0f) {
+				return -1.0f;
+			}
+			res += Item;
+		}
+		return res;
+	};
+	RacersData.Sort([Sum](const auto& A, const auto& B) {
+		const float Sum_A = Sum(A.Value.LapTimes);
+		const float Sum_B = Sum(B.Value.LapTimes);
+		if (Sum_A == -1.0f) {
+			return false;
+		} else if (Sum_B == -1.0f) {
+			return true;
+		}
+		return Sum_A <= Sum_B;
+	});
+
+	for (int32 i = 0; i < RacersData.Num(); i++) {
+		RacersData[i].Value.Ranking = i + 1;
+	}
 
 	FAllRacersGamePlayData Data;
 	for (int32 i = 0; i < RacersData.Num(); i++) {
