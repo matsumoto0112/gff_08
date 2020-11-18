@@ -200,8 +200,14 @@ void ABoat::CalcMovementValues(float& MoveValue, float& LeftValue, float& RightV
 			//’¼i‚Ì‚Ý
 		case EBoatMovableType::StraightOnly:
 			MoveValue = 0.8f;	 //’è”‚ÅˆÚ“®‚·‚é
+			MoveValue = 0.0f;
 			LeftValue = 0.0f;
 			RightValue = 0.0f;
+			{
+				FVector ForwardVector = StaticMesh->GetForwardVector() * 2000.0f;
+				ForwardVector.Z = -980.0f;
+				StaticMesh->SetPhysicsLinearVelocity(ForwardVector);
+			}
 			break;
 			//‚»‚Ì‘¼
 		default:
