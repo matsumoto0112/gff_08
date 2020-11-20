@@ -44,11 +44,8 @@ void AWaterField::Tick(float DeltaTime) {
 }
 
 FVector AWaterField::GetAccelVelocity(const FVector& position) {
-	if (this == nullptr) {
-		return FVector::ZeroVector;
-	}
 	FVector grid = CulcFieldGrid(position);
-	if (WaveArray[grid.X][grid.Y].IsValid == false) {
+	if (this == nullptr || IsGrid(grid) == false || WaveArray[grid.X][grid.Y].IsValid == false) {
 		return FVector::ZeroVector;
 	}
 
@@ -56,20 +53,23 @@ FVector AWaterField::GetAccelVelocity(const FVector& position) {
 }
 
 void AWaterField::GenerateAccelWave(const FVector& position, const FRotator& rotate) {
-	if (this == nullptr) {
+	
+	FVector grid = CulcFieldGrid(position);
+	if (this == nullptr || IsGrid(grid) == false) {
 		return;
 	}
-	FVector grid = CulcFieldGrid(position);
 
 	//すでに波が生成されていたら
 	if (WaveArray[grid.X][grid.Y].IsValid == true) {
+		//波の生成時間を更新する
+		WaveArray[grid.X][grid.Y].StartTime = Timer;
 		return;
 	}
 
 	FVector vel(FMath::Cos(FMath::DegreesToRadians(rotate.Yaw)), FMath::Sin(FMath::DegreesToRadians(rotate.Yaw)), 0.0f);
 	vel.Normalize();
 	WaveArray[grid.X][grid.Y].Initialize(vel, 700.0f, Timer, true);
-	UKismetSystemLibrary::DrawDebugLine(GetWorld(), position, position + vel * 100.0f, FColor::Green, 100.0f, 2.0f);
+	UKismetSystemLibrary::DrawDebugLine(GetWorld(), position, position + vel * 100.0f, FColor::Green, 40.0f, 2.0f);
 
 	UpdateFlowMap(grid);
 	UpdateFlag = true;
@@ -189,4 +189,12 @@ int32 AWaterField::CulcGrid(float position, float edge, int32 index) {
 	int32 grid = FMath::CeilToInt(gridF);
 	grid = FMath::Clamp(grid, 0, index - 1);
 	return grid - 1;
+}
+
+bool AWaterField::IsGrid(const FVector& grid) {
+	//グリッド内に収まっているなら
+	if (grid.X < WaveArray.Num() && grid.Y < WaveArray[0].Num()) {
+		return true;
+	}
+	return false;
 }
