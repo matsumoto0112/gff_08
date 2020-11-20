@@ -160,6 +160,12 @@ private:
 	 */
 	int32 CulcGrid(float position, float edge, int32 index);
 
+	/**
+    * グリッド内に収まっているかどうか	
+	* @return true:グリッド内 false:グリッド外
+	*/
+	bool IsGrid(const FVector& grid);
+
 private:
 	//画像サイズ
 	static constexpr int32 TEXTURE_EDGE_W = 1024;
