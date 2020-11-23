@@ -69,6 +69,10 @@ struct GFF_08_API FNetworkEventData {
 	//! 最後に発生したイベント
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "NetworkSynchroParameters")
 	EGameEvent CurrentEvent;
+
+	//! レースを開始する時間
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "NetworkSynchroParameters")
+	FDateTime RaceStartTime;
 };
 
 /**
