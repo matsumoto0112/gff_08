@@ -24,7 +24,15 @@ public:
 	virtual void Tick(float DeltaTime) override;
 
 	UFUNCTION(BlueprintCallable, Category = "NetworkConnect")
-	void ConnectToRandomRoom(const FString name);
+	bool IsConnectToRoom();
+	UFUNCTION(BlueprintCallable, Category = "NetworkConnect")
+	void InitializeMemberProperty(const FString name);
+	UFUNCTION(BlueprintCallable, Category = "NetworkConnect")
+	void InitializeRoomProperty(const int32 capacity,const FString roomName);
+	UFUNCTION(BlueprintCallable, Category = "NetworkConnect")
+	void UpdateMemberProperty(const int32 channelID);
+	UFUNCTION(BlueprintCallable, Category = "NetworkConnect")
+	void SetPlayerIndex(const int32 channelID);
 
 private:
 	bool IsPressConnectButton;

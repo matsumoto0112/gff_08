@@ -24,14 +24,46 @@ void ANetworkConnect::Tick(float DeltaTime) {
 	Super::Tick(DeltaTime);
 }
 
-void ANetworkConnect::ConnectToRandomRoom(const FString name) {
+bool ANetworkConnect::IsConnectToRoom() {
+	//マスターサーバーに接続されていないなら
 	if (UStrixBlueprintFunctionLibrary::IsMasterServerConnected(GetWorld()) == false) {
-		return;
+		return false;
 	}
 
+	//すでに接続ボタンが押されていたら
 	if (IsPressConnectButton == true) {
-		return;
+		return false;
 	}
 
 	IsPressConnectButton = true;
+
+	return true;
+}
+
+void ANetworkConnect::InitializeMemberProperty(const FString name) {
+	UMyGameInstance::GetInstance()->GetNetworkData()->SetStringMemberProperty("name", name);
+	UMyGameInstance::GetInstance()->GetNetworkData()->SetBoolMemberProperty("IsStart", false);
+	UMyGameInstance::GetInstance()->GetNetworkData()->SetIntMemberProperty("PlayerIndex", 0);
+	UMyGameInstance::GetInstance()->GetNetworkData()->SetIntMemberProperty("BoatIndex", 0);
+}
+
+void ANetworkConnect::InitializeRoomProperty(const int32 capacity, const FString roomName) {
+	UMyGameInstance::GetInstance()->GetNetworkData()->SetIntRoomProperty("capacity", capacity);
+	UMyGameInstance::GetInstance()->GetNetworkData()->SetStringRoomProperty("name", roomName);
+}
+
+void ANetworkConnect::UpdateMemberProperty(const int32 channelID) {
+	UMyGameInstance::GetInstance()->GetUserData()->SetChannelID(channelID);
+	FStrixRoomMember roomMember = UStrixBlueprintFunctionLibrary::GetCurrentRoomMember(GetWorld(), channelID);
+	UMyGameInstance::GetInstance()->GetUserData()->SetPlayerID(roomMember.Id);
+	
+	UMyGameInstance::GetInstance()->GetUserData()->SetPlayerName(*roomMember.Name);
+
+	SetPlayerIndex(channelID);
+	//ポーズ処理
+	UStrixBlueprintFunctionLibrary::PauseNetworkObjectManager(GetWorld(), channelID);
+}
+
+void ANetworkConnect::SetPlayerIndex(const int32 channelID) {
+	FStrixRoom roomInfo =  UStrixBlueprintFunctionLibrary::GetCurrentRoom(GetWorld(), channelID);
 }
