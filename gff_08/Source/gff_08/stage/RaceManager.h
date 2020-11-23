@@ -36,6 +36,10 @@ public:
 	 */
 	UFUNCTION(BlueprintCallable, Category = "RaceManager")
 	void RaceSetup(const FAllRacerInfo& RacersInfo);
+
+	UFUNCTION(BlueprintCallable, Category = "RaceManager")
+	void SetPlayerBoat(ABoat* Boat);
+
 	/**
 	 * マルチプレイ時のボートのセットアップ
 	 */

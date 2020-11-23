@@ -50,11 +50,11 @@ void ARaceManager::BeginPlay() {
 	if (UStrixBlueprintFunctionLibrary::IsMasterServerConnected(GetWorld()) == true) {
 		GEngine->AddOnScreenDebugMessage(-1, 3.0f, FColor::White, "Connected MasterServer");
 
-		const int32 BoatIndex = UMyGameInstance::GetInstance()->GetUserData()->GetBoatIndex();
-		const int32 PlayerIndex = UMyGameInstance::GetInstance()->GetUserData()->GetPlayerIndex();
-		const FName PlayerName = UMyGameInstance::GetInstance()->GetUserData()->GetPlayerName();
-		MultiRaceSetup(FRacerInfo{PlayerName, PlayerIndex, BoatIndex, ERacerType::Player});
-		GEngine->AddOnScreenDebugMessage(-1, 3.0f, FColor::Red, "Create OwnerShip!!!");
+		//const int32 BoatIndex = UMyGameInstance::GetInstance()->GetUserData()->GetBoatIndex();
+		//const int32 PlayerIndex = UMyGameInstance::GetInstance()->GetUserData()->GetPlayerIndex();
+		//const FName PlayerName = UMyGameInstance::GetInstance()->GetUserData()->GetPlayerName();
+		//MultiRaceSetup(FRacerInfo{PlayerName, PlayerIndex, BoatIndex, ERacerType::Player});
+		//GEngine->AddOnScreenDebugMessage(-1, 3.0f, FColor::Red, "Create OwnerShip!!!");
 
 	} else {
 		GEngine->AddOnScreenDebugMessage(-1, 3.0f, FColor::White, "No Connected MasterServer");
@@ -111,6 +111,10 @@ void ARaceManager::Tick(float DeltaTime) {
 void ARaceManager::RaceSetup(const FAllRacerInfo& RacersInfo) {
 	Boats = Setup->Setup(RacersInfo);
 	bRaceAlreadySetup = true;
+}
+
+void ARaceManager::SetPlayerBoat(ABoat* Boat) {
+	Boats.Push(Boat);
 }
 
 void ARaceManager::MultiRaceSetup(const FRacerInfo& Info) {

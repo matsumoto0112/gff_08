@@ -13,10 +13,10 @@ UENUM(BlueprintType)
 enum class EGameEvent : uint8 { START, LAP_1, LAP_2, GOAL, DISCONNECT, NONE };
 
 /**
- * 同期するパラメータ
+ * ネットワーク接続時に一度だけ更新されるユーザーデータ
  */
 USTRUCT(BlueprintType)
-struct GFF_08_API FNetworkSynchroParameters {
+struct GFF_08_API FNetworkUserData {
 	GENERATED_USTRUCT_BODY()
 
 	//! プレイヤー番号
@@ -28,11 +28,14 @@ struct GFF_08_API FNetworkSynchroParameters {
 	//! 選択したボート番号
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "NetworkSynchroParameters")
 	int32 BoatIndex;
+};
 
-	//! 特定のタイミングで同期するための座標（60フレームかに一回更新する）
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "NetworkSynchroParameters")
-	FVector FixLocation;
-
+/**
+ * 毎フレーム更新される入力情報
+ */
+USTRUCT(BlueprintType)
+struct GFF_08_API FNetworkInputData {
+	GENERATED_USTRUCT_BODY()
 	// 入力情報
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "NetworkSynchroParameters")
 	float LeftMotorValue;
@@ -40,10 +43,29 @@ struct GFF_08_API FNetworkSynchroParameters {
 	float RightMotorValue;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "NetworkSynchroParameters")
 	bool bBack;
+};
+
+/**
+ * たまに更新されるイベント発行等のデータ
+ */
+USTRUCT(BlueprintType)
+struct GFF_08_API FNetworkEventData {
+	GENERATED_USTRUCT_BODY()
+	//! 特定のタイミングで同期するための座標（60フレームかに一回更新する）
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "NetworkSynchroParameters")
+	FVector FixLocation;
 
 	//! 最後に発生したイベント
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "NetworkSynchroParameters")
 	EGameEvent CurrentEvent;
+};
+
+/**
+ * リザルト時に必要なデータ
+ */
+USTRUCT(BlueprintType)
+struct GFF_08_API FNetworkResultData {
+	GENERATED_USTRUCT_BODY()
 
 	//! ゴール時に必要な情報
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "NetworkSynchroParameters")
