@@ -43,7 +43,7 @@ public:
 	/**
 	 * インスタンスの取得
 	 */
-	UFUNCTION(BlueprintCallable, Category = "MyGameInstance")
+	UFUNCTION(BlueprintPure, Category = "MyGameInstance")
 	static UMyGameInstance* GetInstance();
 	/**
 	 * サウンドシステムの取得

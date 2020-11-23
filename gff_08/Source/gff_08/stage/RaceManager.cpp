@@ -47,7 +47,7 @@ void ARaceManager::BeginPlay() {
 	}
 
 	bRaceAlreadySetup = false;
-	if (UStrixBlueprintFunctionLibrary::IsMasterServerConnected(GWorld) == true) {
+	if (UStrixBlueprintFunctionLibrary::IsMasterServerConnected(GetWorld()) == true) {
 		GEngine->AddOnScreenDebugMessage(-1, 3.0f, FColor::White, "Connected MasterServer");
 
 		const int32 BoatIndex = UMyGameInstance::GetInstance()->GetUserData()->GetBoatIndex();
