@@ -60,6 +60,15 @@ public:
 		return RoomProperties;
 	}
 
+	UFUNCTION(BlueprintSetter, Category = "NetworkData")
+	void SetMemberProperties(const FStrixPropertyMap properties) {
+		MemberProperties = properties;
+	}
+	UFUNCTION(BlueprintSetter, Category = "NetworkData")
+	void SetRoomProperties(const FStrixPropertyMap properties) {
+		RoomProperties = properties;
+	}
+
 public:
 	UFUNCTION(BlueprintPure, Category = "NetworkData")
 	FStrixPropertyMap SetStringMemberProperty(const FString propertyName, const FString value);
@@ -86,8 +95,9 @@ protected:
 	int32 RoomPort;
 	UPROPERTY(VisibleAnywhere, BlueprintGetter = GetChannelID, BlueprintSetter = SetChannelID, Category = "NetworkData")
 	int32 ChannelID;
-	UPROPERTY(VisibleAnywhere, BlueprintGetter = GetMemberProperties, Category = "NetworkData")
+	UPROPERTY(
+		VisibleAnywhere, BlueprintGetter = GetMemberProperties, BlueprintSetter = SetMemberProperties, Category = "NetworkData")
 	FStrixPropertyMap MemberProperties;
-	UPROPERTY(VisibleAnywhere, BlueprintGetter = GetRoomProperties, Category = "NetworkData")
+	UPROPERTY(VisibleAnywhere, BlueprintGetter = GetRoomProperties, BlueprintSetter = SetRoomProperties, Category = "NetworkData")
 	FStrixPropertyMap RoomProperties;
 };
