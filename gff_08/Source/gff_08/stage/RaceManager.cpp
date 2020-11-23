@@ -76,13 +76,13 @@ void ARaceManager::BeginPlay() {
 	RankingCalculator->Setup(Boats);
 
 	//メインのUIの中ではプレイヤーを参照する必要があるため、Setupの完了後に呼ぶ
-	// TODO:MyHUDクラス内にプレイヤーの取得機能を作成し、Setup後に呼ぶようにする
-	MainUI = CreateWidget<UMyHUD>(GetWorld(), HUDClass);
-	if (!MainUI) {
-		UE_LOG(LogTemp, Error, TEXT("MainUI can not create."));
-		return;
-	}
-	MainUI->AddToViewport(0);
+	//// TODO:MyHUDクラス内にプレイヤーの取得機能を作成し、Setup後に呼ぶようにする
+	//MainUI = CreateWidget<UMyHUD>(GetWorld(), HUDClass);
+	//if (!MainUI) {
+	//	UE_LOG(LogTemp, Error, TEXT("MainUI can not create."));
+	//	return;
+	//}
+	//MainUI->AddToViewport(0);
 }
 
 // Called every frame
