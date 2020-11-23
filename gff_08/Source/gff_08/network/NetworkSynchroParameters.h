@@ -21,13 +21,13 @@ struct GFF_08_API FNetworkUserData {
 
 	//! プレイヤー番号
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "NetworkSynchroParameters")
-	int32 PlayerIndex;
+	int32 PlayerIndex = -1;
 	//! プレイヤー名
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "NetworkSynchroParameters")
 	FName PlayerName;
 	//! 選択したボート番号
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "NetworkSynchroParameters")
-	int32 BoatIndex;
+	int32 BoatIndex = -1;
 };
 
 /**

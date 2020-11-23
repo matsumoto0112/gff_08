@@ -14,6 +14,7 @@ UENUM(BlueprintType)
 enum class ERacerType : uint8 {
 	Player,	   //! プレイヤー操作
 	AI,		   //! AI操作
+	ReplecatedPlayer, //! 複製された方のプレイヤー（マルチプレイ時の対戦相手）
 };
 
 /**

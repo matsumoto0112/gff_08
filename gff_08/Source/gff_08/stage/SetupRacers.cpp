@@ -66,7 +66,9 @@ ABoat* USetupRacers::SetupRacer(const FRacerInfo& RacersInfo) {
 	const FVector Location = Point->GetActorLocation();
 	const FRotator Rotation = Point->GetActorRotation();
 
-	ABoat* Boat = GetWorld()->SpawnActor<ABoat>(BoatClasses[RacersInfo.RacerType].Get(), Location, Rotation);
+	FActorSpawnParameters Params;
+	Params.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
+	ABoat* Boat = GetWorld()->SpawnActor<ABoat>(BoatClasses[RacersInfo.RacerType].Get(), Location, Rotation, Params);
 
 	//プレイヤーならプレイヤーコントローラをセットしてあげる
 	//そうしないと入力が受け取れないため

@@ -6,6 +6,7 @@
 #include "GameFramework/Actor.h"
 #include "gff_08/field/CheckPointManager.h"
 #include "gff_08/field/RankingCalculator.h"
+#include "gff_08/network/NetworkSynchroParameters.h"
 #include "gff_08/stage/SetupRacers.h"
 #include "gff_08/ui/CountDownTimer.h"
 #include "gff_08/ui/MyHUD.h"
@@ -38,7 +39,7 @@ public:
 	void RaceSetup(const FAllRacerInfo& RacersInfo);
 
 	UFUNCTION(BlueprintCallable, Category = "RaceManager")
-	void SetPlayerBoat(ABoat* Boat);
+	ABoat* SpawnBoat(const FNetworkUserData& UserData);
 
 	/**
 	 * マルチプレイ時のボートのセットアップ

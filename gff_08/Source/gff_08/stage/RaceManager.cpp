@@ -50,11 +50,11 @@ void ARaceManager::BeginPlay() {
 	if (UStrixBlueprintFunctionLibrary::IsMasterServerConnected(GetWorld()) == true) {
 		GEngine->AddOnScreenDebugMessage(-1, 3.0f, FColor::White, "Connected MasterServer");
 
-		//const int32 BoatIndex = UMyGameInstance::GetInstance()->GetUserData()->GetBoatIndex();
-		//const int32 PlayerIndex = UMyGameInstance::GetInstance()->GetUserData()->GetPlayerIndex();
-		//const FName PlayerName = UMyGameInstance::GetInstance()->GetUserData()->GetPlayerName();
-		//MultiRaceSetup(FRacerInfo{PlayerName, PlayerIndex, BoatIndex, ERacerType::Player});
-		//GEngine->AddOnScreenDebugMessage(-1, 3.0f, FColor::Red, "Create OwnerShip!!!");
+		// const int32 BoatIndex = UMyGameInstance::GetInstance()->GetUserData()->GetBoatIndex();
+		// const int32 PlayerIndex = UMyGameInstance::GetInstance()->GetUserData()->GetPlayerIndex();
+		// const FName PlayerName = UMyGameInstance::GetInstance()->GetUserData()->GetPlayerName();
+		// MultiRaceSetup(FRacerInfo{PlayerName, PlayerIndex, BoatIndex, ERacerType::Player});
+		// GEngine->AddOnScreenDebugMessage(-1, 3.0f, FColor::Red, "Create OwnerShip!!!");
 
 	} else {
 		GEngine->AddOnScreenDebugMessage(-1, 3.0f, FColor::White, "No Connected MasterServer");
@@ -76,13 +76,13 @@ void ARaceManager::BeginPlay() {
 	RankingCalculator->Setup(Boats);
 
 	//メインのUIの中ではプレイヤーを参照する必要があるため、Setupの完了後に呼ぶ
-	//// TODO:MyHUDクラス内にプレイヤーの取得機能を作成し、Setup後に呼ぶようにする
-	//MainUI = CreateWidget<UMyHUD>(GetWorld(), HUDClass);
-	//if (!MainUI) {
-	//	UE_LOG(LogTemp, Error, TEXT("MainUI can not create."));
-	//	return;
-	//}
-	//MainUI->AddToViewport(0);
+	// TODO:MyHUDクラス内にプレイヤーの取得機能を作成し、Setup後に呼ぶようにする
+	MainUI = CreateWidget<UMyHUD>(GetWorld(), HUDClass);
+	if (!MainUI) {
+		UE_LOG(LogTemp, Error, TEXT("MainUI can not create."));
+		return;
+	}
+	MainUI->AddToViewport(0);
 }
 
 // Called every frame
@@ -113,12 +113,23 @@ void ARaceManager::RaceSetup(const FAllRacerInfo& RacersInfo) {
 	bRaceAlreadySetup = true;
 }
 
-void ARaceManager::SetPlayerBoat(ABoat* Boat) {
-	Boats.Push(Boat);
+ABoat* ARaceManager::SpawnBoat(const FNetworkUserData& UserData) {
+	FRacerInfo Info;
+	Info.BoatIndex = UserData.BoatIndex;
+	Info.PlayerIndex = UserData.PlayerIndex;
+	Info.RacerName = UserData.PlayerName;
+
+	const int32 MyPlayerIndex = UMyGameInstance::GetInstance()->GetUserData()->GetPlayerIndex();
+	Info.RacerType = MyPlayerIndex == UserData.PlayerIndex ? ERacerType::Player : ERacerType::ReplecatedPlayer;
+
+	ABoat* Res = Setup->SetupRacer(Info);
+	Boats.Push(Res);
+
+	return Res;
 }
 
 void ARaceManager::MultiRaceSetup(const FRacerInfo& Info) {
-	Boats.Push(Setup->SetupRacer(Info));
+	// Boats.Push(Setup->SetupRacer(Info));
 	// if (Boats.Num() >= 4) {
 	//	bRaceAlreadySetup = true;
 	//}
@@ -126,9 +137,9 @@ void ARaceManager::MultiRaceSetup(const FRacerInfo& Info) {
 
 void ARaceManager::ReplicateRaceSetup(ABoat* Boat, const int32 BoatIndex, const int32 PlayerIndex) {
 	//複製されたボートのプレイヤー番号を0に固定しておく
-	Boat->ChangeBoat(BoatIndex, PlayerIndex);
-	Boats.Push(Boat);
-	// if (Boats.Num() >= 4) {
+	// Boat->ChangeBoat(BoatIndex, PlayerIndex);
+	// Boats.Push(Boat);
+	//// if (Boats.Num() >= 4) {
 	//	bRaceAlreadySetup = true;
 	//}
 }
