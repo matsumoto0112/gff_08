@@ -55,17 +55,24 @@ struct GFF_08_API FNetworkInputData {
 };
 
 /**
- * たまに更新されるイベント発行等のデータ
+ * 座標系データ
  */
 USTRUCT(BlueprintType)
-struct GFF_08_API FNetworkEventData {
+struct GFF_08_API FNetworkTransformData {
 	GENERATED_USTRUCT_BODY()
 	//! 特定のタイミングで同期するための座標（60フレームかに一回更新する）
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "NetworkSynchroParameters")
 	FVector FixLocation;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "NetworkSynchroParameters")
 	FRotator FixRotation;
+};
 
+/**
+ * たまに更新されるイベント発行等のデータ
+ */
+USTRUCT(BlueprintType)
+struct GFF_08_API FNetworkEventData {
+	GENERATED_USTRUCT_BODY()
 	//! 最後に発生したイベント
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "NetworkSynchroParameters")
 	EGameEvent CurrentEvent;
