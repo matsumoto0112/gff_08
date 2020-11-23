@@ -44,15 +44,19 @@ bool ANetworkConnect::IsConnectToRoom() {
 
 void ANetworkConnect::InitializeMemberProperty(const FString name) {
 	auto instance = UMyGameInstance::GetInstance();
-	instance->GetNetworkData()->SetStringMemberProperty("name", name);
-	instance->GetNetworkData()->SetBoolMemberProperty("IsStart", false);
-	instance->GetNetworkData()->SetIntMemberProperty("PlayerIndex", 0);
-	instance->GetNetworkData()->SetIntMemberProperty("BoatIndex", 0);
+	FStrixPropertyMap memberProperties;
+	memberProperties = instance->GetNetworkData()->SetStringMemberProperty(memberProperties, "name", name);
+	memberProperties = instance->GetNetworkData()->SetBoolMemberProperty(memberProperties, "IsStart", false);
+	memberProperties = instance->GetNetworkData()->SetIntMemberProperty(memberProperties, "PlayerIndex", 0);
+	memberProperties = instance->GetNetworkData()->SetIntMemberProperty(memberProperties, "BoatIndex", 0);
+	instance->GetNetworkData()->SetMemberProperties(memberProperties);
 }
 
 void ANetworkConnect::InitializeRoomProperty(const int32 capacity, const FString roomName) {
-	UMyGameInstance::GetInstance()->GetNetworkData()->SetIntRoomProperty("capacity", capacity);
-	UMyGameInstance::GetInstance()->GetNetworkData()->SetStringRoomProperty("name", roomName);
+	FStrixPropertyMap roomProperties;
+	roomProperties = UMyGameInstance::GetInstance()->GetNetworkData()->SetIntRoomProperty(roomProperties, "capacity", capacity);
+	roomProperties = UMyGameInstance::GetInstance()->GetNetworkData()->SetStringRoomProperty(roomProperties, "name", roomName);
+	UMyGameInstance::GetInstance()->GetNetworkData()->SetRoomProperties(roomProperties);
 }
 
 void ANetworkConnect::UpdateMemberProperty(const int32 channelID) {
@@ -60,6 +64,7 @@ void ANetworkConnect::UpdateMemberProperty(const int32 channelID) {
 
 	//チャンネルIDをセット
 	instance->GetUserData()->SetChannelID(channelID);
+	instance->GetNetworkData()->SetChannelID(channelID);
 	FStrixRoomMember roomMember = StrixUtil::GetCurrentRoomMember(GetWorld(), channelID);
 	// IDと名前をセット
 	instance->GetUserData()->SetPlayerID(roomMember.Id);
@@ -74,10 +79,12 @@ void ANetworkConnect::SetPlayerIndex(const int32 memberCount, const int32 channe
 	int32 count = memberCount;
 	int32 playerIndex = 0;
 	auto instance = UMyGameInstance::GetInstance();
+
 	//参加者が一人なら
 	if (count == 1) {
 		instance->GetUserData()->SetPlayerIndex(playerIndex);
-		instance->GetNetworkData()->SetIntMemberProperty("PlayerIndex", playerIndex);
+		instance->GetNetworkData()->SetMemberProperties(instance->GetNetworkData()->SetIntMemberProperty(
+			instance->GetNetworkData()->GetMemberProperties(), "PlayerIndex", playerIndex));
 		return;
 	}
 
@@ -104,5 +111,6 @@ void ANetworkConnect::SetPlayerIndex(const int32 memberCount, const int32 channe
 	}
 
 	instance->GetUserData()->SetPlayerIndex(playerIndex);
-	instance->GetNetworkData()->SetIntMemberProperty("PlayerIndex", playerIndex);
+	instance->GetNetworkData()->SetMemberProperties(instance->GetNetworkData()->SetIntMemberProperty(
+		instance->GetNetworkData()->GetMemberProperties(), "PlayerIndex", playerIndex));
 }

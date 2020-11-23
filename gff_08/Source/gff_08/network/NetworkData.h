@@ -71,18 +71,18 @@ public:
 
 public:
 	UFUNCTION(BlueprintPure, Category = "NetworkData")
-	FStrixPropertyMap SetStringMemberProperty(const FString propertyName, const FString value);
+	FStrixPropertyMap SetStringMemberProperty(const FStrixPropertyMap properties, const FString propertyName, const FString value);
 	UFUNCTION(BlueprintPure, Category = "NetworkData")
-	FStrixPropertyMap SetIntMemberProperty(const FString propertyName, const int32 value);
+	FStrixPropertyMap SetIntMemberProperty(const FStrixPropertyMap properties, const FString propertyName, const int32 value);
 	UFUNCTION(BlueprintPure, Category = "NetworkData")
-	FStrixPropertyMap SetBoolMemberProperty(const FString propertyName, const bool value);
+	FStrixPropertyMap SetBoolMemberProperty(const FStrixPropertyMap properties, const FString propertyName, const bool value);
 
 	UFUNCTION(BlueprintPure, Category = "NetworkData")
-	FStrixPropertyMap SetStringRoomProperty(const FString propertyName, const FString value);
+	FStrixPropertyMap SetStringRoomProperty(const FStrixPropertyMap properties, const FString propertyName, const FString value);
 	UFUNCTION(BlueprintPure, Category = "NetworkData")
-	FStrixPropertyMap SetIntRoomProperty(const FString propertyName, const int32 value);
+	FStrixPropertyMap SetIntRoomProperty(const FStrixPropertyMap properties, const FString propertyName, const int32 value);
 	UFUNCTION(BlueprintPure, Category = "NetworkData")
-	FStrixPropertyMap SetBoolRoomProperty(const FString propertyName, const bool value);
+	FStrixPropertyMap SetBoolRoomProperty(const FStrixPropertyMap properties, const FString propertyName, const bool value);
 
 protected:
 	UPROPERTY(VisibleAnywhere, BlueprintGetter = GetMasterHostName, Category = "NetworkData")

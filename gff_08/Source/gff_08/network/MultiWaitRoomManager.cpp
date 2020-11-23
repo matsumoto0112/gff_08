@@ -4,6 +4,8 @@
 
 #include <StrixBlueprintFunctionLibrary.h>
 
+using StrixUtil = UStrixBlueprintFunctionLibrary;
+
 // Sets default values
 AMultiWaitRoomManager::AMultiWaitRoomManager() {
 	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
@@ -35,7 +37,7 @@ void AMultiWaitRoomManager::Initialize(int32 ID) {
 
 void AMultiWaitRoomManager::SetCurrentRoomMembers() {
 	//現在のルームメンバー情報取得
-	TArray<FStrixRoomMember> currentRoomMembers = UStrixBlueprintFunctionLibrary::GetCurrentRoomMembers(GWorld, ChannelID);
+	TArray<FStrixRoomMember> currentRoomMembers = StrixUtil::GetCurrentRoomMembers(GWorld, ChannelID);
 	// PlayerIndex取得用
 	bool result = false;
 	int32 playerIndex = -1;
@@ -45,16 +47,15 @@ void AMultiWaitRoomManager::SetCurrentRoomMembers() {
 	GEngine->AddOnScreenDebugMessage(
 		-1, 3.0f, FColor::Green, FString::Printf(TEXT("Now Length: %d"), currentRoomMembers.Num()), false);
 	for (i = 0; i < currentRoomMembers.Num(); i++) {
-		//UStrixBlueprintFunctionLibrary::TryGetIntProperty(currentRoomMembers[i].Properties, "BoatIndex", result, playerIndex);
-		//GEngine->AddOnScreenDebugMessage(-1, 3.0f, FColor::Green, FString::Printf(TEXT("BoatIndex: %d"), playerIndex), false);
-
-		//GEngine->AddOnScreenDebugMessage(-1, 3.0f, FColor::Green,currentRoomMembers[i].Name, false);
-
-		//UStrixBlueprintFunctionLibrary::TryGetIntProperty(currentRoomMembers[i].Properties, "PlayerIndex", result, playerIndex);
-		//GEngine->AddOnScreenDebugMessage(-1, 3.0f, FColor::Green, FString::Printf(TEXT("PlayerIndex: %d"), playerIndex), false);
-		//GEngine->AddOnScreenDebugMessage(-1, 3.0f, FColor::Green, FString::Printf(TEXT("--------------")), false);
+		GEngine->AddOnScreenDebugMessage(-1, 3.0f, FColor::White, currentRoomMembers[i].Name, false);
+		StrixUtil::TryGetIntProperty(currentRoomMembers[i].Properties, "BoatIndex", result, playerIndex);
+		GEngine->AddOnScreenDebugMessage(-1, 3.0f, FColor::White, FString::Printf(TEXT("BoatIndex: %d"), playerIndex), false);
+		StrixUtil::TryGetIntProperty(currentRoomMembers[i].Properties, "PlayerIndex", result, playerIndex);
+		GEngine->AddOnScreenDebugMessage(-1, 3.0f, FColor::White, FString::Printf(TEXT("PlayerIndex: %d"), playerIndex), false);
+		GEngine->AddOnScreenDebugMessage(-1, 3.0f, FColor::White, "---------------------------", false);
 
 		if (result == false) {
+			GEngine->AddOnScreenDebugMessage(-1, 3.0f, FColor::Green, FString::Printf(TEXT("Oh...")), false);
 			continue;
 		}
 		// playerIndexの番号時のIDと一致しているなら
