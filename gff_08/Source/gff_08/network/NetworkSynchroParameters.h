@@ -10,7 +10,16 @@
  * プレイヤーに発生したゲーム内イベント
  */
 UENUM(BlueprintType)
-enum class EGameEvent : uint8 { START, LAP_1, LAP_2, GOAL, DISCONNECT, NONE };
+enum class EGameEvent : uint8 {
+	SETUP,		   //! セットアップ処理中
+	RACEREADY,	   //! 準備完了
+	START,		   //! 一週目
+	LAP_1,		   //! 二週目
+	LAP_2,		   //! 三週目
+	GOAL,		   //! ゴールした
+	DISCONNECT,	   //! 切断した
+	NONE
+};
 
 /**
  * ネットワーク接続時に一度だけ更新されるユーザーデータ
@@ -54,6 +63,8 @@ struct GFF_08_API FNetworkEventData {
 	//! 特定のタイミングで同期するための座標（60フレームかに一回更新する）
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "NetworkSynchroParameters")
 	FVector FixLocation;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "NetworkSynchroParameters")
+	FRotator FixRotation;
 
 	//! 最後に発生したイベント
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "NetworkSynchroParameters")

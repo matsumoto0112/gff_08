@@ -52,6 +52,11 @@ public:
 	}
 
 	UFUNCTION(BlueprintGetter, Category = "LapCounter")
+	int32 GetMostAdvancedLapCount() const {
+		return MostAdcancedLapCount;
+	}
+
+	UFUNCTION(BlueprintGetter, Category = "LapCounter")
 	int32 GetRanking() const {
 		return Ranking;
 	}
@@ -75,7 +80,7 @@ protected:
 	int32 MostAdvancedIndex;
 
 	//! 現在のラップ数（周回数）
-	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "LapCounter")
+	UPROPERTY(VisibleAnywhere, BlueprintGetter = GetMostAdvancedLapCount, Category = "LapCounter")
 	int32 MostAdcancedLapCount;
 
 	//! 現在のチェックポイントのインデックス

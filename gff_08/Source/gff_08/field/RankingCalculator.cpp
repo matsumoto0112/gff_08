@@ -31,17 +31,15 @@ void URankingCalculator::TickComponent(float DeltaTime, ELevelTick TickType, FAc
 
 	//ボートをルールによってソートし、順位を設定する
 	Boats.Sort([&](const ABoat& A, const ABoat& B) {
-		const FSynchroParameters Parameters_A = A.GetSynchroParameters();
-		const FSynchroParameters Parameters_B = B.GetSynchroParameters();
-		const int32 LapCount_A = Parameters_A.LapCount;
-		const int32 LapCount_B = Parameters_B.LapCount;
+		const int32 LapCount_A = A.GetLapCounter()->GetLapCount();
+		const int32 LapCount_B = B.GetLapCounter()->GetLapCount();
 		// ラップ数での降順
 		if (LapCount_A != LapCount_B) {
 			return LapCount_A > LapCount_B;
 		}
 
-		const int32 CheckPointIndex_A = Parameters_A.CurrentCheckPointIndex;
-		const int32 CheckPointIndex_B = Parameters_B.CurrentCheckPointIndex;
+		const int32 CheckPointIndex_A = A.GetLapCounter()->GetCurrentCheckPointIndex();
+		const int32 CheckPointIndex_B = B.GetLapCounter()->GetCurrentCheckPointIndex();
 		// チェックポイントインデックスでの降順
 		if (CheckPointIndex_A != CheckPointIndex_B) {
 			return CheckPointIndex_A > CheckPointIndex_B;

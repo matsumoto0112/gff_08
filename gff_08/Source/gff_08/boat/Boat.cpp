@@ -289,7 +289,7 @@ void ABoat::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent) {
 
 //波の生成タイマー処理
 void ABoat::SettingWaveGenerateTimer() {
-	const FVector Velocity = GetSynchroParameters().Velocity;
+	const FVector Velocity = GetVelocity();
 	const float VelocityLength = Velocity.Size();
 	const float Speed_km_h = USpeedConverter::ToSpeedKilometerPerHour(VelocityLength);
 

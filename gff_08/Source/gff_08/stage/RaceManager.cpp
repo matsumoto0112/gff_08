@@ -209,7 +209,7 @@ bool ARaceManager::IsAnyBoatGoaled() const {
 	// TODO:現在のステージ情報から読み取る
 	constexpr int32 LAP_END_NUM = 4;
 	for (auto&& Boat : Boats) {
-		if (Boat->GetSynchroParameters().MostAdvancedLapCount == LAP_END_NUM) {
+		if (Boat->GetLapCounter()->GetMostAdvancedLapCount() == LAP_END_NUM) {
 			return true;
 		}
 	}
@@ -221,10 +221,9 @@ FAllRacersGamePlayData ARaceManager::CalculateResult() {
 
 	for (int32 i = 0; i < Boats.Num(); i++) {
 		const auto& Boat = Boats[i];
-		const FName Name = Boat->GetSynchroParameters().PlayerName;
+		const FName Name = TEXT("NoName");
 		const int32 Ranking = Boat->GetLapCounter()->GetRanking();
-		const TArray<float> LapTimes = {
-			Boat->GetSynchroParameters().LapTime_1, Boat->GetSynchroParameters().LapTime_2, Boat->GetSynchroParameters().LapTime_3};
+		const TArray<float> LapTimes = Boat->GetLapCounter()->GetLapTimes();
 		if (UNetworkConnectUtility::IsMultiGame(GetWorld())) {
 			RacersData.Emplace(UNetworkConnectUtility::IsOwner(Boat), FGamePlayData{Name, Ranking, LapTimes});
 		} else {

@@ -24,32 +24,6 @@ enum class EBoatMovableType : uint8 {
 	StraightOnly,
 };
 
-USTRUCT(BlueprintType)
-struct FSynchroParameters {
-	GENERATED_USTRUCT_BODY()
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "SynchroParameters")
-	int32 PlayerIndex;
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "SynchroParameters")
-	FName PlayerName;
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "SynchroParameters")
-	int32 LapCount;
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "SynchroParameters")
-	int32 MostAdvancedLapCount;
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "SynchroParameters")
-	int32 CurrentCheckPointIndex;
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "SynchroParameters")
-	int32 Ranking;
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "SynchroParameters")
-	float LapTime_1;
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "SynchroParameters")
-	float LapTime_2;
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "SynchroParameters")
-	float LapTime_3;
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "SynchroParameters")
-	FVector Velocity;
-};
-
 /**
  * ボートクラス
  */
@@ -142,9 +116,6 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "Boat")
 	void ReturnPrevCheckPoint();
 
-	UFUNCTION(BlueprintImplementableEvent, BlueprintCallable, Category = "Boat")
-	FSynchroParameters GetSynchroParameters() const;
-
 private:
 	UFUNCTION()
 	void PushMovementValue();
@@ -156,16 +127,12 @@ private:
 
 	/**
 	 * 波の生成処理
-	 * @note 波の生成処理はBP上でしか行えないため、BPに処理を移譲する
-	 * 後々Cpp上で呼べるようになった時にはcpp上で処理する
 	 */
 	UFUNCTION(BlueprintCallable, Category = "BoatMover")
 	void GenerateWave() const;
 
 	/**
 	 * 波の加速度の取得
-	 * @note 波の加速度取得処理はBP上でしか行えないため、BPに処理を移譲する
-	 * 後々Cpp上で呼べるようになった時にはcpp上で処理する
 	 */
 	UFUNCTION(BlueprintCallable, Category = "BoatMover")
 	FVector GetWaveAccelVelocity() const;
