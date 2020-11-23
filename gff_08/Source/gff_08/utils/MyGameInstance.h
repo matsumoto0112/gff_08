@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "Engine/GameInstance.h"
+#include "gff_08/network/NetworkData.h"
 #include "gff_08/sound/SoundDataAsset.h"
 #include "gff_08/sound/SoundSystem.h"
 #include "gff_08/utils/GamePlayData.h"
@@ -69,6 +70,10 @@ public:
 	UPlayUserData* GetUserData() const {
 		return UserData;
 	}
+	UFUNCTION(BlueprintCallable, Category = "MyGameInstance")
+	UNetworkData* GetNetworkData() const {
+		return NetworkData;
+	}
 
 protected:
 	//! OnHandleSystemError デリゲート登録時のハンドル
@@ -96,4 +101,7 @@ protected:
 	//! ユーザーの情報
 	UPROPERTY()
 	UPlayUserData* UserData;
+	//! ネットワークの情報
+	UPROPERTY()
+	UNetworkData* NetworkData;
 };
