@@ -44,7 +44,7 @@ public:
 	void SetCurrentRoomMembers();
 
 private:
-	static constexpr float LIMIT_TIME = 0.25f;
+	static constexpr float LIMIT_TIME = 0.5f;
 	static constexpr int MAX_ROOM_MEMBER = 4;
 	float Timer;
 
