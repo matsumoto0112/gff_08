@@ -44,19 +44,16 @@ bool ANetworkConnect::IsConnectToRoom() {
 
 void ANetworkConnect::InitializeMemberProperty(const FString name) {
 	auto instance = UMyGameInstance::GetInstance();
-	FStrixPropertyMap memberProperties;
-	memberProperties = instance->GetNetworkData()->SetStringMemberProperty(memberProperties, "name", name);
-	memberProperties = instance->GetNetworkData()->SetBoolMemberProperty(memberProperties, "IsStart", false);
-	memberProperties = instance->GetNetworkData()->SetIntMemberProperty(memberProperties, "PlayerIndex", 0);
-	memberProperties = instance->GetNetworkData()->SetIntMemberProperty(memberProperties, "BoatIndex", 0);
-	instance->GetNetworkData()->SetMemberProperties(memberProperties);
+	instance->GetNetworkData()->SetStringMemberProperty("name", name);
+	instance->GetNetworkData()->SetBoolMemberProperty("IsStart", false);
+	instance->GetNetworkData()->SetIntMemberProperty("PlayerIndex", 0);
+	instance->GetNetworkData()->SetIntMemberProperty("BoatIndex", 0);
+	GEngine->AddOnScreenDebugMessage(-1, 3.0f, FColor::Green, "Member Property Initialized!!");
 }
 
 void ANetworkConnect::InitializeRoomProperty(const int32 capacity, const FString roomName) {
-	FStrixPropertyMap roomProperties;
-	roomProperties = UMyGameInstance::GetInstance()->GetNetworkData()->SetIntRoomProperty(roomProperties, "capacity", capacity);
-	roomProperties = UMyGameInstance::GetInstance()->GetNetworkData()->SetStringRoomProperty(roomProperties, "name", roomName);
-	UMyGameInstance::GetInstance()->GetNetworkData()->SetRoomProperties(roomProperties);
+	UMyGameInstance::GetInstance()->GetNetworkData()->SetIntRoomProperty("capacity", capacity);
+	UMyGameInstance::GetInstance()->GetNetworkData()->SetStringRoomProperty("name", roomName);
 }
 
 void ANetworkConnect::UpdateMemberProperty(const int32 channelID) {
@@ -83,8 +80,7 @@ void ANetworkConnect::SetPlayerIndex(const int32 memberCount, const int32 channe
 	//ŽQ‰ÁŽÒ‚ªˆêl‚È‚ç
 	if (count == 1) {
 		instance->GetUserData()->SetPlayerIndex(playerIndex);
-		instance->GetNetworkData()->SetMemberProperties(instance->GetNetworkData()->SetIntMemberProperty(
-			instance->GetNetworkData()->GetMemberProperties(), "PlayerIndex", playerIndex));
+		instance->GetNetworkData()->SetIntMemberProperty("PlayerIndex", playerIndex);
 		return;
 	}
 
@@ -111,6 +107,5 @@ void ANetworkConnect::SetPlayerIndex(const int32 memberCount, const int32 channe
 	}
 
 	instance->GetUserData()->SetPlayerIndex(playerIndex);
-	instance->GetNetworkData()->SetMemberProperties(instance->GetNetworkData()->SetIntMemberProperty(
-		instance->GetNetworkData()->GetMemberProperties(), "PlayerIndex", playerIndex));
+	instance->GetNetworkData()->SetIntMemberProperty("PlayerIndex", playerIndex);
 }
