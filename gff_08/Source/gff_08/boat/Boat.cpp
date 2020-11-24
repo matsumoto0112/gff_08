@@ -110,24 +110,6 @@ void ABoat::EndPlay(const EEndPlayReason::Type EndPlayReason) {
 	ScrewSound->Stop();
 }
 
-//機体の変更
-void ABoat::ChangeBoat(int32 BoatID, int32 PlayerIndex) {
-	// IDからパラメータを取得する
-	if (!BoatDataAsset->Data.IsValidIndex(BoatID)) {
-		UE_LOG(LogBoat, Error, TEXT("Boat parameter is not defined."));
-		return;
-	}
-
-	this->PlayerIndex_ = PlayerIndex;
-
-	//パラメータを必要な変数に代入していく
-	const FBoatParameterRecord Parameter = BoatDataAsset->Data[BoatID];
-	BoatMover->SetParameter(Parameter.MaxSpeed, Parameter.Acceleration, Parameter.Control);
-	this->StaticMesh->SetStaticMesh(Parameter.BoatMesh);
-	this->StaticMesh->SetMaterial(0, Parameter.Materials[PlayerIndex]);
-	this->StaticMesh->SetMassOverrideInKg(NAME_None, Parameter.Mass);
-}
-
 //レースの準備
 void ABoat::RaceReady(ACheckPoint* StartCheckPoint) {
 	GEngine->AddOnScreenDebugMessage(-1, 30.0f, FColor::Red, TEXT("RaceReady Called!"));
@@ -151,6 +133,22 @@ void ABoat::RaceStart() {
 float ABoat::GetPlayerSpeed() const {
 	// km/sに変換する
 	return USpeedConverter::ToSpeedKilometerPerHour(GetVelocity().Size());
+}
+
+void ABoat::SetRacerInfo(const FRacerInfo& InRacerInfo) {
+	this->RacerInfo = InRacerInfo;
+	// IDからパラメータを取得する
+	if (!BoatDataAsset->Data.IsValidIndex(RacerInfo.BoatIndex)) {
+		UE_LOG(LogBoat, Error, TEXT("Boat parameter is not defined."));
+		return;
+	}
+
+	//パラメータを必要な変数に代入していく
+	const FBoatParameterRecord Parameter = BoatDataAsset->Data[RacerInfo.BoatIndex];
+	BoatMover->SetParameter(Parameter.MaxSpeed, Parameter.Acceleration, Parameter.Control);
+	this->StaticMesh->SetStaticMesh(Parameter.BoatMesh);
+	this->StaticMesh->SetMaterial(0, Parameter.Materials[RacerInfo.PlayerIndex]);
+	this->StaticMesh->SetMassOverrideInKg(NAME_None, Parameter.Mass);
 }
 
 void ABoat::ReturnPrevCheckPoint() {

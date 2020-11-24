@@ -52,8 +52,11 @@ void ULapCounter::PassCheckPoint(ACheckPoint* PassedCheckPoint) {
 	int32 Random = FMath::RandRange(0, 10000);
 	constexpr int32 START_CHECKPOINT_INDEX = 0;
 
+	//周回時の音を再生する
 	auto PlayLapIncrementSound = [](int32 NextLapCount) {
-		ESoundResourceType Sound = NextLapCount == 4 ? ESoundResourceType::SE_RACE_GOAL : ESoundResourceType::SE_RACE_LAP_COUNT;
+		//ラップ数が3->4になった時はゴールSEを再生する
+		const ESoundResourceType Sound =
+			NextLapCount == 4 ? ESoundResourceType::SE_RACE_GOAL : ESoundResourceType::SE_RACE_LAP_COUNT;
 		UMyGameInstance::GetInstance()->GetSoundSystem()->PlaySound2D(Sound);
 	};
 
@@ -69,12 +72,15 @@ void ULapCounter::PassCheckPoint(ACheckPoint* PassedCheckPoint) {
 			MostAdvancedIndex = PassedCheckPointIndex;
 
 			AActor* ParentActor = GetOwner();
+
+			//マルチ接続時なら自分がオーナーの時に音を再生する
 			if (UNetworkConnectUtility::IsMultiGame(GetWorld())) {
 				if (UNetworkConnectUtility::IsOwner(ParentActor)) {
 					PlayLapIncrementSound(MostAdcancedLapCount);
 				}
 			} else {
-				if (Cast<ABoat>(ParentActor)->GetPlayerIndex_() == 0) {
+				//シングルプレイなら自分がプレイヤーの時に再生する
+				if (Cast<ABoat>(ParentActor)->GetRacerInfo().PlayerIndex == 0) {
 					PlayLapIncrementSound(MostAdcancedLapCount);
 				}
 			}

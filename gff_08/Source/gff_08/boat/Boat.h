@@ -11,6 +11,7 @@
 #include "gff_08/field/CheckPoint.h"
 #include "gff_08/sound/SoundObject.h"
 #include "gff_08/utils/GamePlayData.h"
+#include "gff_08/utils/RacersInfo.h"
 
 #include "Boat.generated.h"
 
@@ -72,12 +73,6 @@ public:
 	}
 
 	/**
-	 * 機体を変更する
-	 * @param BoatID ボートのID
-	 */
-	UFUNCTION(BlueprintCallable, Category = "Boat")
-	void ChangeBoat(int32 BoatID, int32 PlayerIndex);
-	/**
 	 * レース準備
 	 * @param StartCheckPoint スタート時のチェックポイント
 	 */
@@ -102,17 +97,19 @@ public:
 		return LapCounter;
 	}
 
-	UFUNCTION(BlueprintSetter, Category = "Boat")
-	void SetRacerName(const FName& Name) {
-		RacerName = Name;
-	}
+	/**
+	 * レーサーの種類を取得する
+	 */
 	UFUNCTION(BlueprintGetter, Category = "Boat")
-	FName GetRacerName() const {
-		return RacerName;
+	FRacerInfo GetRacerInfo() const {
+		return RacerInfo;
 	}
-	int32 GetPlayerIndex_() const {
-		return PlayerIndex_;
-	}
+	/**
+	 * レーサーの種類を設定する
+	 */
+	UFUNCTION(BlueprintSetter, Category = "Boat")
+	void SetRacerInfo(const FRacerInfo& InRacerInfo);
+
 	UFUNCTION(BlueprintCallable, Category = "Boat")
 	void ReturnPrevCheckPoint();
 
@@ -156,11 +153,6 @@ protected:
 	//! 運転手
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Boat")
 	TScriptInterface<IDriver> Driver;
-	//! レーサーの名前
-	UPROPERTY(VisibleAnywhere, BlueprintGetter = GetRacerName, BlueprintSetter = SetRacerName, Category = "Boat")
-	FName RacerName;
-	//! プレイヤー番号
-	int32 PlayerIndex_;
 	//! 反転入力が有効か
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Boat")
 	bool bFlipInput;
@@ -179,4 +171,7 @@ protected:
 	float PostureMaintainingTime;
 	//! X軸回転量の履歴
 	TArray<float> RotationXHistory;
+
+	UPROPERTY(EditAnywhere, BlueprintGetter = GetRacerInfo, BlueprintSetter = SetRacerInfo, Category = "Boat")
+	FRacerInfo RacerInfo;
 };
