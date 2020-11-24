@@ -29,7 +29,7 @@ public:
 	 * 初期化処理
 	 */
 	UFUNCTION(BlueprintCallable, Category = "MultiWaitRoom")
-	void Initialize(int32 ID);
+	void Initialize();
 
 	/**
 	 * 現在のルームにいるメンバー情報をセットする
@@ -40,8 +40,6 @@ public:
 public:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "MultiWaitRoom")
 	TArray<FStrixRoomMember> RoomMemberProperties;
-	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "MultiWaitRoom")
-	int32 ChannelID;
 
 private:
 	static constexpr float LIMIT_TIME = 0.5f;
