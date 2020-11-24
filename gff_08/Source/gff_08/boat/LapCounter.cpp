@@ -33,7 +33,7 @@ void ULapCounter::BeginPlay() {
 	Super::BeginPlay();
 
 	MostAdvancedIndex = 0;
-	MostAdcancedLapCount = 1;
+	MostAdvancedLapCount = 1;
 	CurrentIndex = 0;
 	CurrentLapCount = 1;
 
@@ -64,7 +64,7 @@ void ULapCounter::PassCheckPoint(ACheckPoint* PassedCheckPoint) {
 	if (PassedCheckPointIndex == START_CHECKPOINT_INDEX) {
 		// 今までに進んだ最大のチェックポイントがコースの最後のインデックスなら1週してきたということ
 		if (MostAdvancedIndex == MaxCheckPointIndex) {
-			MostAdcancedLapCount++;
+			MostAdvancedLapCount++;
 
 			//現在の時間から今回のラップタイムを取得し、ラップタイムに追加する
 			float Time = RaceManager->GetRaceTimer()->GetCurrentTime();
@@ -76,14 +76,15 @@ void ULapCounter::PassCheckPoint(ACheckPoint* PassedCheckPoint) {
 			//マルチ接続時なら自分がオーナーの時に音を再生する
 			if (UNetworkConnectUtility::IsMultiGame(GetWorld())) {
 				if (UNetworkConnectUtility::IsOwner(ParentActor)) {
-					PlayLapIncrementSound(MostAdcancedLapCount);
+					PlayLapIncrementSound(MostAdvancedLapCount);
 				}
 			} else {
 				//シングルプレイなら自分がプレイヤーの時に再生する
 				if (Cast<ABoat>(ParentActor)->GetRacerInfo().PlayerIndex == 0) {
-					PlayLapIncrementSound(MostAdcancedLapCount);
+					PlayLapIncrementSound(MostAdvancedLapCount);
 				}
 			}
+			LapIncrementDispatcher.Broadcast(MostAdvancedLapCount);
 		}
 	} else {
 		// 次のチェックポイントに触れたらその情報で更新

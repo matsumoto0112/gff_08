@@ -10,6 +10,8 @@
 
 class ARaceManager;
 
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FLapIncrementDispatcher, int32, NextLapCount);
+
 /**
  * 周回計測機能
  * 周回計測と言いつつ、順位の判定に使う変数も持たせているため役割が不明瞭になってきた
@@ -53,7 +55,7 @@ public:
 
 	UFUNCTION(BlueprintGetter, Category = "LapCounter")
 	int32 GetMostAdvancedLapCount() const {
-		return MostAdcancedLapCount;
+		return MostAdvancedLapCount;
 	}
 
 	UFUNCTION(BlueprintGetter, Category = "LapCounter")
@@ -81,7 +83,7 @@ protected:
 
 	//! 現在のラップ数（周回数）
 	UPROPERTY(VisibleAnywhere, BlueprintGetter = GetMostAdvancedLapCount, Category = "LapCounter")
-	int32 MostAdcancedLapCount;
+	int32 MostAdvancedLapCount;
 
 	//! 現在のチェックポイントのインデックス
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "LapCounter")
@@ -104,4 +106,8 @@ protected:
 	//! このゲームにおける各週のラップタイム
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "LapCounter")
 	TArray<float> LapTimes;
+
+	//! 周回時のデリゲート
+	UPROPERTY(BlueprintAssignable, BlueprintReadWrite, Category = "LapCounter")
+	FLapIncrementDispatcher LapIncrementDispatcher;
 };
