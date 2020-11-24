@@ -17,35 +17,34 @@ public:
 	// Sets default values for this actor's properties
 	AMultiWaitRoomManager();
 
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "MultiWaitRoom")
-	TArray<FStrixRoomMember> RoomMemberProperties;
-	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "MultiWaitRoom")
-	int32 ChannelID;
-
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
-
 
 public:
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 
 	/**
-	* 初期化処理
-	*/
+	 * 初期化処理
+	 */
 	UFUNCTION(BlueprintCallable, Category = "MultiWaitRoom")
 	void Initialize(int32 ID);
-    
+
 	/**
-	* 現在のルームにいるメンバー情報をセットする
-	*/
+	 * 現在のルームにいるメンバー情報をセットする
+	 */
 	UFUNCTION(BlueprintCallable, Category = "MultiWaitRoom")
 	void SetCurrentRoomMembers();
+
+public:
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "MultiWaitRoom")
+	TArray<FStrixRoomMember> RoomMemberProperties;
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "MultiWaitRoom")
+	int32 ChannelID;
 
 private:
 	static constexpr float LIMIT_TIME = 0.5f;
 	static constexpr int MAX_ROOM_MEMBER = 4;
 	float Timer;
-
 };
