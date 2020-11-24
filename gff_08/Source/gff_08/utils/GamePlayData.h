@@ -12,16 +12,16 @@
 USTRUCT(BlueprintType)
 struct GFF_08_API FGamePlayData {
 	GENERATED_USTRUCT_BODY()
-	FGamePlayData() : RacerName(TEXT("")), Ranking(1), LapTimes() {
+	FGamePlayData() : PlayerIndex(-1), RacerName(TEXT("")), LapTimes() {
 	}
-	FGamePlayData(const FName RacerName, int32 Ranking, const TArray<float> LapTimes)
-		: RacerName(RacerName), Ranking(Ranking), LapTimes(LapTimes) {
+	FGamePlayData(int32 PlayerIndex, const FName RacerName, const TArray<float> LapTimes)
+		: PlayerIndex(PlayerIndex), RacerName(RacerName), LapTimes(LapTimes) {
 	}
 
 	UPROPERTY(EditAnyWhere, BlueprintReadWrite, Category = "GamePlayData")
-	FName RacerName;
+	int32 PlayerIndex;
 	UPROPERTY(EditAnyWhere, BlueprintReadWrite, Category = "GamePlayData")
-	int32 Ranking;
+	FName RacerName;
 	UPROPERTY(EditAnyWhere, BlueprintReadWrite, Category = "GamePlayData")
 	TArray<float> LapTimes;
 };

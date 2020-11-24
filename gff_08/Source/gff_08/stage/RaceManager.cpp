@@ -221,13 +221,14 @@ FAllRacersGamePlayData ARaceManager::CalculateResult() {
 
 	for (int32 i = 0; i < Boats.Num(); i++) {
 		const auto& Boat = Boats[i];
-		const FName Name = TEXT("NoName");
-		const int32 Ranking = Boat->GetLapCounter()->GetRanking();
+		const FRacerInfo RacerInfo = Boat->GetRacerInfo();
+		const int32 PlayerIndex = RacerInfo.PlayerIndex;
+		const FName Name = RacerInfo.RacerName;
 		const TArray<float> LapTimes = Boat->GetLapCounter()->GetLapTimes();
 		if (UNetworkConnectUtility::IsMultiGame(GetWorld())) {
-			RacersData.Emplace(UNetworkConnectUtility::IsOwner(Boat), FGamePlayData{Name, Ranking, LapTimes});
+			RacersData.Emplace(UNetworkConnectUtility::IsOwner(Boat), FGamePlayData{PlayerIndex, Name, LapTimes});
 		} else {
-			RacersData.Emplace(i == 0, FGamePlayData{Name, Ranking, LapTimes});
+			RacersData.Emplace(i == 0, FGamePlayData{PlayerIndex, Name, LapTimes});
 		}
 	}
 
@@ -251,10 +252,6 @@ FAllRacersGamePlayData ARaceManager::CalculateResult() {
 		}
 		return Sum_A <= Sum_B;
 	});
-
-	for (int32 i = 0; i < RacersData.Num(); i++) {
-		RacersData[i].Value.Ranking = i + 1;
-	}
 
 	FAllRacersGamePlayData Data;
 	for (int32 i = 0; i < RacersData.Num(); i++) {
