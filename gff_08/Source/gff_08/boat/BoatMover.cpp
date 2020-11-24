@@ -68,13 +68,13 @@ void UBoatMover::Move(float MoveValue, float LeftMotorValue, float RightMotorVal
 	//回転処理
 	AddRightForce(LeftMotorValue, RightMotorValue);
 
-	////波の生成タイマー処理
-	//SettingWaveGenerateTimer();
+	//波の生成タイマー処理
+	SettingWaveGenerateTimer();
 
-	////波による加速処理
-	//const FVector WaveAccelVelocity = GetWaveAccelVelocity();
-	//const FVector NormalizedWaveAccelVelocity = WaveAccelVelocity.GetSafeNormal();
-	//BoatMesh->AddForce(NormalizedWaveAccelVelocity * WaveInfluence);
+	//波による加速処理
+	const FVector WaveAccelVelocity = GetWaveAccelVelocity();
+	const FVector NormalizedWaveAccelVelocity = WaveAccelVelocity.GetSafeNormal();
+	BoatMesh->AddForce(NormalizedWaveAccelVelocity * WaveInfluence);
 }
 
 //最高速度を超えているか

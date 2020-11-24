@@ -95,10 +95,6 @@ void ABoat::BeginPlay() {
 	USoundSystem* SoundSystem = Instance->GetSoundSystem();
 	MoveSound = SoundSystem->PlaySoundWithAttachOwnerActor(ESoundResourceType::SE_BOAT_MOVE, this, false);
 	ScrewSound = SoundSystem->PlaySoundWithAttachOwnerActor(ESoundResourceType::SE_BOAT_SCREW, this, false);
-
-	//フィールドをワールドから探す
-	AActor* FieldActor = UGameplayStatics::GetActorOfClass(GetWorld(), AWaterField::StaticClass());
-	Field = Cast<AWaterField>(FieldActor);
 }
 
 void ABoat::EndPlay(const EEndPlayReason::Type EndPlayReason) {
@@ -107,11 +103,6 @@ void ABoat::EndPlay(const EEndPlayReason::Type EndPlayReason) {
 	if (PrevMotorValueStockHandle.IsValid()) {
 		GetWorld()->GetTimerManager().ClearTimer(PrevMotorValueStockHandle);
 		PrevMotorValueStockHandle.Invalidate();
-	}
-	if (CurrentWaveTimerHandle.IsValid()) {
-		FTimerManager& TimerManager = GetWorld()->GetTimerManager();
-		TimerManager.ClearTimer(CurrentWaveTimerHandle);
-		CurrentWaveTimerHandle.Invalidate();
 	}
 
 	//音源の停止
@@ -272,48 +263,9 @@ void ABoat::Tick(float DeltaTime) {
 	//音源に対するパラメータ設定
 	MoveSound->GetAudioComponent()->SetFloatParameter(TEXT("Speed"), GetPlayerSpeed());
 	ScrewSound->GetAudioComponent()->SetFloatParameter(TEXT("Speed"), GetPlayerSpeed());
-
-	//波の生成タイマー処理
-	SettingWaveGenerateTimer();
-
-	//波による加速処理
-	const FVector WaveAccelVelocity = GetWaveAccelVelocity();
-	const FVector NormalizedWaveAccelVelocity = WaveAccelVelocity.GetSafeNormal();
-	StaticMesh->AddForce(NormalizedWaveAccelVelocity * WaveInfluence);
 }
 
 // Called to bind functionality to input
 void ABoat::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent) {
 	Super::SetupPlayerInputComponent(PlayerInputComponent);
-}
-
-//波の生成タイマー処理
-void ABoat::SettingWaveGenerateTimer() {
-	const FVector Velocity = GetVelocity();
-	const float VelocityLength = Velocity.Size();
-	const float Speed_km_h = USpeedConverter::ToSpeedKilometerPerHour(VelocityLength);
-
-	//速度が一定値以上なら波の生成タイマーをセットする
-	if (Speed_km_h >= WaveSpawnableSpeed) {
-		CurrentWaveSecond += GetWorld()->GetDeltaSeconds();
-		if (CurrentWaveSecond >= WaveSpawnSeconds) {
-			bSpawnWave = true;
-			CurrentWaveSecond -= WaveSpawnSeconds;
-		}
-
-	} else {
-		CurrentWaveSecond = 0.0f;
-	}
-}
-
-//波の生成処理
-void ABoat::GenerateWave() const {
-	const FVector Location = GenerateWaveLocation->GetComponentLocation();
-	const FRotator Rotation = GenerateWaveLocation->GetComponentRotation();
-	Field->GenerateAccelWave(Location, Rotation);
-}
-
-//波の加速度を取得する
-FVector ABoat::GetWaveAccelVelocity() const {
-	return Field->GetAccelVelocity(StaticMesh->GetComponentLocation());
 }
