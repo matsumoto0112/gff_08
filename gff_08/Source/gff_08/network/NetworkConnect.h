@@ -15,6 +15,9 @@ public:
 	// Sets default values for this actor's properties
 	ANetworkConnect();
 
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "NetworkConnect")
+	bool IsPressConnectButton;
+
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
@@ -53,7 +56,4 @@ public:
 	*/
 	UFUNCTION(BlueprintCallable, Category = "NetworkConnect")
 	void SetPlayerIndex(const int32 memberCount, const int32 channelID);
-
-private:
-	bool IsPressConnectButton;
 };
