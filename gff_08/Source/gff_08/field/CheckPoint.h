@@ -48,7 +48,7 @@ public:
 	ACheckPoint* GetPrevPoint() const;
 
 protected:
-	UPROPERTY(EditDefaultsOnly)
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Components")
 	UStaticMeshComponent* MeshComponent;
 
 protected:
@@ -56,4 +56,7 @@ protected:
 	int32 Index;
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "CheckPoint")
 	ACheckPointManager* Manager;
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "CheckPoint",
+		meta = (ClampMin = "0.0", ClampMax = "1.0", UIMin = "0.0", UIMax = "1.0"))
+	float MostHeightPoint = 0.5f;
 };
