@@ -47,6 +47,12 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "CheckPoint")
 	ACheckPoint* GetPrevPoint() const;
 
+	/**
+	 * チェックポイントの得点が高い地点の座標を返す
+	 */
+	UFUNCTION(BlueprintCallable, Category = "CheckPoint")
+	FVector GetPointLocation() const;
+
 protected:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Components")
 	UStaticMeshComponent* MeshComponent;

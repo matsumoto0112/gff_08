@@ -45,3 +45,15 @@ ACheckPoint* ACheckPoint::GetPrevPoint() const {
 		return nullptr;
 	}
 }
+
+FVector ACheckPoint::GetPointLocation() const {
+	FVector Origin;
+	FVector Scale;
+	this->GetActorBounds(true, Origin, Scale);
+	const FVector Min = Origin - Scale;
+	const FVector Max = Origin + Scale;
+
+	const FVector Lerped = FMath ::Lerp(Min, Max, MostHeightPoint);
+	const FVector Res = FVector(Lerped.X, Lerped.Y, Origin.Z);
+	return Res;
+}
