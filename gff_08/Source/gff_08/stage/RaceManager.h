@@ -130,8 +130,10 @@ protected:
 	float RaceEndRemainTime = 10.0f;
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "BoatManager")
 	bool bRaceEnded;
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "BoatManager")
+	bool bRaceEndCountdownStarted;
 
 	//! レース終了時のイベント関数
-	UPROPERTY(BlueprintAssignable, BlueprintReadWrite, Category = "LapCounter")
+	UPROPERTY(BlueprintAssignable, BlueprintReadWrite, Category = "BoatManager")
 	FRaceEndEvent RaceEndEvent;
 };

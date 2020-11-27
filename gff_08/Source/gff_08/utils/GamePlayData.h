@@ -30,6 +30,7 @@ USTRUCT(BlueprintType)
 struct GFF_08_API FAllRacersGamePlayData {
 	GENERATED_USTRUCT_BODY()
 	FAllRacersGamePlayData() : MyBoatIndex(0), AllRacersData() {
+		AllRacersData.Init(FGamePlayData{}, 4);
 	}
 
 	UPROPERTY(EditAnyWhere, BlueprintReadWrite, Category = "AllRacersGamePlayData")

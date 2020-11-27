@@ -31,6 +31,7 @@ void ARaceManager::BeginPlay() {
 
 	UMyGameInstance::GetInstance()->GetSoundSystem()->StopBGM();
 	bRaceStarted = false;
+	bRaceEndCountdownStarted = false;
 
 	const FString Path = "/Game/Blueprints/UI/BP_CountDownTimer.BP_CountDownTimer_C";
 	TSubclassOf<UCountDownTimer> WidgetClass = TSoftClassPtr<UCountDownTimer>(FSoftObjectPath(*Path)).LoadSynchronous();
@@ -93,7 +94,8 @@ void ARaceManager::Tick(float DeltaTime) {
 		return;
 
 	if (bRaceStarted) {
-		if (!IsAnyBoatGoaled()) {
+		if (!bRaceEndCountdownStarted) {
+			bRaceEndCountdownStarted = IsAnyBoatGoaled();
 			return;
 		}
 		CountDownUI->SetAnyBoatGoaledUI();
