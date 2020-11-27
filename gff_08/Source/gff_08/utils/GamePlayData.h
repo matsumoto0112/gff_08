@@ -29,15 +29,18 @@ struct GFF_08_API FGamePlayData {
 USTRUCT(BlueprintType)
 struct GFF_08_API FAllRacersGamePlayData {
 	GENERATED_USTRUCT_BODY()
-	FAllRacersGamePlayData() : MyBoatIndex(0), AllRacersData() {
-		AllRacersData.Init(FGamePlayData{}, 4);
+	FAllRacersGamePlayData() : MyBoatIndex(0) {
 	}
 
 	//! 自分のプレイヤー番号
 	UPROPERTY(EditAnyWhere, BlueprintReadWrite, Category = "AllRacersGamePlayData")
 	int32 MyBoatIndex;
-	//! レーサーの情報
-	//! プレイヤー番号順に格納されている
 	UPROPERTY(EditAnyWhere, BlueprintReadWrite, Category = "AllRacersGamePlayData")
-	TArray<FGamePlayData> AllRacersData;
+	FGamePlayData Player1Data;
+	UPROPERTY(EditAnyWhere, BlueprintReadWrite, Category = "AllRacersGamePlayData")
+	FGamePlayData Player2Data;
+	UPROPERTY(EditAnyWhere, BlueprintReadWrite, Category = "AllRacersGamePlayData")
+	FGamePlayData Player3Data;
+	UPROPERTY(EditAnyWhere, BlueprintReadWrite, Category = "AllRacersGamePlayData")
+	FGamePlayData Player4Data;
 };

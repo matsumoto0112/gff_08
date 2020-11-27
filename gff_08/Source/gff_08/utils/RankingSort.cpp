@@ -19,15 +19,15 @@ FAllRacersGamePlayData URankingSort::SortByLapTimes(const FAllRacersGamePlayData
 		}
 	};
 
-	Res.AllRacersData.Sort([GetSumTimes](const auto& A, const auto& B) {
-		const float SumLapTimes_A = GetSumTimes(A.LapTimes);
-		const float SumLapTimes_B = GetSumTimes(B.LapTimes);
-		return SumLapTimes_A < SumLapTimes_B;
-	});
+	//Res.AllRacersData.Sort([GetSumTimes](const auto& A, const auto& B) {
+	//	const float SumLapTimes_A = GetSumTimes(A.LapTimes);
+	//	const float SumLapTimes_B = GetSumTimes(B.LapTimes);
+	//	return SumLapTimes_A < SumLapTimes_B;
+	//});
 
 	const int32 MyPlayerIndex = UMyGameInstance::GetInstance()->GetUserData()->GetPlayerIndex();
-	Res.MyBoatIndex =
-		Res.AllRacersData.IndexOfByPredicate([MyPlayerIndex](const auto& A) { return A.PlayerIndex == MyPlayerIndex; });
+	//Res.MyBoatIndex =
+	//	Res.AllRacersData.IndexOfByPredicate([MyPlayerIndex](const auto& A) { return A.PlayerIndex == MyPlayerIndex; });
 
 	return Res;
 }

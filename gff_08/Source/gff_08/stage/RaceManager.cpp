@@ -266,11 +266,11 @@ FAllRacersGamePlayData ARaceManager::CalculateResult() {
 	});
 
 	FAllRacersGamePlayData Data;
-	for (int32 i = 0; i < RacersData.Num(); i++) {
-		Data.AllRacersData.Emplace(RacersData[i].Value);
-		if (RacersData[i].Key) {
-			Data.MyBoatIndex = i;
-		}
-	}
+	//for (int32 i = 0; i < RacersData.Num(); i++) {
+	//	Data.AllRacersData.Emplace(RacersData[i].Value);
+	//	if (RacersData[i].Key) {
+	//		Data.MyBoatIndex = i;
+	//	}
+	//}
 	return Data;
 }
