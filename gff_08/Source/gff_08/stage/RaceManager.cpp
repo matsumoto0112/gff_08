@@ -186,6 +186,10 @@ URaceTimer* ARaceManager::GetRaceTimer() const {
 	return MainUI->GetRaceInfo()->GetRaceTimer();
 }
 
+void ARaceManager::TestCallRaceEndEventFunction() {
+	RaceEndEvent.Broadcast();
+}
+
 void ARaceManager::CountdownUpdate() {
 	const float PrevCountDownTime = CountDownTime;
 	CountDownTime -= GetWorld()->GetDeltaSeconds();

@@ -78,6 +78,8 @@ public:
 	 */
 	UFUNCTION(BlueprintCallable, Category = "RaceManager")
 	URaceTimer* GetRaceTimer() const;
+	UFUNCTION(BlueprintCallable, Category = "RaceManager")
+	void TestCallRaceEndEventFunction();
 
 private:
 	/**
