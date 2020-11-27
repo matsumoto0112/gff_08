@@ -101,8 +101,9 @@ void ARaceManager::Tick(float DeltaTime) {
 		CountDownUI->SetAnyBoatGoaledUI();
 		RaceEndRemainTime -= DeltaTime;
 		if (!bRaceEnded && RaceEndRemainTime <= 0.0f) {
+			//マルチプレイ時の終了処理
 			if (UNetworkConnectUtility::IsMultiGame(GetWorld())) {
-				RaceEndEvent.Broadcast();
+				//何もしない
 			} else {
 				UMyGameInstance::GetInstance()->SetPlayData(CalculateResult());
 			}

@@ -33,8 +33,11 @@ struct GFF_08_API FAllRacersGamePlayData {
 		AllRacersData.Init(FGamePlayData{}, 4);
 	}
 
+	//! 自分のプレイヤー番号
 	UPROPERTY(EditAnyWhere, BlueprintReadWrite, Category = "AllRacersGamePlayData")
 	int32 MyBoatIndex;
+	//! レーサーの情報
+	//! プレイヤー番号順に格納されている
 	UPROPERTY(EditAnyWhere, BlueprintReadWrite, Category = "AllRacersGamePlayData")
 	TArray<FGamePlayData> AllRacersData;
 };
