@@ -29,4 +29,9 @@ public:
 	 */
 	UFUNCTION(BlueprintCallable, Category = "StrixSDKUtility", meta = (WorldContext = "worldContextObject"))
 	static bool IsMultiGame(const UObject* worldContextObject);
+	/**
+	* Indexがオーナーのボートを指しているか
+	*/
+	UFUNCTION(BlueprintCallable, Category = "StrixSDKUtility")
+	static bool IsOwnerPlayerIndex(int32 Index);
 };

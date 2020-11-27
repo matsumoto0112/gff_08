@@ -99,7 +99,11 @@ void ARaceManager::Tick(float DeltaTime) {
 		CountDownUI->SetAnyBoatGoaledUI();
 		RaceEndRemainTime -= DeltaTime;
 		if (!bRaceEnded && RaceEndRemainTime <= 0.0f) {
-			UMyGameInstance::GetInstance()->SetPlayData(CalculateResult());
+			if (UNetworkConnectUtility::IsMultiGame(GetWorld())) {
+				RaceEndEvent.Broadcast();
+			} else {
+				UMyGameInstance::GetInstance()->SetPlayData(CalculateResult());
+			}
 			UGameplayStatics::OpenLevel(GetWorld(), NEXT_LEVEL_NAME);
 			bRaceEnded = true;
 		}

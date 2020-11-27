@@ -49,7 +49,6 @@ void ULapCounter::TickComponent(float DeltaTime, ELevelTick TickType, FActorComp
 // チェックポイントを通過した
 void ULapCounter::PassCheckPoint(ACheckPoint* PassedCheckPoint) {
 	const int32 PassedCheckPointIndex = PassedCheckPoint->GetIndex();
-	int32 Random = FMath::RandRange(0, 10000);
 	constexpr int32 START_CHECKPOINT_INDEX = 0;
 
 	//周回時の音を再生する
@@ -58,6 +57,7 @@ void ULapCounter::PassCheckPoint(ACheckPoint* PassedCheckPoint) {
 		const ESoundResourceType Sound =
 			NextLapCount == 4 ? ESoundResourceType::SE_RACE_GOAL : ESoundResourceType::SE_RACE_LAP_COUNT;
 		UMyGameInstance::GetInstance()->GetSoundSystem()->PlaySound2D(Sound);
+		GEngine->AddOnScreenDebugMessage(-1, 10.0f, FColor::Red, TEXT("Play Increment Sound"));
 	};
 
 	// スタート地点のチェックポイント
@@ -67,23 +67,18 @@ void ULapCounter::PassCheckPoint(ACheckPoint* PassedCheckPoint) {
 			MostAdvancedLapCount++;
 
 			//現在の時間から今回のラップタイムを取得し、ラップタイムに追加する
-			float Time = RaceManager->GetRaceTimer()->GetCurrentTime();
+			const float Time = RaceManager->GetRaceTimer()->GetCurrentTime();
 			LapTimes.Add(GetLapTime(Time, LapTimes));
 			MostAdvancedIndex = PassedCheckPointIndex;
 
 			AActor* ParentActor = GetOwner();
+			ABoat* ParentBoat = Cast<ABoat>(ParentActor);
 
 			//マルチ接続時なら自分がオーナーの時に音を再生する
-			if (UNetworkConnectUtility::IsMultiGame(GetWorld())) {
-				if (UNetworkConnectUtility::IsOwner(ParentActor)) {
-					PlayLapIncrementSound(MostAdvancedLapCount);
-				}
-			} else {
-				//シングルプレイなら自分がプレイヤーの時に再生する
-				if (Cast<ABoat>(ParentActor)->GetRacerInfo().PlayerIndex == 0) {
-					PlayLapIncrementSound(MostAdvancedLapCount);
-				}
+			if (UNetworkConnectUtility::IsOwnerPlayerIndex(ParentBoat->GetRacerInfo().PlayerIndex)) {
+				PlayLapIncrementSound(MostAdvancedLapCount);
 			}
+
 			LapIncrementDispatcher.Broadcast(MostAdvancedLapCount);
 		}
 	} else {

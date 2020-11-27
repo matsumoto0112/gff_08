@@ -13,6 +13,8 @@
 
 #include "RaceManager.generated.h"
 
+DECLARE_DYNAMIC_MULTICAST_DELEGATE(FRaceEndEvent);
+
 /**
  * レース管理
  */
@@ -128,4 +130,8 @@ protected:
 	float RaceEndRemainTime = 10.0f;
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "BoatManager")
 	bool bRaceEnded;
+
+	//! レース終了時のイベント関数
+	UPROPERTY(BlueprintAssignable, BlueprintReadWrite, Category = "LapCounter")
+	FRaceEndEvent RaceEndEvent;
 };
