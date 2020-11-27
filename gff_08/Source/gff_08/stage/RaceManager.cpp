@@ -103,8 +103,10 @@ void ARaceManager::Tick(float DeltaTime) {
 		if (!bRaceEnded && RaceEndRemainTime <= 0.0f) {
 			//マルチプレイ時の終了処理
 			if (UNetworkConnectUtility::IsMultiGame(GetWorld())) {
+				GEngine->AddOnScreenDebugMessage(-1, 30.0f, FColor::Red, TEXT("MultiPlay Ended"));
 				//何もしない
 			} else {
+				GEngine->AddOnScreenDebugMessage(-1, 30.0f, FColor::Red, TEXT("SinglePlay Ended"));
 				UMyGameInstance::GetInstance()->SetPlayData(CalculateResult());
 			}
 			UGameplayStatics::OpenLevel(GetWorld(), NEXT_LEVEL_NAME);
@@ -266,7 +268,7 @@ FAllRacersGamePlayData ARaceManager::CalculateResult() {
 	});
 
 	FAllRacersGamePlayData Data;
-	//for (int32 i = 0; i < RacersData.Num(); i++) {
+	// for (int32 i = 0; i < RacersData.Num(); i++) {
 	//	Data.AllRacersData.Emplace(RacersData[i].Value);
 	//	if (RacersData[i].Key) {
 	//		Data.MyBoatIndex = i;
