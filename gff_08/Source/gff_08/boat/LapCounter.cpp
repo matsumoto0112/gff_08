@@ -63,7 +63,7 @@ void ULapCounter::PassCheckPoint(ACheckPoint* PassedCheckPoint) {
 	// スタート地点のチェックポイント
 	if (PassedCheckPointIndex == START_CHECKPOINT_INDEX) {
 		// 今までに進んだ最大のチェックポイントがコースの最後のインデックスなら1週してきたということ
-		if (MostAdvancedIndex == MaxCheckPointIndex) {
+		if (PassedCheckPoint->IsLastCheckPointIndex(MostAdvancedIndex)) {
 			MostAdvancedLapCount++;
 
 			//現在の時間から今回のラップタイムを取得し、ラップタイムに追加する
