@@ -172,6 +172,7 @@ void ARaceManager::RaceStart() {
 	}
 
 	//マルチプレイ用
+	GEngine->AddOnScreenDebugMessage(-1, 30.0f, FColor::Red, FString::Format(TEXT("{0} Racers Setup!!"), {Boats.Num()}));
 	RankingCalculator->Setup(Boats);
 }
 

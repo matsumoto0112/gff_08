@@ -65,6 +65,9 @@ struct GFF_08_API FNetworkTransformData {
 	FVector FixLocation;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "NetworkSynchroParameters")
 	FRotator FixRotation;
+	//! 現在のチェックポイントのインデックス（ランキング計算用）
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "NetworkSynchroParameters")
+	int32 CheckPointIndex;
 };
 
 /**
