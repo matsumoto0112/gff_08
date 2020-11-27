@@ -96,13 +96,24 @@ void ULapCounter::PassCheckPoint(ACheckPoint* PassedCheckPoint) {
 	// 順位決定用のインデックスの更新処理
 	if (PassedCheckPointIndex == START_CHECKPOINT_INDEX) {
 		// 周回したタイミングで加算
-		if (CurrentIndex == MaxCheckPointIndex) {
+		//直前までにいたインデックスがこのステージ中最後のチェックポイントのインデックスなら周回してきたということ
+		if (PassedCheckPoint->IsLastCheckPointIndex(CurrentIndex)) {
 			CurrentLapCount++;
+			GEngine->AddOnScreenDebugMessage(-1, 10.0f, FColor::Red,
+				FString::Format(TEXT("Boat Index {0} reached IncrementLapCount Location! NextLapCount is {1}"),
+					{Cast<ABoat>(GetOwner())->GetRacerInfo().PlayerIndex, CurrentLapCount}));
+			UE_LOG(LogTemp, Log, TEXT("Boat Index {0} reached IncrementLapCount Location! NextLapCount is {1}"),
+				Cast<ABoat>(GetOwner())->GetRacerInfo().PlayerIndex, CurrentLapCount);
 		}
 	} else if (PassedCheckPointIndex == MaxCheckPointIndex) {
 		// 戻ったタイミングで減算
 		if (CurrentIndex == START_CHECKPOINT_INDEX) {
 			CurrentLapCount = FMath::Max(CurrentLapCount - 1, 0);
+			GEngine->AddOnScreenDebugMessage(-1, 10.0f, FColor::Red,
+				FString::Format(TEXT("Boat Index {0} reached DecrementLapCount Location! NextLapCount is {1}"),
+					{Cast<ABoat>(GetOwner())->GetRacerInfo().PlayerIndex, CurrentLapCount}));
+			UE_LOG(LogTemp, Log, TEXT("Boat Index {0} reached DecrementLapCount Location! NextLapCount is {1}"),
+				Cast<ABoat>(GetOwner())->GetRacerInfo().PlayerIndex, CurrentLapCount);
 		}
 	}
 	CurrentIndex = PassedCheckPointIndex;

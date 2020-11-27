@@ -56,6 +56,10 @@ void URankingCalculator::TickComponent(float DeltaTime, ELevelTick TickType, FAc
 	});
 
 	for (int32 i = 0; i < Boats.Num(); i++) {
+		GEngine->AddOnScreenDebugMessage(-1, 0.0f, FColor::Red,
+			FString::Format(TEXT("Index {0} LapCount is {1}! CheckPointIndex is {2}! Rank is {3}"),
+				{Boats[i]->GetRacerInfo().PlayerIndex, Boats[i]->GetLapCounter()->GetLapCount(),
+					Boats[i]->GetLapCounter()->GetCurrentCheckPointIndex(), i + 1}));
 		Cast<ABoat>(Boats[i])->GetLapCounter()->SetRanking(i + 1);
 	}
 }

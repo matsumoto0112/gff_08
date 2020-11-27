@@ -58,3 +58,7 @@ FVector ACheckPoint::GetPointLocation() const {
 	const FVector Res = FVector(Lerped.X, Lerped.Y, Origin.Z);
 	return Res;
 }
+
+bool ACheckPoint::IsLastCheckPointIndex(int32 InIndex) const {
+	return Manager->IsLastCheckPointIndex(InIndex);
+}

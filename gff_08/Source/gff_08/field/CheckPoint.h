@@ -52,6 +52,10 @@ public:
 	 */
 	UFUNCTION(BlueprintCallable, Category = "CheckPoint")
 	FVector GetPointLocation() const;
+	/**
+	 * Indexのチェックポイントはステージ中で最後のチェックポイントか
+	 */
+	bool IsLastCheckPointIndex(int32 InIndex) const;
 
 protected:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Components")

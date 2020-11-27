@@ -46,3 +46,7 @@ void ACheckPointManager::CollectCheckPointsInWorld() {
 		}
 	}
 }
+
+bool ACheckPointManager::IsLastCheckPointIndex(int32 Index) const {
+	return Index + 1 == CheckPoints.Num();
+}

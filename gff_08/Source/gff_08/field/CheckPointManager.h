@@ -34,6 +34,8 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "CheckPointManager")
 	void CollectCheckPointsInWorld();
 
+	bool IsLastCheckPointIndex(int32 Index) const;
+
 protected:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "CheckPointManager")
 	TMap<int32, ACheckPoint*> CheckPoints;
