@@ -53,68 +53,68 @@ public:
 	USoundSystem* GetSoundSystem() const;
 
 	UFUNCTION(BlueprintCallable, Category = "MyGameInstance")
-	FAllRacersGamePlayData GetPlayData() const {
+	UAllRacersGamePlayDataObject* GetPlayData() const {
 		return PlayData;
 	}
 
-	UFUNCTION(BlueprintCallable, Category = "MyGameInstance")
-	void SetPlayData(const FAllRacersGamePlayData& Data) {
-		this->PlayData = Data;
-		if (this->PlayData.Player1Data.LapTimes.Num() == 3) {
-			GEngine->AddOnScreenDebugMessage(-1, 60.0f, FColor::Red,
-				FString::Printf(TEXT("Set Play Data Called. PlayerIndex: %d LapTime is %f,%f,%f"), this->PlayData.MyBoatIndex,
-					this->PlayData.Player1Data.LapTimes[0], this->PlayData.Player1Data.LapTimes[1],
-					this->PlayData.Player1Data.LapTimes[2]));
-			UE_LOG(LogTemp, Log, TEXT("Set Play Data Called. PlayerIndex: %d LapTime is %f,%f,%f"), this->PlayData.MyBoatIndex,
-				this->PlayData.Player1Data.LapTimes[0], this->PlayData.Player1Data.LapTimes[1],
-				this->PlayData.Player1Data.LapTimes[2]);
-		} else {
-			GEngine->AddOnScreenDebugMessage(-1, 60.0f, FColor::Red,
-				FString::Printf(TEXT("Player1Data LapTimes.Num() != 3... Num = "), this->PlayData.Player1Data.LapTimes.Num()));
-			UE_LOG(LogTemp, Log, TEXT("Player1Data LapTimes.Num() != 3... Num = "), this->PlayData.Player1Data.LapTimes.Num());
-		}
-		if (this->PlayData.Player2Data.LapTimes.Num() == 3) {
-			GEngine->AddOnScreenDebugMessage(-1, 60.0f, FColor::Red,
-				FString::Printf(TEXT("Set Play Data Called. PlayerIndex: %d LapTime is %f,%f,%f"), this->PlayData.MyBoatIndex,
-					this->PlayData.Player2Data.LapTimes[0], this->PlayData.Player2Data.LapTimes[1],
-					this->PlayData.Player2Data.LapTimes[2]));
-			UE_LOG(LogTemp, Log, TEXT("Set Play Data Called. PlayerIndex: %d LapTime is %f,%f,%f"), this->PlayData.MyBoatIndex,
-				this->PlayData.Player2Data.LapTimes[0], this->PlayData.Player2Data.LapTimes[1],
-				this->PlayData.Player2Data.LapTimes[2]);
+	// UFUNCTION(BlueprintCallable, Category = "MyGameInstance")
+	// void SetPlayData(const FAllRacersGamePlayData& Data) {
+	//	this->PlayData = Data;
+	//	if (this->PlayData.Player1Data.LapTimes.Num() == 3) {
+	//		GEngine->AddOnScreenDebugMessage(-1, 60.0f, FColor::Red,
+	//			FString::Printf(TEXT("Set Play Data Called. PlayerIndex: %d LapTime is %f,%f,%f"), this->PlayData.MyBoatIndex,
+	//				this->PlayData.Player1Data.LapTimes[0], this->PlayData.Player1Data.LapTimes[1],
+	//				this->PlayData.Player1Data.LapTimes[2]));
+	//		UE_LOG(LogTemp, Log, TEXT("Set Play Data Called. PlayerIndex: %d LapTime is %f,%f,%f"), this->PlayData.MyBoatIndex,
+	//			this->PlayData.Player1Data.LapTimes[0], this->PlayData.Player1Data.LapTimes[1],
+	//			this->PlayData.Player1Data.LapTimes[2]);
+	//	} else {
+	//		GEngine->AddOnScreenDebugMessage(-1, 60.0f, FColor::Red,
+	//			FString::Printf(TEXT("Player1Data LapTimes.Num() != 3... Num = "), this->PlayData.Player1Data.LapTimes.Num()));
+	//		UE_LOG(LogTemp, Log, TEXT("Player1Data LapTimes.Num() != 3... Num = "), this->PlayData.Player1Data.LapTimes.Num());
+	//	}
+	//	if (this->PlayData.Player2Data.LapTimes.Num() == 3) {
+	//		GEngine->AddOnScreenDebugMessage(-1, 60.0f, FColor::Red,
+	//			FString::Printf(TEXT("Set Play Data Called. PlayerIndex: %d LapTime is %f,%f,%f"), this->PlayData.MyBoatIndex,
+	//				this->PlayData.Player2Data.LapTimes[0], this->PlayData.Player2Data.LapTimes[1],
+	//				this->PlayData.Player2Data.LapTimes[2]));
+	//		UE_LOG(LogTemp, Log, TEXT("Set Play Data Called. PlayerIndex: %d LapTime is %f,%f,%f"), this->PlayData.MyBoatIndex,
+	//			this->PlayData.Player2Data.LapTimes[0], this->PlayData.Player2Data.LapTimes[1],
+	//			this->PlayData.Player2Data.LapTimes[2]);
 
-		} else {
-			GEngine->AddOnScreenDebugMessage(-1, 60.0f, FColor::Red,
-				FString::Printf(TEXT("Player2Data LapTimes.Num() != 3... Num = "), this->PlayData.Player2Data.LapTimes.Num()));
-			UE_LOG(LogTemp, Log, TEXT("Player1Data LapTimes.Num() != 3... Num = "), this->PlayData.Player2Data.LapTimes.Num());
-		}
-		if (this->PlayData.Player3Data.LapTimes.Num() == 3) {
-			GEngine->AddOnScreenDebugMessage(-1, 60.0f, FColor::Red,
-				FString::Printf(TEXT("Set Play Data Called. PlayerIndex: %d LapTime is %f,%f,%f"), this->PlayData.MyBoatIndex,
-					this->PlayData.Player3Data.LapTimes[0], this->PlayData.Player3Data.LapTimes[1],
-					this->PlayData.Player3Data.LapTimes[2]));
-			UE_LOG(LogTemp, Log, TEXT("Set Play Data Called. PlayerIndex: %d LapTime is %f,%f,%f"), this->PlayData.MyBoatIndex,
-				this->PlayData.Player3Data.LapTimes[0], this->PlayData.Player3Data.LapTimes[1],
-				this->PlayData.Player3Data.LapTimes[2]);
+	//	} else {
+	//		GEngine->AddOnScreenDebugMessage(-1, 60.0f, FColor::Red,
+	//			FString::Printf(TEXT("Player2Data LapTimes.Num() != 3... Num = "), this->PlayData.Player2Data.LapTimes.Num()));
+	//		UE_LOG(LogTemp, Log, TEXT("Player1Data LapTimes.Num() != 3... Num = "), this->PlayData.Player2Data.LapTimes.Num());
+	//	}
+	//	if (this->PlayData.Player3Data.LapTimes.Num() == 3) {
+	//		GEngine->AddOnScreenDebugMessage(-1, 60.0f, FColor::Red,
+	//			FString::Printf(TEXT("Set Play Data Called. PlayerIndex: %d LapTime is %f,%f,%f"), this->PlayData.MyBoatIndex,
+	//				this->PlayData.Player3Data.LapTimes[0], this->PlayData.Player3Data.LapTimes[1],
+	//				this->PlayData.Player3Data.LapTimes[2]));
+	//		UE_LOG(LogTemp, Log, TEXT("Set Play Data Called. PlayerIndex: %d LapTime is %f,%f,%f"), this->PlayData.MyBoatIndex,
+	//			this->PlayData.Player3Data.LapTimes[0], this->PlayData.Player3Data.LapTimes[1],
+	//			this->PlayData.Player3Data.LapTimes[2]);
 
-		} else {
-			GEngine->AddOnScreenDebugMessage(-1, 60.0f, FColor::Red,
-				FString::Printf(TEXT("Player3Data LapTimes.Num() != 3... Num = "), this->PlayData.Player3Data.LapTimes.Num()));
-			UE_LOG(LogTemp, Log, TEXT("Player1Data LapTimes.Num() != 3... Num = "), this->PlayData.Player3Data.LapTimes.Num());
-		}
-		if (this->PlayData.Player4Data.LapTimes.Num() == 3) {
-			GEngine->AddOnScreenDebugMessage(-1, 60.0f, FColor::Red,
-				FString::Printf(TEXT("Set Play Data Called. PlayerIndex: %d LapTime is %f,%f,%f"), this->PlayData.MyBoatIndex,
-					this->PlayData.Player4Data.LapTimes[0], this->PlayData.Player4Data.LapTimes[1],
-					this->PlayData.Player4Data.LapTimes[2]));
-			UE_LOG(LogTemp, Log, TEXT("Set Play Data Called. PlayerIndex: %d LapTime is %f,%f,%f"), this->PlayData.MyBoatIndex,
-				this->PlayData.Player4Data.LapTimes[0], this->PlayData.Player4Data.LapTimes[1],
-				this->PlayData.Player4Data.LapTimes[2]);
-		} else {
-			GEngine->AddOnScreenDebugMessage(-1, 60.0f, FColor::Red,
-				FString::Printf(TEXT("Player4Data LapTimes.Num() != 3... Num = "), this->PlayData.Player4Data.LapTimes.Num()));
-			UE_LOG(LogTemp, Log, TEXT("Player4Data LapTimes.Num() != 3... Num = "), this->PlayData.Player4Data.LapTimes.Num());
-		}
-	}
+	//	} else {
+	//		GEngine->AddOnScreenDebugMessage(-1, 60.0f, FColor::Red,
+	//			FString::Printf(TEXT("Player3Data LapTimes.Num() != 3... Num = "), this->PlayData.Player3Data.LapTimes.Num()));
+	//		UE_LOG(LogTemp, Log, TEXT("Player1Data LapTimes.Num() != 3... Num = "), this->PlayData.Player3Data.LapTimes.Num());
+	//	}
+	//	if (this->PlayData.Player4Data.LapTimes.Num() == 3) {
+	//		GEngine->AddOnScreenDebugMessage(-1, 60.0f, FColor::Red,
+	//			FString::Printf(TEXT("Set Play Data Called. PlayerIndex: %d LapTime is %f,%f,%f"), this->PlayData.MyBoatIndex,
+	//				this->PlayData.Player4Data.LapTimes[0], this->PlayData.Player4Data.LapTimes[1],
+	//				this->PlayData.Player4Data.LapTimes[2]));
+	//		UE_LOG(LogTemp, Log, TEXT("Set Play Data Called. PlayerIndex: %d LapTime is %f,%f,%f"), this->PlayData.MyBoatIndex,
+	//			this->PlayData.Player4Data.LapTimes[0], this->PlayData.Player4Data.LapTimes[1],
+	//			this->PlayData.Player4Data.LapTimes[2]);
+	//	} else {
+	//		GEngine->AddOnScreenDebugMessage(-1, 60.0f, FColor::Red,
+	//			FString::Printf(TEXT("Player4Data LapTimes.Num() != 3... Num = "), this->PlayData.Player4Data.LapTimes.Num()));
+	//		UE_LOG(LogTemp, Log, TEXT("Player4Data LapTimes.Num() != 3... Num = "), this->PlayData.Player4Data.LapTimes.Num());
+	//	}
+	//}
 
 	UFUNCTION(BlueprintCallable, Category = "MyGameInstance")
 	UOptionParameter* GetOption() const {
@@ -148,7 +148,7 @@ protected:
 	USoundSystem* SoundSystem;
 	//! ゲームのプレイ情報
 	UPROPERTY()
-	FAllRacersGamePlayData PlayData;
+	UAllRacersGamePlayDataObject* PlayData;
 	//! オプション情報
 	UPROPERTY()
 	UOptionParameter* Option;
