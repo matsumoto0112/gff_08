@@ -68,6 +68,9 @@ struct GFF_08_API FNetworkTransformData {
 	//! 現在のチェックポイントのインデックス（ランキング計算用）
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "NetworkSynchroParameters")
 	int32 CheckPointIndex;
+	//! 現在の周回数（ランキング計算用）
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "NetworkSynchroParameters")
+	int32 LapCount;
 };
 
 /**
