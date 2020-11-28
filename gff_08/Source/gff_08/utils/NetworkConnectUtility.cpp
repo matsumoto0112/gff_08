@@ -16,7 +16,10 @@ bool UNetworkConnectUtility::IsOwner(const AActor* target) {
 }
 
 bool UNetworkConnectUtility::IsMultiGame(const UObject* worldContextObject) {
-	return IsMasterServerConnected(worldContextObject);
+	FStrixRoom roomProperty = UStrixBlueprintFunctionLibrary::GetCurrentRoom(
+		worldContextObject, UMyGameInstance::GetInstance()->GetNetworkData()->GetChannelID());
+
+	return roomProperty.Capacity != 0; 
 }
 
 bool UNetworkConnectUtility::IsOwnerPlayerIndex(int32 Index) {
