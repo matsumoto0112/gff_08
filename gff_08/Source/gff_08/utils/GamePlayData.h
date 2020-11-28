@@ -6,6 +6,7 @@
 #include "Kismet/BlueprintFunctionLibrary.h"
 
 #include "GamePlayData.generated.h"
+
 /**
  *
  */
@@ -26,21 +27,23 @@ struct GFF_08_API FGamePlayData {
 	TArray<float> LapTimes;
 };
 
-USTRUCT(BlueprintType)
-struct GFF_08_API FAllRacersGamePlayData {
-	GENERATED_USTRUCT_BODY()
-	FAllRacersGamePlayData() : MyBoatIndex(0) {
+UCLASS(BlueprintType)
+class GFF_08_API UAllRacersGamePlayDataObject : public UObject {
+	GENERATED_BODY()
+public:
+	UAllRacersGamePlayDataObject() {
 	}
 
-	//! 自分のプレイヤー番号
-	UPROPERTY(EditAnyWhere, BlueprintReadWrite, Category = "AllRacersGamePlayData")
-	int32 MyBoatIndex;
+	//! プレイヤー1のプレイデータ
 	UPROPERTY(EditAnyWhere, BlueprintReadWrite, Category = "AllRacersGamePlayData")
 	FGamePlayData Player1Data;
+	//! プレイヤー2のプレイデータ
 	UPROPERTY(EditAnyWhere, BlueprintReadWrite, Category = "AllRacersGamePlayData")
 	FGamePlayData Player2Data;
+	//! プレイヤー3のプレイデータ
 	UPROPERTY(EditAnyWhere, BlueprintReadWrite, Category = "AllRacersGamePlayData")
 	FGamePlayData Player3Data;
+	//! プレイヤー4のプレイデータ
 	UPROPERTY(EditAnyWhere, BlueprintReadWrite, Category = "AllRacersGamePlayData")
 	FGamePlayData Player4Data;
 };

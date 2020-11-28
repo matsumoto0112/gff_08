@@ -9,6 +9,7 @@ UMyGameInstance::UMyGameInstance() {
 	SoundSystem = CreateDefaultSubobject<USoundSystem>(TEXT("SoundSystem"));
 	UserData = CreateDefaultSubobject<UPlayUserData>(TEXT("PlayUserData"));
 	NetworkData = CreateDefaultSubobject<UNetworkData>(TEXT("NetworkData"));
+	PlayData = CreateDefaultSubobject<UAllRacersGamePlayDataObject>(TEXT("PlayData"));
 }
 
 void UMyGameInstance::Init() {

@@ -4,35 +4,8 @@
 
 #include "gff_08/utils/MyGameInstance.h"
 
-FAllRacersGamePlayData URankingSort::SortByLapTimes(const FAllRacersGamePlayData& RacersPlayData) {
-	FAllRacersGamePlayData Res = RacersPlayData;
-
-	auto GetSumTimes = [](const TArray<float>& Times) {
-		if (Times.Num() == 3) {
-			float Res = 0.0f;
-			for (auto&& Time : Times) {
-				Res += Time;
-			}
-			return Res;
-		} else {
-			return FLT_MAX;
-		}
-	};
-
-	// Res.AllRacersData.Sort([GetSumTimes](const auto& A, const auto& B) {
-	//	const float SumLapTimes_A = GetSumTimes(A.LapTimes);
-	//	const float SumLapTimes_B = GetSumTimes(B.LapTimes);
-	//	return SumLapTimes_A < SumLapTimes_B;
-	//});
-
-	const int32 MyPlayerIndex = UMyGameInstance::GetInstance()->GetUserData()->GetPlayerIndex();
-	// Res.MyBoatIndex =
-	//	Res.AllRacersData.IndexOfByPredicate([MyPlayerIndex](const auto& A) { return A.PlayerIndex == MyPlayerIndex; });
-
-	return Res;
-}
-
-TArray<FGamePlayData> URankingSort::GetPlayDatasSortedByRanking(const FAllRacersGamePlayData& Data) {
+TArray<FGamePlayData> URankingSort::GetPlayDatasSortedByRanking() {
+	auto Data = UMyGameInstance::GetInstance()->GetPlayData();
 	auto GetSumTimes = [](const TArray<float>& Times) {
 		if (Times.Num() == 3) {
 			float Res = 0.0f;
@@ -50,10 +23,10 @@ TArray<FGamePlayData> URankingSort::GetPlayDatasSortedByRanking(const FAllRacers
 	};
 
 	TArray<FGamePlayData> Res;
-	Res.Push(Data.Player1Data);
-	Res.Push(Data.Player2Data);
-	Res.Push(Data.Player3Data);
-	Res.Push(Data.Player4Data);
+	Res.Push(Data->Player1Data);
+	Res.Push(Data->Player2Data);
+	Res.Push(Data->Player3Data);
+	Res.Push(Data->Player4Data);
 	Res.Sort([GetSumTimes](const auto& A, const auto& B) {
 		const float SumLapTimes_A = GetSumTimes(A.LapTimes);
 		const float SumLapTimes_B = GetSumTimes(B.LapTimes);

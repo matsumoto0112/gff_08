@@ -101,7 +101,7 @@ void ARaceManager::Tick(float DeltaTime) {
 				//‰½‚à‚µ‚È‚¢
 			} else {
 				GEngine->AddOnScreenDebugMessage(-1, 30.0f, FColor::Red, TEXT("SinglePlay Ended"));
-				UMyGameInstance::GetInstance()->SetPlayData(CalculateResult());
+				CalculateResult();
 			}
 			UGameplayStatics::OpenLevel(GetWorld(), NEXT_LEVEL_NAME);
 			bRaceEnded = true;
@@ -224,9 +224,7 @@ bool ARaceManager::IsAnyBoatGoaled() const {
 	return false;
 }
 
-FAllRacersGamePlayData ARaceManager::CalculateResult() {
-	FAllRacersGamePlayData Res;
-
+void ARaceManager::CalculateResult() {
 	auto GetData = [&](int32 i) {
 		const auto& Boat = Boats[i];
 		const FRacerInfo RacerInfo = Boat->GetRacerInfo();
@@ -241,9 +239,9 @@ FAllRacersGamePlayData ARaceManager::CalculateResult() {
 		return FGamePlayData{PlayerIndex, Name, LapTimes};
 	};
 
-	Res.Player1Data = GetData(0);
-	Res.Player2Data = GetData(1);
-	Res.Player3Data = GetData(2);
-	Res.Player4Data = GetData(3);
-	return Res;
+	auto Res = UMyGameInstance::GetInstance()->GetPlayData();
+	Res->Player1Data = GetData(0);
+	Res->Player2Data = GetData(1);
+	Res->Player3Data = GetData(2);
+	Res->Player4Data = GetData(3);
 }

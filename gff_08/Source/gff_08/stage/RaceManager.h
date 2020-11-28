@@ -91,7 +91,7 @@ private:
 	 */
 	bool IsAnyBoatGoaled() const;
 
-	FAllRacersGamePlayData CalculateResult();
+	void CalculateResult();
 
 protected:
 	static const FName NEXT_LEVEL_NAME;
