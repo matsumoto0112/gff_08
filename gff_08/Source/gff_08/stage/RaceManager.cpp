@@ -231,48 +231,25 @@ bool ARaceManager::IsAnyBoatGoaled() const {
 }
 
 FAllRacersGamePlayData ARaceManager::CalculateResult() {
-	TArray<TPair<bool, FGamePlayData>> RacersData;
+	FAllRacersGamePlayData Res;
 
-	for (int32 i = 0; i < Boats.Num(); i++) {
+	auto GetData = [&](int32 i) {
 		const auto& Boat = Boats[i];
 		const FRacerInfo RacerInfo = Boat->GetRacerInfo();
 		const int32 PlayerIndex = RacerInfo.PlayerIndex;
 		const FName Name = RacerInfo.RacerName;
-		const TArray<float> LapTimes = Boat->GetLapCounter()->GetLapTimes();
-		if (UNetworkConnectUtility::IsMultiGame(GetWorld())) {
-			RacersData.Emplace(UNetworkConnectUtility::IsOwner(Boat), FGamePlayData{PlayerIndex, Name, LapTimes});
-		} else {
-			RacersData.Emplace(i == 0, FGamePlayData{PlayerIndex, Name, LapTimes});
-		}
-	}
 
-	auto Sum = [](const TArray<float>& A) {
-		float res = 0.0f;
-		for (auto&& Item : A) {
-			if (Item == 0.0f) {
-				return -1.0f;
-			}
-			res += Item;
+		// 3é¸ï∂ÇÃÉfÅ[É^Ç™ÇΩÇ‹ÇÈÇ‹Ç≈0ñÑÇﬂÇ∑ÇÈ
+		TArray<float> LapTimes = Boat->GetLapCounter()->GetLapTimes();
+		while (LapTimes.Num() < 3) {
+			LapTimes.Push(0.0f);
 		}
-		return res;
+		return FGamePlayData{PlayerIndex, Name, LapTimes};
 	};
-	RacersData.Sort([Sum](const auto& A, const auto& B) {
-		const float Sum_A = Sum(A.Value.LapTimes);
-		const float Sum_B = Sum(B.Value.LapTimes);
-		if (Sum_A == -1.0f) {
-			return false;
-		} else if (Sum_B == -1.0f) {
-			return true;
-		}
-		return Sum_A <= Sum_B;
-	});
 
-	FAllRacersGamePlayData Data;
-	// for (int32 i = 0; i < RacersData.Num(); i++) {
-	//	Data.AllRacersData.Emplace(RacersData[i].Value);
-	//	if (RacersData[i].Key) {
-	//		Data.MyBoatIndex = i;
-	//	}
-	//}
-	return Data;
+	Res.Player1Data = GetData(0);
+	Res.Player2Data = GetData(1);
+	Res.Player3Data = GetData(2);
+	Res.Player4Data = GetData(3);
+	return Res;
 }

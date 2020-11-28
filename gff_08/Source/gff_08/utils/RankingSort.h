@@ -18,4 +18,16 @@ class GFF_08_API URankingSort : public UBlueprintFunctionLibrary {
 public:
 	UFUNCTION(BlueprintCallable, Category = "RankingSort")
 	static FAllRacersGamePlayData SortByLapTimes(const FAllRacersGamePlayData& RacersPlayData);
+
+	/**
+	 * ランキング順にソートされた各プレイヤーのデータを取得する
+	 */
+	UFUNCTION(BlueprintCallable, Category = "RankingSort")
+	static TArray<FGamePlayData> GetPlayDatasSortedByRanking(const FAllRacersGamePlayData& Data);
+
+	/**
+	* 合計クリアタイムを取得する
+	*/
+	UFUNCTION(BlueprintCallable, Category = "RankingSort")
+	static float GetSumTimes(const FGamePlayData& Data);
 };
