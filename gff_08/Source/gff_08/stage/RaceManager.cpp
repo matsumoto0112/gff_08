@@ -98,9 +98,11 @@ void ARaceManager::Tick(float DeltaTime) {
 			//マルチプレイ時の終了処理
 			if (UNetworkConnectUtility::IsMultiGame(GetWorld())) {
 				GEngine->AddOnScreenDebugMessage(-1, 30.0f, FColor::Red, TEXT("MultiPlay Ended"));
+				UE_LOG(LogTemp, Log, TEXT("MultiPlay Ended"));
 				//何もしない
 			} else {
 				GEngine->AddOnScreenDebugMessage(-1, 30.0f, FColor::Red, TEXT("SinglePlay Ended"));
+				UE_LOG(LogTemp, Log, TEXT("SinglePlay Ended"));
 				CalculateResult();
 			}
 			UGameplayStatics::OpenLevel(GetWorld(), NEXT_LEVEL_NAME);
