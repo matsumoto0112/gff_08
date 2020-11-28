@@ -51,12 +51,6 @@ void ARaceManager::BeginPlay() {
 	if (UStrixBlueprintFunctionLibrary::IsMasterServerConnected(GetWorld()) == true) {
 		GEngine->AddOnScreenDebugMessage(-1, 3.0f, FColor::White, "Connected MasterServer");
 
-		// const int32 BoatIndex = UMyGameInstance::GetInstance()->GetUserData()->GetBoatIndex();
-		// const int32 PlayerIndex = UMyGameInstance::GetInstance()->GetUserData()->GetPlayerIndex();
-		// const FName PlayerName = UMyGameInstance::GetInstance()->GetUserData()->GetPlayerName();
-		// MultiRaceSetup(FRacerInfo{PlayerName, PlayerIndex, BoatIndex, ERacerType::Player});
-		// GEngine->AddOnScreenDebugMessage(-1, 3.0f, FColor::Red, "Create OwnerShip!!!");
-
 	} else {
 		GEngine->AddOnScreenDebugMessage(-1, 3.0f, FColor::White, "No Connected MasterServer");
 		//シングルプレイ用設定
