@@ -46,4 +46,6 @@ private:
 	FVector CurrentTargetPoint;
 	UPROPERTY()
 	int32 CurrentTargetCheckPointIndex;
+	UPROPERTY()
+	int32 Intelligence = 0;
 };

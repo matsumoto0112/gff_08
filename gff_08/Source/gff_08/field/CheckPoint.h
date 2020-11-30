@@ -51,7 +51,7 @@ public:
 	 * チェックポイントの得点が高い地点の座標を返す
 	 */
 	UFUNCTION(BlueprintCallable, Category = "CheckPoint")
-	FVector GetPointLocation() const;
+	FVector GetPointLocation(float Blur = 0.0f) const;
 	/**
 	 * Indexのチェックポイントはステージ中で最後のチェックポイントか
 	 */

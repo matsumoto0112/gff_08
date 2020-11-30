@@ -67,6 +67,6 @@ void UAIBrain::UpdateInputInfo_Implementation() {
 void UAIBrain::UpdateTargetPoint() {
 	const ACheckPoint* NextCheckPoint = Parent->GetNextCheckPoint();
 	const ACheckPoint* NextNextCheckPoint = NextCheckPoint->GetNextPoint();
-	CurrentTargetPoint = NextNextCheckPoint->GetPointLocation();
+	CurrentTargetPoint = NextNextCheckPoint->GetPointLocation(Parent->GetRacerInfo().PlayerIndex * 0.1f);
 	CurrentTargetCheckPointIndex = NextCheckPoint->GetIndex();
 }

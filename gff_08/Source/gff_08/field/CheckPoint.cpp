@@ -46,15 +46,14 @@ ACheckPoint* ACheckPoint::GetPrevPoint() const {
 	}
 }
 
-FVector ACheckPoint::GetPointLocation() const {
+FVector ACheckPoint::GetPointLocation(float Blur) const {
 	FVector Origin;
 	FVector Scale;
 	this->GetActorBounds(true, Origin, Scale);
 	const FVector Min = Origin - Scale;
 	const FVector Max = Origin + Scale;
-	const float RandomPoint = FMath::FRandRange(-0.1f, 0.1f);
 
-	const FVector Lerped = FMath ::Lerp(Min, Max, FMath::Clamp(MostHeightPoint + RandomPoint, 0.0f, 1.0f));
+	const FVector Lerped = FMath ::Lerp(Min, Max, FMath::Clamp(MostHeightPoint + Blur, 0.0f, 1.0f));
 	const FVector Res = FVector(Lerped.X, Lerped.Y, Origin.Z);
 	return Res;
 }
