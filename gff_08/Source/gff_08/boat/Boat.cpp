@@ -69,6 +69,9 @@ ABoat::ABoat() {
 	LapCounter = CreateDefaultSubobject<ULapCounter>(TEXT("LapCounter"));
 	this->AddOwnedComponent(LapCounter);
 
+	VisualBoatMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("VisualBoatMesh"));
+	VisualBoatMesh->SetupAttachment(RootComponent);
+
 	SteerForceLocation = CreateDefaultSubobject<UArrowComponent>(TEXT("SteerForceLocation"));
 	SteerForceLocation->SetupAttachment(RootComponent);
 
@@ -88,6 +91,7 @@ void ABoat::BeginPlay() {
 	InitStructure.BoatMesh = this->StaticMesh;
 	InitStructure.GenerateWaveLocation = this->GenerateWaveLocation;
 	InitStructure.SteerForceLocation = this->SteerForceLocation;
+	InitStructure.VisualBoatMesh = this->VisualBoatMesh;
 	BoatMover->Init(InitStructure);
 
 	//音源オブジェクトの作成
@@ -148,6 +152,12 @@ void ABoat::SetRacerInfo(const FRacerInfo& InRacerInfo) {
 	this->StaticMesh->SetStaticMesh(Parameter.BoatMesh);
 	this->StaticMesh->SetMaterial(0, Parameter.Materials[RacerInfo.PlayerIndex]);
 	this->StaticMesh->SetMassOverrideInKg(NAME_None, Parameter.Mass);
+
+	this->StaticMesh->SetVisibility(false);
+
+	this->VisualBoatMesh->SetStaticMesh(Parameter.BoatMesh);
+	this->VisualBoatMesh->SetMaterial(0, Parameter.Materials[RacerInfo.PlayerIndex]);
+	this->VisualBoatMesh->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 }
 
 void ABoat::ReturnPrevCheckPoint() {
@@ -237,7 +247,6 @@ void ABoat::Tick(float DeltaTime) {
 
 	//移動に使用するパラメータはドライバーが計算する
 	IDriver::Execute_UpdateInputInfo(Driver.GetObject());
-
 	//移動力計算
 	float MoveValue;
 	float LeftValue;

@@ -38,6 +38,8 @@ public:
 	//! ボートのメッシュ
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "BoatMoverInitStructure")
 	UStaticMeshComponent* BoatMesh;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "BoatMoverInitStructure")
+	UStaticMeshComponent* VisualBoatMesh;
 	//! 回転をかける場所
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "BoatMoverInitStructure")
 	UArrowComponent* SteerForceLocation;
@@ -105,6 +107,9 @@ private:
 	 */
 	UFUNCTION()
 	void AddRightForce(float LeftMotorValue, float RightMotorValue);
+
+	UFUNCTION()
+	void AddMeshRotate(float LeftMotorValue, float RightMotorValue);
 	/**
 	 * 波生成タイマーのセッティング
 	 */
@@ -135,6 +140,8 @@ protected:
 	//! ボートのメッシュ
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components")
 	UStaticMeshComponent* BoatMesh;
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components")
+	UStaticMeshComponent* VisualBoatMesh;
 	//! 回転をかける場所
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components")
 	UArrowComponent* SteerForceLocation;
