@@ -121,6 +121,8 @@ protected:
 	//! ボートメッシュ
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Components")
 	UStaticMeshComponent* StaticMesh;
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Components")
+	UStaticMeshComponent* VisualBoatMesh;
 	//! ボート移動処理
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Components")
 	UBoatMover* BoatMover;

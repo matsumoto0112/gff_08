@@ -42,6 +42,7 @@ void UBoatMover::Init(const FBoatMoverInitStructure& InitStructure) {
 	BoatMesh = InitStructure.BoatMesh;
 	SteerForceLocation = InitStructure.SteerForceLocation;
 	GenerateWaveLocation = InitStructure.GenerateWaveLocation;
+	VisualBoatMesh = InitStructure.VisualBoatMesh;
 }
 
 // Called every frame
@@ -67,6 +68,8 @@ void UBoatMover::Move(float MoveValue, float LeftMotorValue, float RightMotorVal
 
 	//回転処理
 	AddRightForce(LeftMotorValue, RightMotorValue);
+
+	AddMeshRotate(LeftMotorValue, RightMotorValue);
 
 	//波の生成タイマー処理
 	SettingWaveGenerateTimer();
@@ -116,10 +119,25 @@ void UBoatMover::AddRightForce(float LeftMotorValue, float RightMotorValue) {
 	const float Coef = bFlipInput ? -1.0 : 1.0;
 	const float ForcePower = RotateValue * Mass * AngularAcceleration * Coef;
 
+	// Y方向の単一ベクトルを取得する(機体の正面)
 	const FVector RightVector = SteerForceLocation->GetRightVector();
+	//親オブジェクトの位置を取得
 	const FVector SteerLocation = SteerForceLocation->GetComponentLocation();
 	const FVector V = FVector(RightVector.X, RightVector.Y, 0.0f) * ForcePower;
 	BoatMesh->AddForceAtLocation(V, SteerLocation);
+}
+
+void UBoatMover::AddMeshRotate(float LeftMotorValue, float RightMotorValue) {
+	const float RotateValue = LeftMotorValue - RightMotorValue;
+	float Yaw = VisualBoatMesh->GetRelativeRotation().Yaw;
+	//使用範囲を0～360のを-180～180に変換
+	float Y = (Yaw > 180.0f) ? Yaw - 360.0f : Yaw;
+	//回転制限
+	//Y = FMath::Clamp(Y - RotateValue * 0.5f, -30.0f, 30.0f);
+	Y = FMath::Lerp(0.0f, 30.0f * RotateValue * -1.0f, FMath::Abs(RotateValue));
+	//範囲を元に戻す
+	Y = (Y < 0) ? Y + 360.0f : Y;
+	VisualBoatMesh->SetRelativeRotation(FRotator(0.0f, Y, 0.0f));
 }
 
 //波の生成タイマー処理
