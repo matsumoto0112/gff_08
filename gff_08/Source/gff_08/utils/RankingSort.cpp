@@ -46,3 +46,17 @@ float URankingSort::GetSumTimes(const FGamePlayData& Data) {
 	}
 	return Res;
 }
+
+FGamePlayData URankingSort::GetMyPlayerResultData() {
+	UMyGameInstance* Instance = UMyGameInstance::GetInstance();
+	switch (Instance->GetUserData()->GetPlayerIndex()) {
+		case 0:
+			return Instance->GetPlayData()->Player1Data;
+		case 1:
+			return Instance->GetPlayData()->Player2Data;
+		case 2:
+			return Instance->GetPlayData()->Player3Data;
+		default:
+			return Instance->GetPlayData()->Player4Data;
+	}
+}

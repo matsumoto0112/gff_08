@@ -27,4 +27,9 @@ public:
 	 */
 	UFUNCTION(BlueprintCallable, Category = "RankingSort")
 	static float GetSumTimes(const FGamePlayData& Data);
+	/**
+	 * ©•ª‚ÌƒŠƒUƒ‹ƒgî•ñ‚ğæ“¾‚·‚é
+	 */
+	UFUNCTION(BlueprintPure, Category = "RankingSort")
+	static FGamePlayData GetMyPlayerResultData();
 };
