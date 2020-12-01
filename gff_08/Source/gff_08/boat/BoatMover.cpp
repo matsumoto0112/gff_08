@@ -132,9 +132,14 @@ void UBoatMover::AddMeshRotate(float LeftMotorValue, float RightMotorValue) {
 	float Yaw = VisualBoatMesh->GetRelativeRotation().Yaw;
 	//使用範囲を0～360のを-180～180に変換
 	float Y = (Yaw > 180.0f) ? Yaw - 360.0f : Yaw;
-	//回転制限
-	//Y = FMath::Clamp(Y - RotateValue * 0.5f, -30.0f, 30.0f);
-	Y = FMath::Lerp(0.0f, 30.0f * RotateValue * -1.0f, FMath::Abs(RotateValue));
+	//両方の押し込みの絶対値がs指定した値以下なら
+	if (FMath::Abs(RotateValue) <= 0.2f) {
+		//徐々にまっすぐにする
+		Y = FMath::Lerp(Y, 0.0f, 0.1f);
+	} else {
+		//押し込んでいる方向へ回転させる(回転制限)
+		Y = FMath::Clamp(Y - RotateValue * 1.25f, -30.0f, 30.0f);
+	}
 	//範囲を元に戻す
 	Y = (Y < 0) ? Y + 360.0f : Y;
 	VisualBoatMesh->SetRelativeRotation(FRotator(0.0f, Y, 0.0f));
