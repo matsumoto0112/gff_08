@@ -132,21 +132,24 @@ void UBoatMover::AddRightForce(float LeftMotorValue, float RightMotorValue) {
 
 void UBoatMover::AddMeshRotate(float LeftMotorValue, float RightMotorValue) {
 	const float RotateValue = LeftMotorValue - RightMotorValue;
-	float Yaw = VisualBoatMesh->GetRelativeRotation().Yaw;
+	const FRotator nowVisualMeshRotate = VisualBoatMesh->GetRelativeRotation();
 	//使用範囲を0～360のを-180～180に変換
-	float Z = (Yaw > 180.0f) ? Yaw - 360.0f : Yaw;
+	float Z = (nowVisualMeshRotate.Yaw > 180.0f) ? nowVisualMeshRotate.Yaw - 360.0f : nowVisualMeshRotate.Yaw;
+	float X = (nowVisualMeshRotate.Roll > 180.0f) ? nowVisualMeshRotate.Roll - 360.0f : nowVisualMeshRotate.Roll;
 	//両方の押し込みの絶対値がs指定した値以下なら
 	if (FMath::Abs(RotateValue) <= 0.2f) {
 		//徐々にまっすぐにする
 		Z = FMath::Lerp(Z, 0.0f, 0.1f);
+		X = FMath::Lerp(X, 0.0f, 0.1f);
 	} else {
 		//押し込んでいる方向へ回転させる(回転制限)
 		Z = FMath::Clamp(Z - RotateValue * 1.25f, -MaxHorizontalRotate, MaxHorizontalRotate);
+		X = FMath::Clamp(X - RotateValue, -MaxDiagonalRotate, MaxDiagonalRotate);
 	}
 	//範囲を元に戻す
 	Z = (Z < 0) ? Z + 360.0f : Z;
-	FRotator nowVisualMeshRotate = VisualBoatMesh->GetRelativeRotation();
-	VisualBoatMesh->SetRelativeRotation(FRotator(nowVisualMeshRotate.Pitch, Z, nowVisualMeshRotate.Roll));
+	X = (X < 0) ? X + 360.0f : X;
+	VisualBoatMesh->SetRelativeRotation(FRotator(nowVisualMeshRotate.Pitch, Z, X));
 }
 
 void UBoatMover::AddMeshVerticalTilt(float LeftMotorValue, float RightMotorValue) {
