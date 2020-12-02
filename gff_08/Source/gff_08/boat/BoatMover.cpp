@@ -26,6 +26,7 @@ void UBoatMover::BeginPlay() {
 	if (!Field) {
 		UE_LOG(LogBoat, Error, TEXT("Can not find Field Actor!"));
 	}
+	VerticalCount = 0.0f;
 }
 
 void UBoatMover::EndPlay(const EEndPlayReason::Type EndPlayReason) {
@@ -70,6 +71,8 @@ void UBoatMover::Move(float MoveValue, float LeftMotorValue, float RightMotorVal
 	AddRightForce(LeftMotorValue, RightMotorValue);
 
 	AddMeshRotate(LeftMotorValue, RightMotorValue);
+
+	AddMeshVerticalTilt(LeftMotorValue, RightMotorValue);
 
 	//波の生成タイマー処理
 	SettingWaveGenerateTimer();
@@ -131,13 +134,42 @@ void UBoatMover::AddMeshRotate(float LeftMotorValue, float RightMotorValue) {
 	const float RotateValue = LeftMotorValue - RightMotorValue;
 	float Yaw = VisualBoatMesh->GetRelativeRotation().Yaw;
 	//使用範囲を0～360のを-180～180に変換
-	float Y = (Yaw > 180.0f) ? Yaw - 360.0f : Yaw;
-	//回転制限
-	//Y = FMath::Clamp(Y - RotateValue * 0.5f, -30.0f, 30.0f);
-	Y = FMath::Lerp(0.0f, 30.0f * RotateValue * -1.0f, FMath::Abs(RotateValue));
+	float Z = (Yaw > 180.0f) ? Yaw - 360.0f : Yaw;
+	//両方の押し込みの絶対値がs指定した値以下なら
+	if (FMath::Abs(RotateValue) <= 0.2f) {
+		//徐々にまっすぐにする
+		Z = FMath::Lerp(Z, 0.0f, 0.1f);
+	} else {
+		//押し込んでいる方向へ回転させる(回転制限)
+		Z = FMath::Clamp(Z - RotateValue * 1.25f, -MaxHorizontalRotate, MaxHorizontalRotate);
+	}
 	//範囲を元に戻す
+	Z = (Z < 0) ? Z + 360.0f : Z;
+	FRotator nowVisualMeshRotate = VisualBoatMesh->GetRelativeRotation();
+	VisualBoatMesh->SetRelativeRotation(FRotator(nowVisualMeshRotate.Pitch, Z, nowVisualMeshRotate.Roll));
+}
+
+void UBoatMover::AddMeshVerticalTilt(float LeftMotorValue, float RightMotorValue) {
+	//現在速度(cm/s)を取得する
+	const FVector Velocity = ParentPawn->GetVelocity();
+	const float VelocityLength = Velocity.Size();
+
+	// 現在速度/最大速度を割り出すためにMaxSpeedをcm/sに変換する
+	const float MaxSpeed_cm_s = USpeedConverter::ToSpeedCentimeterPerSecond(MoveMaxSpeed);
+	const float Coef = FMath::Lerp(0.0f, 1.0f, VelocityLength / MaxSpeed_cm_s);
+
+	const FRotator nowRotator = VisualBoatMesh->GetRelativeRotation();
+	float Y = (nowRotator.Pitch > 180.0f) ? nowRotator.Pitch - 360.0f : nowRotator.Pitch;
+	if (Coef <= 0.5f) {
+		Y = FMath::Lerp(Y, 0.0f, 0.1f);
+		VerticalCount = 0.0f;
+	} else {
+		VerticalCount += GetWorld()->DeltaTimeSeconds;
+		Y = FMath::Abs(FMath::Sin(VerticalCount * 2.0f) * MaxVerticalRotate);
+		Y = FMath::Clamp(Y, 0.0f, MaxVerticalRotate);
+	}
 	Y = (Y < 0) ? Y + 360.0f : Y;
-	VisualBoatMesh->SetRelativeRotation(FRotator(0.0f, Y, 0.0f));
+	VisualBoatMesh->SetRelativeRotation(FRotator(Y, nowRotator.Yaw, nowRotator.Roll));
 }
 
 //波の生成タイマー処理
