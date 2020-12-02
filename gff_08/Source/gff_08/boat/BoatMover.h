@@ -174,10 +174,13 @@ protected:
 	//ƒ‚[ƒ^[‚Ì¶‰E’l‚É‘Î‚µ‚ÄæZ‚·‚éŒW”
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Rotate")
 	float RotatePowerCoef = 1.0f;
-	//‰¡‚ÌŒX‚«‚ÌÅ‘å
+	//‰¡‚ÌŒX‚«‚ÌÅ‘å(Z²)
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Rotate")
 	float MaxHorizontalRotate = 30.0f;
-	//c‚ÌŒX‚«‚ÌÅ‘å
+	//Î‚ß‚ÌŒX‚«‚ÌÅ‘å(X²)
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Rotate")
+	float MaxDiagonalRotate = 5.0f;
+	//c‚ÌŒX‚«‚ÌÅ‘å(Y²)
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Rotate")
 	float MaxVerticalRotate = 5.0f;
 	//! “ü—Í‚ğ”½“]‚·‚é‚©‚Ç‚¤‚©
