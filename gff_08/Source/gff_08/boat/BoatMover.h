@@ -108,8 +108,15 @@ private:
 	UFUNCTION()
 	void AddRightForce(float LeftMotorValue, float RightMotorValue);
 
+	/**
+	* 入力時のボートの左右への傾きを調整する
+	*/
 	UFUNCTION()
 	void AddMeshRotate(float LeftMotorValue, float RightMotorValue);
+
+	UFUNCTION()
+	void AddMeshVerticalTilt(float LeftMotorValue, float RightMotorValue);
+
 	/**
 	 * 波生成タイマーのセッティング
 	 */
@@ -167,6 +174,12 @@ protected:
 	//モーターの左右値に対して乗算する係数
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Rotate")
 	float RotatePowerCoef = 1.0f;
+	//横の傾きの最大
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Rotate")
+	float MaxHorizontalRotate = 30.0f;
+	//縦の傾きの最大
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Rotate")
+	float MaxVerticalRotate = 5.0f;
 	//! 入力を反転するかどうか
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Rotate")
 	bool bFlipInput = true;
@@ -183,4 +196,5 @@ protected:
 
 	//! 波の生成タイマー
 	FTimerHandle CurrentWaveTimerHandle;
+	float VerticalCount = 0.0f;
 };
