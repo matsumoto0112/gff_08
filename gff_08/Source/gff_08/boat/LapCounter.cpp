@@ -53,11 +53,22 @@ void ULapCounter::PassCheckPoint(ACheckPoint* PassedCheckPoint) {
 
 	//周回時の音を再生する
 	auto PlayLapIncrementSound = [](int32 NextLapCount) {
-		//ラップ数が3->4になった時はゴールSEを再生する
-		const ESoundResourceType Sound =
-			NextLapCount == 4 ? ESoundResourceType::SE_RACE_GOAL : ESoundResourceType::SE_RACE_LAP_COUNT;
-		UMyGameInstance::GetInstance()->GetSoundSystem()->PlaySound2D(Sound);
-		GEngine->AddOnScreenDebugMessage(-1, 10.0f, FColor::Red, TEXT("Play Increment Sound"));
+		USoundSystem* SoundSystem = UMyGameInstance::GetInstance()->GetSoundSystem();
+		switch (NextLapCount) {
+			case 2:	   // 1週目終了 2週目開始時
+				SoundSystem->PlaySound2D(ESoundResourceType::SE_RACE_LAP_COUNT);
+				break;
+			case 3:	   // 2週目終了 3週目開始時
+				SoundSystem->PlaySound2D(ESoundResourceType::SE_RACE_LAP_COUNT);
+				SoundSystem->ChangeBGMPitchPattern(BGMPitchPattern::Fast);
+				break;
+			case 4:	   // 3週目終了 ゴール後
+				SoundSystem->PlaySound2D(ESoundResourceType::SE_RACE_GOAL);
+				SoundSystem->PlayBGM(ESoundResourceType::BGM_GOAL);
+				break;
+			default:
+				break;
+		}
 	};
 
 	// スタート地点のチェックポイント

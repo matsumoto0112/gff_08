@@ -9,6 +9,12 @@
 
 #include "SoundSystem.generated.h"
 
+UENUM(BlueprintType)
+enum class BGMPitchPattern : uint8 {
+	Default,
+	Fast,
+};
+
 /**
  *
  */
@@ -33,6 +39,11 @@ public:
 	 */
 	UFUNCTION(BlueprintCallable, Category = "SoundSystem")
 	void StopBGM();
+	/**
+	 * BGMのピッチのパターンを変更する
+	 */
+	UFUNCTION(BlueprintCallable, Category = "SoundSystem")
+	void ChangeBGMPitchPattern(BGMPitchPattern Pattern);
 	/**
 	 * 通常の音源再生
 	 * @param Sound 音源の種類

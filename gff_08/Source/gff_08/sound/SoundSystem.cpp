@@ -22,6 +22,23 @@ void USoundSystem::StopBGM() {
 	}
 }
 
+void USoundSystem::ChangeBGMPitchPattern(BGMPitchPattern Pattern) {
+	constexpr float DEFAULT_PITCH = 1.0f;
+	constexpr float FAST_PITCH = 5.0f;
+	float Pitch = 1.0f;
+	switch (Pattern) {
+		case BGMPitchPattern::Default:
+			Pitch = DEFAULT_PITCH;
+			break;
+		case BGMPitchPattern::Fast:
+			Pitch = FAST_PITCH;
+			break;
+		default:
+			break;
+	}
+	BGMComp->SetPitchMultiplier(Pitch);
+}
+
 // ‰¹Œ¹‚ÌÄ¶
 void USoundSystem::PlaySound2D(ESoundResourceType Sound) {
 	FSoundDataAssetRecord* Asset = GetRecord(Sound);
