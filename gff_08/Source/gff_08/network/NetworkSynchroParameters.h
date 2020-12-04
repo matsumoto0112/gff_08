@@ -37,6 +37,9 @@ struct GFF_08_API FNetworkUserData {
 	//! 選択したボート番号
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "NetworkSynchroParameters")
 	int32 BoatIndex = -1;
+	//ネットワーク上のID
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "NetworkSynchroParameters")
+	int32 PlayerNetworkID = -1;
 };
 
 /**
