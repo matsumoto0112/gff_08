@@ -16,5 +16,8 @@ class GFF_08_API UStageCreateUtils : public UBlueprintFunctionLibrary {
 
 public:
 	UFUNCTION(BlueprintCallable, Category = "StageCreateUtils")
-	static void SetStraightBuoy(AActor* Wall, TSubclassOf<AActor> BouyClass);
+	static void SetStraightBuoy(AActor* Wall, TSubclassOf<AActor> BuoyClass);
+
+	UFUNCTION(BlueprintCallable, Category = "StageCreateUtils")
+	static void SetArchBuoy(AActor* Arch, TSubclassOf<AActor> BuoyClass);
 };

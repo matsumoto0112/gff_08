@@ -5,7 +5,7 @@
 #include "Components/ArrowComponent.h"
 #include "Engine/Engine.h"
 
-void UStageCreateUtils::SetStraightBuoy(AActor* Wall, TSubclassOf<AActor> BouyClass) {
+void UStageCreateUtils::SetStraightBuoy(AActor* Wall, TSubclassOf<AActor> BuoyClass) {
 	auto World = Wall->GetWorld();
 	if (!World) {
 		GEngine->AddOnScreenDebugMessage(-1, 10.0f, FColor::Red, TEXT("Error: WorldObject is null."));
@@ -18,7 +18,6 @@ void UStageCreateUtils::SetStraightBuoy(AActor* Wall, TSubclassOf<AActor> BouyCl
 		return;
 	}
 
-
 	const FVector Start = Cast<USceneComponent>(WallEndPoints[0])->GetComponentLocation();
 	const FVector End = Cast<USceneComponent>(WallEndPoints[1])->GetComponentLocation();
 
@@ -30,9 +29,25 @@ void UStageCreateUtils::SetStraightBuoy(AActor* Wall, TSubclassOf<AActor> BouyCl
 	GEngine->AddOnScreenDebugMessage(-1, 10.0f, FColor::Red, FString::Format(TEXT("LEN: {0}"), {Length}));
 
 	while (Current + STEP <= Length) {
-		AActor* Buoy = World->SpawnActor<AActor>(BouyClass, Start + Direction * Current, Rotator);
+		AActor* Buoy = World->SpawnActor<AActor>(BuoyClass, Start + Direction * Current, Rotator);
 		Buoy->SetFolderPath(TEXT("/Buoys"));
 
 		Current += STEP;
+	}
+}
+
+void UStageCreateUtils::SetArchBuoy(AActor* Arch, TSubclassOf<AActor> BuoyClass) {
+	auto World = Arch->GetWorld();
+	if (!World) {
+		GEngine->AddOnScreenDebugMessage(-1, 10.0f, FColor::Red, TEXT("Error: WorldObject is null."));
+		return;
+	}
+
+	TArray<UActorComponent*> Points = Arch->GetComponentsByClass(UArrowComponent::StaticClass());
+	const FRotator Rotator = FRotator::ZeroRotator;
+	for (auto&& Point : Points) {
+		const FVector Location = Cast<USceneComponent>(Point)->GetComponentLocation();
+		AActor* Buoy = World->SpawnActor<AActor>(BuoyClass, Location, Rotator);
+		Buoy->SetFolderPath(TEXT("/Buoys"));
 	}
 }
