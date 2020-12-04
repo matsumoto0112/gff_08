@@ -88,8 +88,11 @@ public:
 	int32 Column = 200;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Wave")
 	float WaveLifespan = 45.0f;
-	UPROPERTY(EditAnywhere, Category = "Wave")
+
+	UPROPERTY(EditAnywhere, Category = "Material")
 	UMaterial* CopyWaterMaterial;
+	UPROPERTY(EditAnywhere, Category = "Material")
+	FColor LightColor = FColor::White;
 
 protected:
 	// スタート時

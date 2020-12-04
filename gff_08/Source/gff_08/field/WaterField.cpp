@@ -115,6 +115,7 @@ void AWaterField::CreateTextureAndMaterial() {
 
 	// マテリアルインスタンスへテクスチャーパラメーターを設定する。与える値の型は UTexture2D*
 	Material->SetTextureParameterValue("FlowMap", FlowMap);
+	Material->SetVectorParameterValue("LightColor", LightColor);
 	VisualMesh->SetMaterial(0, Material);
 }
 
