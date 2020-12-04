@@ -26,7 +26,6 @@ void UStageCreateUtils::SetStraightBuoy(AActor* Wall, TSubclassOf<AActor> BuoyCl
 	const float Length = FVector::Distance(Start, End);
 	constexpr float STEP = 500.0f;
 	float Current = 0.0f;
-	GEngine->AddOnScreenDebugMessage(-1, 10.0f, FColor::Red, FString::Format(TEXT("LEN: {0}"), {Length}));
 
 	while (Current + STEP <= Length) {
 		AActor* Buoy = World->SpawnActor<AActor>(BuoyClass, Start + Direction * Current, Rotator);
