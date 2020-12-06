@@ -85,7 +85,7 @@ public:
 	void RaceStart();
 
 	/**
-	 * プレイヤーのスピード
+	 * プレイヤーのスピード(km/h)
 	 */
 	UFUNCTION(BlueprintCallable, Category = "Boat")
 	virtual float GetPlayerSpeed() const;
