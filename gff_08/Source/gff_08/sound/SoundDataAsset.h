@@ -29,7 +29,7 @@ enum class ESoundResourceType : uint8 {
 	SE_GENERAL_BACK,
 	SE_GENERAL_DECISION,
 	SE_GENERAL_SELECT,
-
+	SE_RESULT_FANFARE,
 	NONE
 };
 

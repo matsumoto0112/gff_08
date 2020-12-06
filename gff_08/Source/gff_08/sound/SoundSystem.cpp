@@ -24,7 +24,7 @@ void USoundSystem::StopBGM() {
 
 void USoundSystem::ChangeBGMPitchPattern(BGMPitchPattern Pattern) {
 	constexpr float DEFAULT_PITCH = 1.0f;
-	constexpr float FAST_PITCH = 5.0f;
+	constexpr float FAST_PITCH = 2.0f;
 	float Pitch = 1.0f;
 	switch (Pattern) {
 		case BGMPitchPattern::Default:
