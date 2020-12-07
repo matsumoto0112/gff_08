@@ -166,6 +166,10 @@ void ABoat::ReturnPrevCheckPoint() {
 		PrevCheckPoint->GetActorRotation() + FRotator::MakeFromEuler(FVector(0, 0, -90.0f)));
 }
 
+void ABoat::OnEnableAutoMode() {
+	OnEventDispatcher.Broadcast();
+}
+
 void ABoat::PushMovementValue() {
 	const FInputInfo InputInfo = IDriver::Execute_CurrentInputInfo(Driver.GetObject());
 	PrevMotorValues.Emplace(InputInfo.LeftMotorValue, InputInfo.RightMotorValue);
