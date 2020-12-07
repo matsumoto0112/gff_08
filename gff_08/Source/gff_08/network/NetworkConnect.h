@@ -15,7 +15,7 @@ public:
 	// Sets default values for this actor's properties
 	ANetworkConnect();
 
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "NetworkConnect")
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "NetworkConnect")
 	bool IsPressConnectButton;
 
 protected:
