@@ -44,6 +44,7 @@ bool ANetworkConnect::IsConnectToRoom() {
 
 void ANetworkConnect::InitializeMemberProperty(const FString name) {
 	auto instance = UMyGameInstance::GetInstance();
+	//必要なユーザー情報を初期化する
 	instance->GetNetworkData()->SetStringMemberProperty("name", name);
 	instance->GetNetworkData()->SetBoolMemberProperty("IsStart", false);
 	instance->GetNetworkData()->SetIntMemberProperty("PlayerIndex", 0);
@@ -52,8 +53,10 @@ void ANetworkConnect::InitializeMemberProperty(const FString name) {
 }
 
 void ANetworkConnect::InitializeRoomProperty(const int32 capacity, const FString roomName) {
+	//部屋情報を初期化する
 	UMyGameInstance::GetInstance()->GetNetworkData()->SetIntRoomProperty("capacity", capacity);
 	UMyGameInstance::GetInstance()->GetNetworkData()->SetStringRoomProperty("name", roomName);
+	GEngine->AddOnScreenDebugMessage(-1, 3.0f, FColor::Green, "Room Property Initialized!!");
 }
 
 void ANetworkConnect::UpdateMemberProperty(const int32 channelID) {
@@ -61,7 +64,7 @@ void ANetworkConnect::UpdateMemberProperty(const int32 channelID) {
 
 	//チャンネルIDをセット
 	instance->GetUserData()->SetChannelID(channelID);
-	instance->GetNetworkData()->SetChannelID(channelID);
+	// instance->GetNetworkData()->SetChannelID(channelID);
 	FStrixRoomMember roomMember = StrixUtil::GetCurrentRoomMember(GetWorld(), channelID);
 	// IDと名前をセット
 	instance->GetUserData()->SetPlayerID(roomMember.Id);
