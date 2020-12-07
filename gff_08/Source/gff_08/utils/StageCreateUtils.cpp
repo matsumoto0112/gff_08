@@ -29,9 +29,9 @@ void UStageCreateUtils::SetStraightBuoy(AActor* Wall, TSubclassOf<AActor> BuoyCl
 
 	while (Current + STEP <= Length) {
 		AActor* Buoy = World->SpawnActor<AActor>(BuoyClass, Start + Direction * Current, Rotator);
-		#ifdef WITH_EDITOR
-		//Buoy->SetFolderPath(TEXT("/Buoys"));
-		#endif
+#if WITH_EDITOR
+		Buoy->SetFolderPath(TEXT("/Buoys"));
+#endif
 		Current += STEP;
 	}
 }
@@ -48,8 +48,8 @@ void UStageCreateUtils::SetArchBuoy(AActor* Arch, TSubclassOf<AActor> BuoyClass)
 	for (auto&& Point : Points) {
 		const FVector Location = Cast<USceneComponent>(Point)->GetComponentLocation();
 		AActor* Buoy = World->SpawnActor<AActor>(BuoyClass, Location, Rotator);
-		#ifdef WITH_EDITOR
-		//Buoy->SetFolderPath(TEXT("/Buoys"));
-		#endif
+#if WITH_EDITOR
+		Buoy->SetFolderPath(TEXT("/Buoys"));
+#endif
 	}
 }
