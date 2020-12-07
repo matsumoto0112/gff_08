@@ -48,4 +48,6 @@ private:
 	int32 CurrentTargetCheckPointIndex;
 	UPROPERTY()
 	int32 Intelligence = 0;
+	UPROPERTY()
+	float Line;
 };

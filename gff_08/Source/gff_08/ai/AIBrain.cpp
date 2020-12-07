@@ -20,6 +20,7 @@ UAIBrain::UAIBrain() {
 void UAIBrain::Init(ABoat* Boat) {
 	Parent = Boat;
 	CurrentTargetCheckPointIndex = -1;
+	Line = 0.1f * Boat->GetRacerInfo().PlayerIndex - 0.1f;
 }
 
 FInputInfo UAIBrain::Next() {
@@ -67,6 +68,6 @@ void UAIBrain::UpdateInputInfo_Implementation() {
 void UAIBrain::UpdateTargetPoint() {
 	const ACheckPoint* NextCheckPoint = Parent->GetNextCheckPoint();
 	const ACheckPoint* NextNextCheckPoint = NextCheckPoint->GetNextPoint();
-	CurrentTargetPoint = NextNextCheckPoint->GetPointLocation(Parent->GetRacerInfo().PlayerIndex * 0.1f);
+	CurrentTargetPoint = NextNextCheckPoint->GetPointLocation(Line);
 	CurrentTargetCheckPointIndex = NextCheckPoint->GetIndex();
 }
