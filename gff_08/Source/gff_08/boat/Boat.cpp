@@ -9,6 +9,9 @@
 #include "kismet/KismetSystemLibrary.h"
 
 namespace {
+static const FName DEFAULT_COLLISION_PROFILE_NAME = TEXT("Boat_Default");
+static const FName FLASH_COLLISION_PROFILE_NAME = TEXT("Boat_Flash");
+
 constexpr int32 NEED_MOTOR_VALUE_NUM = 5;
 bool IsMaintaining(const TArray<TPair<float, float>>& MotorValues) {
 	if (MotorValues.Num() < NEED_MOTOR_VALUE_NUM) {
@@ -164,6 +167,8 @@ void ABoat::ReturnPrevCheckPoint() {
 	ACheckPoint* PrevCheckPoint = NextCheckPoint->GetPrevPoint();
 	SetActorLocationAndRotation(PrevCheckPoint->GetActorLocation() + FVector(0.0f, 0.0f, 100.0f),
 		PrevCheckPoint->GetActorRotation() + FRotator::MakeFromEuler(FVector(0, 0, -90.0f)));
+	bFlasing = true;
+	this->StaticMesh->SetCollisionProfileName(FLASH_COLLISION_PROFILE_NAME);
 }
 
 void ABoat::OnEnableAutoMode() {
@@ -268,6 +273,20 @@ void ABoat::Tick(float DeltaTime) {
 	if (IsOverMaxRestoreForce(RotationXHistory)) {
 		ReturnPrevCheckPoint();
 		RotationXHistory.Empty();
+	}
+
+	if (bFlasing) {
+		FlashTime += DeltaTime;
+
+		const bool visibility = static_cast<int32>(FlashTime / 0.1f) % 2 == 0;
+		this->VisualBoatMesh->SetVisibility(visibility);
+
+		if (FlashTime >= 2.0f) {
+			FlashTime = 0.0f;
+			bFlasing = false;
+			this->StaticMesh->SetCollisionProfileName(DEFAULT_COLLISION_PROFILE_NAME);
+			this->VisualBoatMesh->SetVisibility(true);
+		}
 	}
 
 	//âπåπÇ…ëŒÇ∑ÇÈÉpÉâÉÅÅ[É^ê›íË

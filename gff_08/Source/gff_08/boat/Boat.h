@@ -15,7 +15,6 @@
 
 #include "Boat.generated.h"
 
-
 /**
  * ボートの移動可能状態
  */
@@ -185,4 +184,9 @@ protected:
 
 	UPROPERTY(EditAnywhere, BlueprintGetter = GetRacerInfo, BlueprintSetter = SetRacerInfo, Category = "Boat")
 	FRacerInfo RacerInfo;
+
+	//! 点滅しているか
+	bool bFlasing;
+	//! 点滅経過時間
+	float FlashTime;
 };
