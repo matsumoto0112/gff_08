@@ -58,12 +58,12 @@ void ARaceManager::BeginPlay() {
 		FAllRacerInfo Racers;
 		Racers.Racers.Push(FRacerInfo{TEXT("Player"), 0, PlayerBoatIndex, ERacerType::Player});
 
-		// Racers.Racers.Push(FRacerInfo{TEXT("AI_1"), 1, FMath::RandRange(0, 3), ERacerType::AI});
-		// Racers.Racers.Push(FRacerInfo{TEXT("AI_2"), 2, FMath::RandRange(0, 3), ERacerType::AI});
-		// Racers.Racers.Push(FRacerInfo{TEXT("AI_3"), 3, FMath::RandRange(0, 3), ERacerType::AI});
-		Racers.Racers.Push(FRacerInfo{TEXT("AI_1"), 1, 1, ERacerType::AI});
-		Racers.Racers.Push(FRacerInfo{TEXT("AI_2"), 2, 2, ERacerType::AI});
-		Racers.Racers.Push(FRacerInfo{TEXT("AI_3"), 3, 3, ERacerType::AI});
+		Racers.Racers.Push(FRacerInfo{TEXT("AI_1"), 1, FMath::RandRange(0, 3), ERacerType::AI});
+		Racers.Racers.Push(FRacerInfo{TEXT("AI_2"), 2, FMath::RandRange(0, 3), ERacerType::AI});
+		Racers.Racers.Push(FRacerInfo{TEXT("AI_3"), 3, FMath::RandRange(0, 3), ERacerType::AI});
+		// Racers.Racers.Push(FRacerInfo{TEXT("AI_1"), 1, 1, ERacerType::AI});
+		// Racers.Racers.Push(FRacerInfo{TEXT("AI_2"), 2, 2, ERacerType::AI});
+		// Racers.Racers.Push(FRacerInfo{TEXT("AI_3"), 3, 3, ERacerType::AI});
 
 		RaceSetup(Racers);
 
