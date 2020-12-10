@@ -80,6 +80,21 @@ ABoat::ABoat() {
 
 	GenerateWaveLocation = CreateDefaultSubobject<UArrowComponent>(TEXT("GenerateWaveLocation"));
 	GenerateWaveLocation->SetupAttachment(RootComponent);
+
+	auto SetLightParams = [](URectLightComponent* Light) {
+		Light->SetIntensity(250.0f);
+		Light->SetSourceHeight(16.0f);
+		Light->SetSourceWidth(16.0f);
+		Light->SetAttenuationRadius(50.0f);
+	};
+
+	LeftLight = CreateDefaultSubobject<URectLightComponent>(TEXT("LeftLight"));
+	LeftLight->SetupAttachment(VisualBoatMesh);
+	SetLightParams(LeftLight);
+
+	RightLight = CreateDefaultSubobject<URectLightComponent>(TEXT("RightLight"));
+	RightLight->SetupAttachment(VisualBoatMesh);
+	SetLightParams(RightLight);
 }
 
 // Called when the game starts or when spawned
@@ -161,6 +176,9 @@ void ABoat::SetRacerInfo(const FRacerInfo& InRacerInfo) {
 	this->VisualBoatMesh->SetStaticMesh(Parameter.BoatMesh);
 	this->VisualBoatMesh->SetMaterial(0, Parameter.Materials[RacerInfo.PlayerIndex]);
 	this->VisualBoatMesh->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+
+	this->LeftLight->SetRelativeLocation(Parameter.LeftLightLocation);
+	this->RightLight->SetRelativeLocation(Parameter.RightLightLocation);
 }
 
 void ABoat::ReturnPrevCheckPoint() {

@@ -54,6 +54,12 @@ struct GFF_08_API FBoatParameter : public FTableRowBase {
 	//! 重さ
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "BoatParameter")
 	float Mass;
+	//! 左ライトの位置
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "BoatParameter")
+	FVector LeftLightLocation;
+	//! 右ライトの位置
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "BoatParameter")
+	FVector RightLightLocation;
 };
 
 /**
@@ -90,6 +96,12 @@ struct GFF_08_API FBoatParameterRecord {
 	//! 重さ
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "BoatParameter")
 	float Mass;
+	//! 左ライトの位置
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "BoatParameter")
+	FVector LeftLightLocation;
+	//! 右ライトの位置
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "BoatParameter")
+	FVector RightLightLocation;
 };
 
 /**

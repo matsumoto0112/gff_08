@@ -29,6 +29,8 @@ void UBoatDataAsset::Import() {
 		Asset.Acceleration = Record->Acceleration;
 		Asset.Control = Record->Control;
 		Asset.Mass = Record->Mass;
+		Asset.LeftLightLocation = Record->LeftLightLocation;
+		Asset.RightLightLocation = Record->RightLightLocation;
 
 		Data.Push(Asset);
 	}

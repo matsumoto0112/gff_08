@@ -2,6 +2,7 @@
 
 #pragma once
 
+#include "Components/RectLightComponent.h"
 #include "CoreMinimal.h"
 #include "GameFramework/Pawn.h"
 #include "gff_08/boat/BoatDataAsset.h"
@@ -141,9 +142,15 @@ protected:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Components")
 	UArrowComponent* GenerateWaveLocation;
 
+	//! 左側のライト
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Components")
+	URectLightComponent* LeftLight;
+	//! 右側のライト
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Components")
+	URectLightComponent* RightLight;
+
 	//! ボートのデータアセット
-	UPROPERTY(EditDefaultsOnly, Category = "Boat")
-	UBoatDataAsset* BoatDataAsset;
+	UPROPERTY(EditDefaultsOnly, Category = "Boat") UBoatDataAsset* BoatDataAsset;
 
 	//! ボートの現在の移動可能状態
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Boat")
