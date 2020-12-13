@@ -265,7 +265,7 @@ bool ABoat::IsReverseDriving() const {
 	const float DotProduct = FVector::DotProduct(To, ForwardVector);
 	const float Dot = FMath::Acos(DotProduct);
 	const float Deg = FMath::RadiansToDegrees(Dot);
-	return Deg > 120.0f;
+	return Deg > 135.0f;
 }
 
 // Called every frame
