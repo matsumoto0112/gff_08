@@ -177,9 +177,13 @@ private:
 	static constexpr int32 LIMIT_TIME = 1;
 	static constexpr uint8 NEUTRAL = 0300;
 
+	UPROPERTY()
+	UTexture2D* FlowMap;
+	UPROPERTY()
+	UMaterialInstanceDynamic* WaterMaterial;
+
 	TArray<Fr8g8b8a8> TextureColorData;
 	TArray<TArray<FAccelWaveInfo>> WaveArray;
-	UTexture2D* FlowMap;
 	bool UpdateFlag;
 	float Timer;
 	int32 ColumnArrayIndex;
