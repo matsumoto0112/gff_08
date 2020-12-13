@@ -59,7 +59,7 @@ void AWaterField::Tick(float DeltaTime) {
 }
 
 FVector AWaterField::GetAccelVelocity(const FVector& position) {
-	FVector grid = CulcFieldGrid(position);
+	const FVector grid = CulcFieldGrid(position);
 	if (this == nullptr || IsGrid(grid) == false || WaveArray[grid.X][grid.Y].IsValid == false) {
 		return FVector::ZeroVector;
 	}
@@ -68,7 +68,7 @@ FVector AWaterField::GetAccelVelocity(const FVector& position) {
 }
 
 void AWaterField::GenerateAccelWave(const FVector& position, const FRotator& rotate) {
-	FVector grid = CulcFieldGrid(position);
+	const FVector grid = CulcFieldGrid(position);
 	if (this == nullptr || IsGrid(grid) == false) {
 		return;
 	}
@@ -135,7 +135,7 @@ void AWaterField::CreateTextureAndMaterial() {
 
 void AWaterField::UpdateWaveInfo() {
 	bool updateFlag = false;
-	int32 addColumnIndex = 50;
+	const int32 addColumnIndex = 50;
 	for (int32 i = 0; i < WaveArray.Num(); i++) {
 		for (int32 j = ColumnArrayIndex; j < ColumnArrayIndex + addColumnIndex; j++) {
 			if (j >= WaveArray[i].Num()) {
@@ -171,13 +171,12 @@ void AWaterField::UpdateTexture() {
 
 void AWaterField::UpdateFlowMap(const FVector& fieldGrid) {
 	//テクスチャのグリッド座標
-	int32 texX = FMath::CeilToInt(fieldGrid.Y) * EdgeTexW;
-	int32 texY = FMath::CeilToInt(fieldGrid.X) * EdgeTexH;
+	const int32 texX = FMath::CeilToInt(fieldGrid.Y) * EdgeTexW;
+	const int32 texY = FMath::CeilToInt(fieldGrid.X) * EdgeTexH;
 
-	int32 index = (TEXTURE_EDGE_W * texX) + texY;
+	const int32 index = (TEXTURE_EDGE_W * texX) + texY;
 
-	FVector vel = WaveArray[fieldGrid.X][fieldGrid.Y].Velocity;
-	vel *= 50;
+	const FVector vel = WaveArray[fieldGrid.X][fieldGrid.Y].Velocity * 50;
 
 	int32 forCount = 0;
 	for (int32 i = index; i < index + EdgeTexW; i++) {
@@ -199,8 +198,7 @@ FVector AWaterField::CulcFieldGrid(const FVector& position) {
 
 int32 AWaterField::CulcGrid(float position, float edge, int32 index) {
 	//グリッドで調べられる範囲を超えないようClamp処理をしておく
-	float clampPos = FMath::Clamp(position, -edge, edge);
-	float gridF = ((position + edge) / (edge * 2.0f)) * index;
+	const float gridF = ((position + edge) / (edge * 2.0f)) * index;
 	int32 grid = FMath::CeilToInt(gridF);
 	grid = FMath::Clamp(grid, 0, index - 1);
 	return grid - 1;
