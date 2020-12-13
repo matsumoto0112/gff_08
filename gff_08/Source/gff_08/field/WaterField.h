@@ -180,6 +180,7 @@ private:
 	TArray<Fr8g8b8a8> TextureColorData;
 	TArray<TArray<FAccelWaveInfo>> WaveArray;
 	UTexture2D* FlowMap;
+	UMaterialInstanceDynamic* WaterMaterial;
 	bool UpdateFlag;
 	float Timer;
 	int32 ColumnArrayIndex;

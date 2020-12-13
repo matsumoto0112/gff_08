@@ -27,12 +27,26 @@ void AWaterField::BeginPlay() {
 }
 
 void AWaterField::EndPlay(const EEndPlayReason::Type EndPlayReason) {
+	Super::EndPlay(EndPlayReason);
 	GetWorld()->GetTimerManager().ClearTimer(handle);
+
+	//テクスチャの破棄
+	FlowMap->ConditionalBeginDestroy();
+	FlowMap = nullptr;
+
+	//マテリアルの破棄
+	WaterMaterial->ConditionalBeginDestroy();
+	WaterMaterial = nullptr;
 }
 
 // Called every frame
 void AWaterField::Tick(float DeltaTime) {
 	Super::Tick(DeltaTime);
+
+	if (FlowMap == nullptr || WaterMaterial == nullptr) {
+		return;
+	}
+
 	Timer += DeltaTime;
 	if (UpdateFlag == false) {
 		return;
@@ -53,7 +67,6 @@ FVector AWaterField::GetAccelVelocity(const FVector& position) {
 }
 
 void AWaterField::GenerateAccelWave(const FVector& position, const FRotator& rotate) {
-	
 	FVector grid = CulcFieldGrid(position);
 	if (this == nullptr || IsGrid(grid) == false) {
 		return;
@@ -106,7 +119,7 @@ void AWaterField::Initialize() {
 void AWaterField::CreateTextureAndMaterial() {
 	//マテリアルの作成
 	UPrimitiveComponent* Primitive = Cast<UPrimitiveComponent>(GetComponentByClass(UPrimitiveComponent::StaticClass()));
-	UMaterialInstanceDynamic* Material = Primitive->CreateAndSetMaterialInstanceDynamicFromMaterial(0, CopyWaterMaterial);
+	WaterMaterial = Primitive->CreateAndSetMaterialInstanceDynamicFromMaterial(0, CopyWaterMaterial);
 
 	//テクスチャの作成
 	FlowMap = UTexture2D::CreateTransient(TEXTURE_EDGE_W, TEXTURE_EDGE_H, PF_R8G8B8A8);
@@ -114,9 +127,9 @@ void AWaterField::CreateTextureAndMaterial() {
 	UpdateTexture();
 
 	// マテリアルインスタンスへテクスチャーパラメーターを設定する。与える値の型は UTexture2D*
-	Material->SetTextureParameterValue("FlowMap", FlowMap);
-	Material->SetVectorParameterValue("LightColor", LightColor);
-	VisualMesh->SetMaterial(0, Material);
+	WaterMaterial->SetTextureParameterValue("FlowMap", FlowMap);
+	WaterMaterial->SetVectorParameterValue("LightColor", LightColor);
+	VisualMesh->SetMaterial(0, WaterMaterial);
 }
 
 void AWaterField::UpdateWaveInfo() {
