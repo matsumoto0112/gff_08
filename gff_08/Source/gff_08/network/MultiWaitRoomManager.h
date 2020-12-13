@@ -44,5 +44,6 @@ public:
 private:
 	static constexpr float LIMIT_TIME = 0.5f;
 	static constexpr int MAX_ROOM_MEMBER = 4;
+	UPROPERTY()
 	float Timer;
 };
