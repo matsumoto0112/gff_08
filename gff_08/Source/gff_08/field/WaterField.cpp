@@ -32,18 +32,19 @@ void AWaterField::EndPlay(const EEndPlayReason::Type EndPlayReason) {
 
 	//テクスチャの破棄
 	FlowMap->ConditionalBeginDestroy();
+	FlowMap->MarkPendingKill();
 	FlowMap = nullptr;
 
 	//マテリアルの破棄
 	WaterMaterial->ConditionalBeginDestroy();
+	WaterMaterial->MarkPendingKill();
 	WaterMaterial = nullptr;
 }
 
 // Called every frame
 void AWaterField::Tick(float DeltaTime) {
 	Super::Tick(DeltaTime);
-
-	if (FlowMap == nullptr || WaterMaterial == nullptr) {
+	if (IsValid(FlowMap) == false || IsValid(WaterMaterial) == false) {
 		return;
 	}
 
