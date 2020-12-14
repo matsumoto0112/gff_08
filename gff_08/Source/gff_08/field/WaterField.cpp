@@ -49,13 +49,6 @@ void AWaterField::Tick(float DeltaTime) {
 	}
 
 	Timer += DeltaTime;
-	if (UpdateFlag == false) {
-		return;
-	}
-
-	UpdateTexture();
-
-	UpdateFlag = false;
 }
 
 FVector AWaterField::GetAccelVelocity(const FVector& position) {
@@ -83,14 +76,13 @@ void AWaterField::GenerateAccelWave(const FVector& position, const FRotator& rot
 	FVector vel(FMath::Cos(FMath::DegreesToRadians(rotate.Yaw)), FMath::Sin(FMath::DegreesToRadians(rotate.Yaw)), 0.0f);
 	vel.Normalize();
 	WaveArray[grid.X][grid.Y].Initialize(vel, 700.0f, Timer, true);
-	UKismetSystemLibrary::DrawDebugLine(GetWorld(), position, position + vel * 100.0f, FColor::Green, 40.0f, 2.0f);
 
 	UpdateFlowMap(grid);
-	UpdateFlag = true;
+	UpdateTexture();
 }
 
 void AWaterField::Initialize() {
-	UpdateFlag = false;
+
 	//フィールドの縦横の長さ、グリッド1辺の長さを調べる
 	FVector origin, boxExtent;
 	GetActorBounds(false, origin, boxExtent);
@@ -114,17 +106,16 @@ void AWaterField::Initialize() {
 	CreateTextureAndMaterial();
 
 	Timer = 0.0f;
-	ColumnArrayIndex = 0;
+	CurrentRow = 0;
 }
 
 void AWaterField::CreateTextureAndMaterial() {
 	//マテリアルの作成
 	UPrimitiveComponent* Primitive = Cast<UPrimitiveComponent>(GetComponentByClass(UPrimitiveComponent::StaticClass()));
 	WaterMaterial = Primitive->CreateAndSetMaterialInstanceDynamicFromMaterial(0, CopyWaterMaterial);
-
+	
 	//テクスチャの作成
 	FlowMap = UTexture2D::CreateTransient(TEXTURE_EDGE_W, TEXTURE_EDGE_H, PF_R8G8B8A8);
-
 	UpdateTexture();
 
 	// マテリアルインスタンスへテクスチャーパラメーターを設定する。与える値の型は UTexture2D*
@@ -135,26 +126,26 @@ void AWaterField::CreateTextureAndMaterial() {
 
 void AWaterField::UpdateWaveInfo() {
 	bool updateFlag = false;
-	const int32 addColumnIndex = 50;
+	//1回調べるのに200のfor文を回す
 	for (int32 i = 0; i < WaveArray.Num(); i++) {
-		for (int32 j = ColumnArrayIndex; j < ColumnArrayIndex + addColumnIndex; j++) {
-			if (j >= WaveArray[i].Num()) {
-				break;
-			}
-			if (WaveArray[i][j].IsValid == false) {
-				continue;
-			}
-			float t = Timer - WaveArray[i][j].StartTime;
-			if (t >= WaveLifespan) {
-				WaveArray[i][j].Initialize(FVector::ZeroVector, 0.0f, 0.0f, false);
-				UpdateFlowMap(FVector(i, j, 0));
-				updateFlag = true;
-			}
+		if (i >= WaveArray[CurrentRow].Num()) {
+			break;
+		}
+		//そのマスに波が生成されているかどうか
+		if (WaveArray[CurrentRow][i].IsValid == false) {
+			continue;
+		}
+		float t = Timer - WaveArray[CurrentRow][i].StartTime;
+		//生存時間を過ぎていたら
+		if (t >= WaveLifespan) {
+			WaveArray[CurrentRow][i].Initialize(FVector::ZeroVector, 0.0f, 0.0f, false);
+			UpdateFlowMap(FVector(CurrentRow, i, 0));
+			updateFlag = true;
 		}
 	}
-	ColumnArrayIndex += addColumnIndex;
-	if (ColumnArrayIndex >= Column) {
-		ColumnArrayIndex = 0;
+	CurrentRow ++;
+	if (CurrentRow >= WaveArray.Num()) {
+		CurrentRow = 0;
 	}
 
 	if (updateFlag == true) {
