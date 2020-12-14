@@ -53,6 +53,8 @@ FInputInfo UAIBrain::Next() {
 		Res.RightMotorValue = 1.0f;
 	}
 
+	Res.LeftMotorValue *= Intelligence;
+	Res.RightMotorValue *= Intelligence;
 	return Res;
 }
 

@@ -33,6 +33,8 @@ public:
 	 * “ü—Íó‘Ô‚ğXV‚·‚é
 	 */
 	virtual void UpdateInputInfo_Implementation() override;
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "AIBrain")
+	float Intelligence = 1.0f;
 
 private:
 	void UpdateTargetPoint();
@@ -46,8 +48,6 @@ private:
 	FVector CurrentTargetPoint;
 	UPROPERTY()
 	int32 CurrentTargetCheckPointIndex;
-	UPROPERTY()
-	int32 Intelligence = 0;
 	UPROPERTY()
 	float Line;
 };
