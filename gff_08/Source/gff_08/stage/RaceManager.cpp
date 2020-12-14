@@ -6,8 +6,6 @@
 #include "gff_08/utils/NetworkConnectUtility.h"
 #include "kismet/GamePlayStatics.h"
 
-#include <StrixBlueprintFunctionLibrary.h>
-
 const FName ARaceManager::NEXT_LEVEL_NAME = TEXT("Result");
 
 // Sets default values
@@ -48,7 +46,9 @@ void ARaceManager::BeginPlay() {
 	}
 
 	bRaceAlreadySetup = false;
-	if (UStrixBlueprintFunctionLibrary::IsMasterServerConnected(GetWorld()) == true) {
+	
+	//ƒ}ƒ‹ƒ`ƒQ[ƒ€‚È‚ç
+	if (UNetworkConnectUtility::IsMultiGame(GetWorld()) == true) {
 		GEngine->AddOnScreenDebugMessage(-1, 3.0f, FColor::White, "Connected MasterServer");
 
 	} else {
@@ -61,9 +61,6 @@ void ARaceManager::BeginPlay() {
 		Racers.Racers.Push(FRacerInfo{TEXT("AI_1"), 1, FMath::RandRange(0, 3), ERacerType::AI});
 		Racers.Racers.Push(FRacerInfo{TEXT("AI_2"), 2, FMath::RandRange(0, 3), ERacerType::AI});
 		Racers.Racers.Push(FRacerInfo{TEXT("AI_3"), 3, FMath::RandRange(0, 3), ERacerType::AI});
-		// Racers.Racers.Push(FRacerInfo{TEXT("AI_1"), 1, 1, ERacerType::AI});
-		// Racers.Racers.Push(FRacerInfo{TEXT("AI_2"), 2, 2, ERacerType::AI});
-		// Racers.Racers.Push(FRacerInfo{TEXT("AI_3"), 3, 3, ERacerType::AI});
 
 		RaceSetup(Racers);
 
