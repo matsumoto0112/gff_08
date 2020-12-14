@@ -52,7 +52,7 @@ void ULapCounter::PassCheckPoint(ACheckPoint* PassedCheckPoint) {
 	constexpr int32 START_CHECKPOINT_INDEX = 0;
 
 	//Žü‰ñŽž‚Ì‰¹‚ðÄ¶‚·‚é
-	auto PlayLapIncrementSound = [](int32 NextLapCount) {
+	auto PlayLapIncrementSound = [&](int32 NextLapCount) {
 		USoundSystem* SoundSystem = UMyGameInstance::GetInstance()->GetSoundSystem();
 		switch (NextLapCount) {
 			case 2:	   // 1T–ÚI—¹ 2T–ÚŠJŽnŽž
@@ -65,6 +65,7 @@ void ULapCounter::PassCheckPoint(ACheckPoint* PassedCheckPoint) {
 			case 4:	   // 3T–ÚI—¹ ƒS[ƒ‹Œã
 				SoundSystem->PlaySound2D(ESoundResourceType::SE_RACE_GOAL);
 				SoundSystem->PlayBGM(ESoundResourceType::BGM_GOAL);
+				RaceManager->GetHUD()->RankingUpdateStop();
 				break;
 			default:
 				break;

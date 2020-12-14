@@ -17,4 +17,7 @@ class GFF_08_API UMyHUD : public UUserWidget {
 public:
 	UFUNCTION(BlueprintImplementableEvent, Category = "MyHUD")
 	URaceInfo* GetRaceInfo() const;
+
+	UFUNCTION(BlueprintImplementableEvent, Category = "MyHUD")
+	void RankingUpdateStop();
 };

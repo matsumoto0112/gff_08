@@ -17,7 +17,7 @@ void URaceTimer::NativeTick(const FGeometry& MyGeometry, float InDeltaTime) {
 
 	//ŽžŠÔ•\Ž¦—pUI‚ÌŽæ“¾
 	UUITime* UITime = Cast<UUITime>(GetWidgetFromName("BP_UITime"));
-	if (UITime) {
+	if (UITime && bUpdateImagesFlag) {
 		UITime->SetTimeFloat(CurrentTime);
 	}
 }
@@ -29,4 +29,8 @@ void URaceTimer::Start() {
 
 void URaceTimer::Stop() {
 	bIsStarted = false;
+}
+
+void URaceTimer::StopUpdateImages() {
+	bUpdateImagesFlag = false;
 }

@@ -31,6 +31,9 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "RaceTimer")
 	void Stop();
 
+	UFUNCTION(BlueprintCallable, Category = "RaceTimer")
+	void StopUpdateImages();
+
 	/**
 	 * Œ»İ‚ÌŠÔ‚ğæ“¾‚·‚é
 	 */
@@ -46,4 +49,6 @@ protected:
 	//! Œv‘ªŠJn‚µ‚Ä‚¢‚é‚©
 	UPROPERTY()
 	bool bIsStarted = false;
+	UPROPERTY()
+	bool bUpdateImagesFlag = true;
 };

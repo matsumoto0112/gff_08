@@ -81,6 +81,13 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "RaceManager")
 	void TestCallRaceEndEventFunction();
 
+	/**
+	 * HUDの取得
+	 */
+	UMyHUD* GetHUD() const {
+		return MainUI;
+	}
+
 private:
 	/**
 	 * カウントダウンの更新処理
