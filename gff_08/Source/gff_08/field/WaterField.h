@@ -174,7 +174,7 @@ private:
 	static constexpr int32 TEXTURE_EDGE_W = 1024;
 	static constexpr int32 TEXTURE_EDGE_H = 1024;
 
-	static constexpr int32 LIMIT_TIME = 1;
+	static constexpr float LIMIT_TIME = 0.05f;
 	static constexpr uint8 NEUTRAL = 0300;
 
 	UPROPERTY()
@@ -184,8 +184,7 @@ private:
 
 	TArray<Fr8g8b8a8> TextureColorData;
 	TArray<TArray<FAccelWaveInfo>> WaveArray;
-	bool UpdateFlag;
 	float Timer;
-	int32 ColumnArrayIndex;
+	int32 CurrentRow;
 	FTimerHandle handle;
 };
