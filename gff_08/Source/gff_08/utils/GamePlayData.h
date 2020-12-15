@@ -47,3 +47,11 @@ public:
 	UPROPERTY(EditAnyWhere, BlueprintReadWrite, Category = "AllRacersGamePlayData")
 	FGamePlayData Player4Data;
 };
+
+UCLASS()
+class GFF_08_API UPlayDataNormalizer : public UBlueprintFunctionLibrary {
+	GENERATED_BODY()
+public:
+	UFUNCTION(BlueprintCallable, Category = "PlayDataNormalizer")
+	static FGamePlayData NormalizePlayData(const FGamePlayData& Data);
+};
