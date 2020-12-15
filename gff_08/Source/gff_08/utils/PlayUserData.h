@@ -15,6 +15,16 @@ class GFF_08_API UPlayUserData : public UObject {
 	GENERATED_BODY()
 
 public:
+	UFUNCTION(BlueprintCallable, Category = "Initialize")
+	void Initialize() {
+		PlayerName = "";
+		BoatIndex = 0;
+		SelectStageIndex = 0;
+		PlayerIndex = 0;
+		ChannelID = 0;
+		PlayerID = 0;
+	}
+
 	UFUNCTION(BlueprintGetter, Category = "PlayUserData")
 	FName GetPlayerName() const {
 		return PlayerName;
