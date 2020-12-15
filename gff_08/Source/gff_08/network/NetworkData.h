@@ -27,6 +27,17 @@ public:
 		, RoomProperties() {
 	}
 
+	UFUNCTION(BlueprintCallable, Category = "NetworkData")
+	void Initialize() {
+		MasterHostName = "4f33be0b0d5a2fdd174aa3d1.game.strixcloud.net";
+		ApplicationID = "8df430d4-a8f7-4e53-98ac-1ea2cbdeeabb";
+		HostPort = 9122;
+		RoomPort = 9123;
+		ChannelID = 0;
+		MemberProperties = {};
+		RoomProperties = {};
+	}
+
 	UFUNCTION(BlueprintGetter, Category = "NetworkData")
 	FString GetMasterHostName() const {
 		return MasterHostName;
