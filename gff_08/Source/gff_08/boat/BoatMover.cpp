@@ -2,6 +2,7 @@
 
 #include "BoatMover.h"
 
+#include "gff_08/boat/Boat.h"
 #include "gff_08/utils/MyLogCategory.h"
 #include "gff_08/utils/SpeedConverter.h"
 #include "kismet/GamePlayStatics.h"
@@ -80,7 +81,21 @@ void UBoatMover::Move(float MoveValue, float LeftMotorValue, float RightMotorVal
 	//”g‚É‚æ‚é‰Á‘¬ˆ—
 	const FVector WaveAccelVelocity = GetWaveAccelVelocity();
 	const FVector NormalizedWaveAccelVelocity = WaveAccelVelocity.GetSafeNormal();
-	BoatMesh->AddForce(NormalizedWaveAccelVelocity * WaveInfluence);
+
+	const float Coef = [&]() {
+		ABoat* Parent = Cast<ABoat>(ParentPawn);
+		if (!Parent) {
+			return 1.0f;
+		}
+		ULapCounter* LapCounter = Parent->GetLapCounter();
+		if (!LapCounter) {
+			return 1.0f;
+		}
+		const int32 Ranking = LapCounter->GetRanking();
+		GEngine->AddOnScreenDebugMessage(-1, 0.0f, FColor::Red, FString::Format(TEXT("{0}"), {Ranking}));
+		return TArray<float>{1.0f, 1.0f, 1.1f, 1.2f, 1.25f}[Ranking];
+	}();
+	BoatMesh->AddForce(NormalizedWaveAccelVelocity * WaveInfluence * Coef);
 }
 
 //Å‚‘¬“x‚ğ’´‚¦‚Ä‚¢‚é‚©
