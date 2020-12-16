@@ -26,8 +26,6 @@ enum class EBoatMovableType : uint8 {
 	StraightOnly,
 };
 
-DECLARE_DYNAMIC_MULTICAST_DELEGATE(FEnableAutoEvent);
-
 /**
  * ボートクラス
  */
@@ -116,9 +114,6 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "Boat")
 	void ReturnPrevCheckPoint();
 
-	UFUNCTION(BlueprintCallable, Category = "Boat")
-	void OnEnableAutoMode();
-
 private:
 	UFUNCTION()
 	void PushMovementValue();
@@ -170,9 +165,6 @@ protected:
 	//! 反転入力が有効か
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Boat")
 	bool bFlipInput;
-
-	UPROPERTY(BlueprintAssignable, Category = "Boat")
-	FEnableAutoEvent OnEventDispatcher;
 
 	//! モーターの回転量を保存するタイマーのハンドル
 	FTimerHandle PrevMotorValueStockHandle;
