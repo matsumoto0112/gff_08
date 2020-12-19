@@ -227,3 +227,7 @@ void UBoatMover::GenerateWave() const {
 FVector UBoatMover::GetWaveAccelVelocity() const {
 	return Field->GetAccelVelocity(BoatMesh->GetComponentLocation());
 }
+
+void UBoatMover::GenerateSynchroWave(const FVector& direction, const FRotator& rotate) {
+
+}

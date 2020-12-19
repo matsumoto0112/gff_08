@@ -140,6 +140,9 @@ protected:
 	UFUNCTION(BlueprintCallable, Category = "BoatMover")
 	FVector GetWaveAccelVelocity() const;
 
+	UFUNCTION(BlueprintCallable, Category = "BoatMover")
+	void GenerateSynchroWave(const FVector& direction, const FRotator& rotate);
+
 protected:
 	//! êeÇÃÉ|Å[Éì
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components")
