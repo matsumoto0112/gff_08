@@ -63,10 +63,14 @@ void ULapCounter::PassCheckPoint(ACheckPoint* PassedCheckPoint) {
 				SoundSystem->ChangeBGMPitchPattern(BGMPitchPattern::Fast);
 				break;
 			case 4:	   // 3T–ÚI—¹ ƒS[ƒ‹Œã
+			{
 				SoundSystem->PlaySound2D(ESoundResourceType::SE_RACE_GOAL);
 				SoundSystem->PlayBGM(ESoundResourceType::BGM_GOAL);
 				RaceManager->GetHUD()->RankingUpdateStop();
-				break;
+				AActor* ParentActor = GetOwner();
+				ABoat* ParentBoat = Cast<ABoat>(ParentActor);
+				ParentBoat->EnableAutoMode();
+			} break;
 			default:
 				break;
 		}

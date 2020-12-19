@@ -114,6 +114,9 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "Boat")
 	void ReturnPrevCheckPoint();
 
+	UFUNCTION(BlueprintCallable, BlueprintImplementableEvent, Category = "Boat")
+	void EnableAutoMode();
+
 private:
 	UFUNCTION()
 	void PushMovementValue();
