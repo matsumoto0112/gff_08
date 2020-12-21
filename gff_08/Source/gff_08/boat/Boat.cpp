@@ -95,6 +95,9 @@ ABoat::ABoat() {
 	RightLight = CreateDefaultSubobject<URectLightComponent>(TEXT("RightLight"));
 	RightLight->SetupAttachment(VisualBoatMesh);
 	SetLightParams(RightLight);
+
+	ConfettiParticle = CreateDefaultSubobject<UParticleSystemComponent>(TEXT("ConfettiParticle"));
+	ConfettiParticle->SetupAttachment(RootComponent);
 }
 
 // Called when the game starts or when spawned
@@ -117,6 +120,7 @@ void ABoat::BeginPlay() {
 	USoundSystem* SoundSystem = Instance->GetSoundSystem();
 	MoveSound = SoundSystem->PlaySoundWithAttachOwnerActor(ESoundResourceType::SE_BOAT_MOVE, this, false);
 	ScrewSound = SoundSystem->PlaySoundWithAttachOwnerActor(ESoundResourceType::SE_BOAT_SCREW, this, false);
+	ConfettiParticle->Deactivate();
 }
 
 void ABoat::EndPlay(const EEndPlayReason::Type EndPlayReason) {
@@ -187,6 +191,10 @@ void ABoat::ReturnPrevCheckPoint() {
 		PrevCheckPoint->GetActorRotation() + FRotator::MakeFromEuler(FVector(0, 0, -90.0f)));
 	bFlasing = true;
 	this->StaticMesh->SetCollisionProfileName(FLASH_COLLISION_PROFILE_NAME);
+}
+
+void ABoat::EnableConfettiParticle() {
+	ConfettiParticle->Activate();
 }
 
 void ABoat::PushMovementValue() {

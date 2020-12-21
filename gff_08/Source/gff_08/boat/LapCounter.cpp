@@ -70,6 +70,9 @@ void ULapCounter::PassCheckPoint(ACheckPoint* PassedCheckPoint) {
 				AActor* ParentActor = GetOwner();
 				ABoat* ParentBoat = Cast<ABoat>(ParentActor);
 				ParentBoat->EnableAutoMode();
+				if (Ranking == 1) {
+					ParentBoat->EnableConfettiParticle();
+				}
 			} break;
 			default:
 				break;

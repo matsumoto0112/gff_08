@@ -5,6 +5,7 @@
 #include "Components/RectLightComponent.h"
 #include "CoreMinimal.h"
 #include "GameFramework/Pawn.h"
+#include "Particles/ParticleSystemComponent.h"
 #include "gff_08/boat/BoatDataAsset.h"
 #include "gff_08/boat/BoatMover.h"
 #include "gff_08/boat/Driver.h"
@@ -117,6 +118,9 @@ public:
 	UFUNCTION(BlueprintCallable, BlueprintImplementableEvent, Category = "Boat")
 	void EnableAutoMode();
 
+	UFUNCTION(BlueprintCallable, Category = "Boat")
+	void EnableConfettiParticle();
+
 private:
 	UFUNCTION()
 	void PushMovementValue();
@@ -146,6 +150,8 @@ protected:
 	//! 右側のライト
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Components")
 	URectLightComponent* RightLight;
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Components")
+	UParticleSystemComponent* ConfettiParticle;
 
 	//! ボートのデータアセット
 	UPROPERTY(EditDefaultsOnly, Category = "Boat") UBoatDataAsset* BoatDataAsset;
