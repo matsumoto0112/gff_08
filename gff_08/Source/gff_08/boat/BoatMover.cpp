@@ -93,6 +93,7 @@ void UBoatMover::Move(float MoveValue, float LeftMotorValue, float RightMotorVal
 		}
 		const int32 Ranking = LapCounter->GetRanking();
 		GEngine->AddOnScreenDebugMessage(-1, 0.0f, FColor::Red, FString::Format(TEXT("{0}"), {Ranking}));
+		//０位（エラー対策）,１位、２位、３位、４位
 		return TArray<float>{1.0f, 1.0f, 1.1f, 1.2f, 1.25f}[Ranking];
 	}();
 	BoatMesh->AddForce(NormalizedWaveAccelVelocity * WaveInfluence * Coef);
