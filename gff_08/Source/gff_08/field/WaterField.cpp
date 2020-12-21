@@ -73,6 +73,7 @@ void AWaterField::GenerateAccelWave(const FVector& position, const FRotator& rot
 		WaveArray[grid.X][grid.Y].StartTime = Timer;
 		//波の方向をベクトルの平均値にする
 		WaveArray[grid.X][grid.Y].Velocity = (WaveArray[grid.X][grid.Y].Velocity + vel) / 2.0f;
+		WaveArray[grid.X][grid.Y].Length = 700.0f;
 		return;
 	}
 
@@ -136,6 +137,7 @@ void AWaterField::UpdateWaveInfo() {
 		float t = Timer - WaveArray[CurrentRow][i].StartTime;
 		int32 power = FMath::Clamp(static_cast<int32>(WaveLifespan - t), 0, static_cast<int32>(WaveLifespan));
 		UpdateFlowMap(FVector(CurrentRow, i, 0), power);
+		WaveArray[CurrentRow][i].Length *= FMath::Clamp((t / WaveLifespan), 0.0f, 1.0f);
 		//生存時間を過ぎていたら
 		if (t >= WaveLifespan) {
 			WaveArray[CurrentRow][i].Initialize(FVector::ZeroVector, 0.0f, 0.0f, false);
