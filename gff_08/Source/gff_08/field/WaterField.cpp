@@ -23,12 +23,10 @@ void AWaterField::BeginPlay() {
 	Super::BeginPlay();
 
 	Initialize();
-	GetWorld()->GetTimerManager().SetTimer(handle, this, &AWaterField::UpdateWaveInfo, LIMIT_TIME, true);
 }
 
 void AWaterField::EndPlay(const EEndPlayReason::Type EndPlayReason) {
 	Super::EndPlay(EndPlayReason);
-	GetWorld()->GetTimerManager().ClearTimer(handle);
 
 	//テクスチャの破棄
 	FlowMap->ConditionalBeginDestroy();
@@ -49,6 +47,7 @@ void AWaterField::Tick(float DeltaTime) {
 	}
 
 	Timer += DeltaTime;
+	UpdateWaveInfo();
 }
 
 FVector AWaterField::GetAccelVelocity(const FVector& position) {
@@ -66,23 +65,23 @@ void AWaterField::GenerateAccelWave(const FVector& position, const FRotator& rot
 		return;
 	}
 
+	FVector vel(FMath::Cos(FMath::DegreesToRadians(rotate.Yaw)), FMath::Sin(FMath::DegreesToRadians(rotate.Yaw)), 0.0f);
+	vel.Normalize();
 	//すでに波が生成されていたら
 	if (WaveArray[grid.X][grid.Y].IsValid == true) {
 		//波の生成時間を更新する
 		WaveArray[grid.X][grid.Y].StartTime = Timer;
+		//波の方向をベクトルの平均値にする
+		WaveArray[grid.X][grid.Y].Velocity = (WaveArray[grid.X][grid.Y].Velocity + vel) / 2.0f;
 		return;
 	}
 
-	FVector vel(FMath::Cos(FMath::DegreesToRadians(rotate.Yaw)), FMath::Sin(FMath::DegreesToRadians(rotate.Yaw)), 0.0f);
-	vel.Normalize();
 	WaveArray[grid.X][grid.Y].Initialize(vel, 700.0f, Timer, true);
 
-	UpdateFlowMap(grid);
-	UpdateTexture();
+	UpdateFlowMap(grid, WaveLifespan);
 }
 
 void AWaterField::Initialize() {
-
 	//フィールドの縦横の長さ、グリッド1辺の長さを調べる
 	FVector origin, boxExtent;
 	GetActorBounds(false, origin, boxExtent);
@@ -113,7 +112,7 @@ void AWaterField::CreateTextureAndMaterial() {
 	//マテリアルの作成
 	UPrimitiveComponent* Primitive = Cast<UPrimitiveComponent>(GetComponentByClass(UPrimitiveComponent::StaticClass()));
 	WaterMaterial = Primitive->CreateAndSetMaterialInstanceDynamicFromMaterial(0, CopyWaterMaterial);
-	
+
 	//テクスチャの作成
 	FlowMap = UTexture2D::CreateTransient(TEXTURE_EDGE_W, TEXTURE_EDGE_H, PF_R8G8B8A8);
 	UpdateTexture();
@@ -125,8 +124,7 @@ void AWaterField::CreateTextureAndMaterial() {
 }
 
 void AWaterField::UpdateWaveInfo() {
-	bool updateFlag = false;
-	//1回調べるのに200のfor文を回す
+	// 1回調べるのに200のfor文を回す
 	for (int32 i = 0; i < WaveArray.Num(); i++) {
 		if (i >= WaveArray[CurrentRow].Num()) {
 			break;
@@ -136,21 +134,20 @@ void AWaterField::UpdateWaveInfo() {
 			continue;
 		}
 		float t = Timer - WaveArray[CurrentRow][i].StartTime;
+		int32 power = FMath::Clamp(static_cast<int32>(WaveLifespan - t), 0, static_cast<int32>(WaveLifespan));
+		UpdateFlowMap(FVector(CurrentRow, i, 0), power);
 		//生存時間を過ぎていたら
 		if (t >= WaveLifespan) {
 			WaveArray[CurrentRow][i].Initialize(FVector::ZeroVector, 0.0f, 0.0f, false);
-			UpdateFlowMap(FVector(CurrentRow, i, 0));
-			updateFlag = true;
 		}
 	}
-	CurrentRow ++;
+	CurrentRow++;
 	if (CurrentRow >= WaveArray.Num()) {
 		CurrentRow = 0;
+		GEngine->AddOnScreenDebugMessage(-1, 2.0f, FColor::Green, FString::Printf(TEXT("Update End")));
 	}
 
-	if (updateFlag == true) {
-		UpdateTexture();
-	}
+	UpdateTexture();
 }
 
 void AWaterField::UpdateTexture() {
@@ -160,14 +157,14 @@ void AWaterField::UpdateTexture() {
 	FlowMap->UpdateResource();
 }
 
-void AWaterField::UpdateFlowMap(const FVector& fieldGrid) {
+void AWaterField::UpdateFlowMap(const FVector& fieldGrid, const int32 power) {
 	//テクスチャのグリッド座標
 	const int32 texX = FMath::CeilToInt(fieldGrid.Y) * EdgeTexW;
 	const int32 texY = FMath::CeilToInt(fieldGrid.X) * EdgeTexH;
 
 	const int32 index = (TEXTURE_EDGE_W * texX) + texY;
 
-	const FVector vel = WaveArray[fieldGrid.X][fieldGrid.Y].Velocity * 50;
+	const FVector vel = WaveArray[fieldGrid.X][fieldGrid.Y].Velocity * power;
 
 	int32 forCount = 0;
 	for (int32 i = index; i < index + EdgeTexW; i++) {

@@ -144,7 +144,7 @@ private:
 	 * flowMapの色情報の更新を行う
 	 * @param [fieldGrid] ActorのGrid座標
 	 */
-	void UpdateFlowMap(const FVector& fieldGrid);
+	void UpdateFlowMap(const FVector& fieldGrid,const int32 power);
 
 	/**
 	 * 与えられたActorの位置をGrid座標に変換する
@@ -186,5 +186,4 @@ private:
 	TArray<TArray<FAccelWaveInfo>> WaveArray;
 	float Timer;
 	int32 CurrentRow;
-	FTimerHandle handle;
 };
