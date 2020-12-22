@@ -7,6 +7,8 @@
 #include "gff_08/utils/SpeedConverter.h"
 #include "kismet/GamePlayStatics.h"
 
+const TMap<int32, float> UBoatMover::kWaveAccelerationRecoverIntervalTimes = {{1, 8.0f}, {2, 4.0f}, {3, 2.0f}, {4, 1.0f}};
+
 // Sets default values for this component's properties
 UBoatMover::UBoatMover(const FObjectInitializer& ObjectInitializer) : Super(ObjectInitializer) {
 	// Set this component to be initialized when the game starts, and to be ticked every frame.  You can turn these features
@@ -28,6 +30,8 @@ void UBoatMover::BeginPlay() {
 		UE_LOG(LogBoat, Error, TEXT("Can not find Field Actor!"));
 	}
 	VerticalCount = 0.0f;
+	WaveAccelerationManageTime = 0.0f;
+	WaveAccelerationType = EWaveAccelerationType::Active;
 }
 
 void UBoatMover::EndPlay(const EEndPlayReason::Type EndPlayReason) {
@@ -82,21 +86,53 @@ void UBoatMover::Move(float MoveValue, float LeftMotorValue, float RightMotorVal
 	const FVector WaveAccelVelocity = GetWaveAccelVelocity();
 	const FVector NormalizedWaveAccelVelocity = WaveAccelVelocity.GetSafeNormal();
 
-	const float Coef = [&]() {
+	auto GetRanking = [&]() {
 		ABoat* Parent = Cast<ABoat>(ParentPawn);
 		if (!Parent) {
-			return 1.0f;
+			return 4;
 		}
 		ULapCounter* LapCounter = Parent->GetLapCounter();
 		if (!LapCounter) {
-			return 1.0f;
+			return 4;
 		}
 		const int32 Ranking = LapCounter->GetRanking();
+		return Ranking;
+	};
+
+	const float Coef = [&]() {
+		if (WaveAccelerationType == EWaveAccelerationType::Deactive)
+			return 0.0f;
+		const int32 Ranking = GetRanking();
 		GEngine->AddOnScreenDebugMessage(-1, 0.0f, FColor::Red, FString::Format(TEXT("{0}"), {Ranking}));
 		//ÇOà ÅiÉGÉâÅ[ëŒçÙÅj,ÇPà ÅAÇQà ÅAÇRà ÅAÇSà 
 		return TArray<float>{1.0f, 1.0f, 1.1f, 1.2f, 1.25f}[Ranking];
 	}();
+
 	BoatMesh->AddForce(NormalizedWaveAccelVelocity * WaveInfluence * Coef);
+
+	const float DeltaSeconds = GetWorld()->GetDeltaSeconds();
+	if (WaveAccelerationType == EWaveAccelerationType::Active) {
+		//îgÇ…èÊÇ¡ÇƒÇ¢ÇÈä‘ÅAéûä‘ÇåvéZÇ∑ÇÈ
+		if (WaveAccelVelocity.Size() > 0.0f) {
+			WaveAccelerationManageTime += DeltaSeconds;
+			//àÍíËéûä‘Çí¥âﬂÇµÇΩÇÁñ≥å¯Ç…Ç∑ÇÈ
+			if (WaveAccelerationManageTime >= kWaveAccelerationActiveTime) {
+				WaveAccelerationType = EWaveAccelerationType::Deactive;
+				WaveAccelerationManageTime = 0.0f;
+			}
+		} else {
+			//îgÇ…èÊÇ¡ÇƒÇ¢Ç»Ç¢ä‘ÇÕÉJÉEÉìÉ^Å[ÇÇ‡Ç∆Ç…ñﬂÇ∑
+			WaveAccelerationManageTime -= DeltaSeconds;
+			WaveAccelerationManageTime = FMath::Max(0.0f, WaveAccelerationManageTime);
+		}
+	} else {
+		WaveAccelerationManageTime += GetWorld()->GetDeltaSeconds();
+		//äeèáà Ç≤Ç∆Ç…åàÇﬂÇÁÇÍÇΩéûä‘Çí¥âﬂÇµÇƒÇ¢ÇΩÇÁîgÇ…ÇÊÇÈâ¡ë¨ÇóLå¯âªÇ∑ÇÈ
+		if (WaveAccelerationManageTime >= kWaveAccelerationRecoverIntervalTimes[GetRanking()]) {
+			WaveAccelerationType = EWaveAccelerationType::Active;
+			WaveAccelerationManageTime = 0.0f;
+		}
+	}
 }
 
 //ç≈çÇë¨ìxÇí¥Ç¶ÇƒÇ¢ÇÈÇ©
@@ -230,5 +266,4 @@ FVector UBoatMover::GetWaveAccelVelocity() const {
 }
 
 void UBoatMover::GenerateSynchroWave(const FVector& direction, const FRotator& rotate) {
-
 }

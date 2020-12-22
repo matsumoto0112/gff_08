@@ -109,8 +109,8 @@ private:
 	void AddRightForce(float LeftMotorValue, float RightMotorValue);
 
 	/**
-	* 入力時のボートの左右への傾きを調整する
-	*/
+	 * 入力時のボートの左右への傾きを調整する
+	 */
 	UFUNCTION()
 	void AddMeshRotate(float LeftMotorValue, float RightMotorValue);
 
@@ -203,4 +203,13 @@ protected:
 	//! 波の生成タイマー
 	FTimerHandle CurrentWaveTimerHandle;
 	float VerticalCount = 0.0f;
+
+	//! 波の加速間隔を順位ごとに一定間隔で有効化する機能用変数
+	float WaveAccelerationManageTime;
+	enum class EWaveAccelerationType {
+		Active,
+		Deactive,
+	} WaveAccelerationType;
+	static const TMap<int32, float> kWaveAccelerationRecoverIntervalTimes;
+	static constexpr float kWaveAccelerationActiveTime = 1.0f;
 };
