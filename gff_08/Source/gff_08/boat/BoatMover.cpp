@@ -11,6 +11,9 @@
 const TMap<int32, float> UBoatMover::kWaveAccelerationRecoverIntervalTimes = {{1, 8.0f}, {2, 4.0f}, {3, 2.0f}, {4, 1.0f}};
 //順位:有効時間(s)
 const TMap<int32, float> UBoatMover::kWaveAccelerationActiveTimes = {{1, 1.0f}, {2, 1.0f}, {3, 1.0f}, {4, 1.0f}};
+//順位:加速力
+//NOTE:最大速度は変わらないため、最高速度に達しやすくなるかのみを変えられる
+const TMap<int32, float> UBoatMover::kBoatAccerationCoefs = {{1, 1.0f}, {2, 1.1f}, {3, 1.2f}, {4, 1.5f}};
 
 // Sets default values for this component's properties
 UBoatMover::UBoatMover(const FObjectInitializer& ObjectInitializer) : Super(ObjectInitializer) {
@@ -87,20 +90,6 @@ void UBoatMover::Move(float MoveValue, float LeftMotorValue, float RightMotorVal
 
 	//波による加速処理
 	const FVector WaveAccelVelocity = GetWaveAccelVelocity();
-	const FVector NormalizedWaveAccelVelocity = WaveAccelVelocity.GetSafeNormal();
-
-	auto GetRanking = [&]() {
-		ABoat* Parent = Cast<ABoat>(ParentPawn);
-		if (!Parent) {
-			return 4;
-		}
-		ULapCounter* LapCounter = Parent->GetLapCounter();
-		if (!LapCounter) {
-			return 4;
-		}
-		const int32 Ranking = LapCounter->GetRanking();
-		return Ranking;
-	};
 
 	const float Coef = [&]() {
 		if (WaveAccelerationType == EWaveAccelerationType::Deactive)
@@ -111,7 +100,7 @@ void UBoatMover::Move(float MoveValue, float LeftMotorValue, float RightMotorVal
 		return TArray<float>{1.0f, 1.0f, 1.1f, 1.2f, 1.25f}[Ranking];
 	}();
 
-	BoatMesh->AddForce(NormalizedWaveAccelVelocity * WaveInfluence * Coef);
+	BoatMesh->AddForce(WaveAccelVelocity * WaveInfluence * Coef);
 
 	const float DeltaSeconds = GetWorld()->GetDeltaSeconds();
 	if (WaveAccelerationType == EWaveAccelerationType::Active) {
@@ -159,7 +148,7 @@ void UBoatMover::AddForwardForce(float MoveValue) {
 
 	//加速する割合を0.0~1.0倍するための係数を計算する
 	//最大速度に対して現在速度が小さいほど1.0に近くなる
-	const float Coef = FMath::Lerp(1.0f, 0.0f, VelocityLength / MaxSpeed_cm_s);
+	const float Coef = FMath::Lerp(1.0f, 0.0f, VelocityLength / MaxSpeed_cm_s) * kBoatAccerationCoefs[GetRanking()];
 
 	const float Mass = BoatMesh->GetMass();
 	const float ForcePower = MoveValue * Mass * Acceleration * Coef;
@@ -254,6 +243,19 @@ void UBoatMover::SettingWaveGenerateTimer() {
 		TimerManager.ClearTimer(CurrentWaveTimerHandle);
 		CurrentWaveTimerHandle.Invalidate();
 	}
+}
+
+int32 UBoatMover::GetRanking() const {
+	ABoat* Parent = Cast<ABoat>(ParentPawn);
+	if (!Parent) {
+		return 4;
+	}
+	ULapCounter* LapCounter = Parent->GetLapCounter();
+	if (!LapCounter) {
+		return 4;
+	}
+	const int32 Ranking = LapCounter->GetRanking();
+	return FMath::Clamp(Ranking, 1, 4);
 }
 
 //波の生成処理

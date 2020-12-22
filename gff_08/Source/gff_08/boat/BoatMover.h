@@ -123,6 +123,9 @@ private:
 	UFUNCTION()
 	void SettingWaveGenerateTimer();
 
+	UFUNCTION()
+	int32 GetRanking() const;
+
 protected:
 	/**
 	 * îgÇÃê∂ê¨èàóù
@@ -210,6 +213,8 @@ protected:
 		Active,
 		Deactive,
 	} WaveAccelerationType;
+
 	static const TMap<int32, float> kWaveAccelerationRecoverIntervalTimes;
 	static const TMap<int32, float> kWaveAccelerationActiveTimes;
+	static const TMap<int32, float> kBoatAccerationCoefs;
 };
