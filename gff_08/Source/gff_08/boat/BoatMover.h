@@ -211,5 +211,5 @@ protected:
 		Deactive,
 	} WaveAccelerationType;
 	static const TMap<int32, float> kWaveAccelerationRecoverIntervalTimes;
-	static constexpr float kWaveAccelerationActiveTime = 1.0f;
+	static const TMap<int32, float> kWaveAccelerationActiveTimes;
 };

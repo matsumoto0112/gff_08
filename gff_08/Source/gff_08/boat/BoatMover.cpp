@@ -7,7 +7,10 @@
 #include "gff_08/utils/SpeedConverter.h"
 #include "kismet/GamePlayStatics.h"
 
+//‡ˆÊ:‰ñ•œŠÔ(s)
 const TMap<int32, float> UBoatMover::kWaveAccelerationRecoverIntervalTimes = {{1, 8.0f}, {2, 4.0f}, {3, 2.0f}, {4, 1.0f}};
+//‡ˆÊ:—LŒøŠÔ(s)
+const TMap<int32, float> UBoatMover::kWaveAccelerationActiveTimes = {{1, 1.0f}, {2, 1.0f}, {3, 1.0f}, {4, 1.0f}};
 
 // Sets default values for this component's properties
 UBoatMover::UBoatMover(const FObjectInitializer& ObjectInitializer) : Super(ObjectInitializer) {
@@ -116,7 +119,7 @@ void UBoatMover::Move(float MoveValue, float LeftMotorValue, float RightMotorVal
 		if (WaveAccelVelocity.Size() > 0.0f) {
 			WaveAccelerationManageTime += DeltaSeconds;
 			//ˆê’èŠÔ‚ğ’´‰ß‚µ‚½‚ç–³Œø‚É‚·‚é
-			if (WaveAccelerationManageTime >= kWaveAccelerationActiveTime) {
+			if (WaveAccelerationManageTime >= kWaveAccelerationActiveTimes[GetRanking()]) {
 				WaveAccelerationType = EWaveAccelerationType::Deactive;
 				WaveAccelerationManageTime = 0.0f;
 			}
