@@ -12,8 +12,10 @@ const TMap<int32, float> UBoatMover::kWaveAccelerationRecoverIntervalTimes = {{1
 //順位:有効時間(s)
 const TMap<int32, float> UBoatMover::kWaveAccelerationActiveTimes = {{1, 1.0f}, {2, 1.0f}, {3, 1.0f}, {4, 1.0f}};
 //順位:加速力
-//NOTE:最大速度は変わらないため、最高速度に達しやすくなるかのみを変えられる
+// NOTE:最大速度は変わらないため、最高速度に達しやすくなるかのみを変えられる
 const TMap<int32, float> UBoatMover::kBoatAccerationCoefs = {{1, 1.0f}, {2, 1.1f}, {3, 1.2f}, {4, 1.5f}};
+//順位:最高速度
+const TMap<int32, float> UBoatMover::kBoatMaxSpeedCoefs = {{1, 1.0f}, {2, 1.0f}, {3, 1.0f}, {4, 1.0f}};
 
 // Sets default values for this component's properties
 UBoatMover::UBoatMover(const FObjectInitializer& ObjectInitializer) : Super(ObjectInitializer) {
@@ -133,7 +135,7 @@ bool UBoatMover::IsOverBoatMaxSpeed() const {
 	const float Length = Velocity.Size();
 	const float Speed_km_h = USpeedConverter::ToSpeedKilometerPerHour(Length);
 
-	return Speed_km_h >= MoveMaxSpeed;
+	return Speed_km_h >= MoveMaxSpeed * kBoatMaxSpeedCoefs[GetRanking()];
 }
 
 //前方に対する力を加算する
@@ -144,7 +146,7 @@ void UBoatMover::AddForwardForce(float MoveValue) {
 	const float VelocityLength = Velocity.Size();
 
 	// 現在速度/最大速度を割り出すためにMaxSpeedをcm/sに変換する
-	const float MaxSpeed_cm_s = USpeedConverter::ToSpeedCentimeterPerSecond(MoveMaxSpeed);
+	const float MaxSpeed_cm_s = USpeedConverter::ToSpeedCentimeterPerSecond(MoveMaxSpeed * kBoatMaxSpeedCoefs[GetRanking()]);
 
 	//加速する割合を0.0~1.0倍するための係数を計算する
 	//最大速度に対して現在速度が小さいほど1.0に近くなる

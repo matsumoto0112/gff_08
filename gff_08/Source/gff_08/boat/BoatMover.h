@@ -217,4 +217,5 @@ protected:
 	static const TMap<int32, float> kWaveAccelerationRecoverIntervalTimes;
 	static const TMap<int32, float> kWaveAccelerationActiveTimes;
 	static const TMap<int32, float> kBoatAccerationCoefs;
+	static const TMap<int32, float> kBoatMaxSpeedCoefs;
 };
