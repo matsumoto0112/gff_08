@@ -69,7 +69,7 @@ void ULapCounter::PassCheckPoint(ACheckPoint* PassedCheckPoint) {
 				RaceManager->GetHUD()->RankingUpdateStop();
 				AActor* ParentActor = GetOwner();
 				ABoat* ParentBoat = Cast<ABoat>(ParentActor);
-				ParentBoat->EnableAutoMode();
+				//ParentBoat->EnableAutoMode();
 				if (Ranking == 1) {
 					ParentBoat->EnableConfettiParticle();
 				}
