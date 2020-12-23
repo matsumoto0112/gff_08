@@ -76,6 +76,12 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "LapCounter")
 	TArray<float> GetLapTimes() const;
 
+	/**
+	* 正確なランキング情報に更新する
+	*/
+	UFUNCTION()
+	void UpdateAccurateRanking();
+
 protected:
 	//! 最も進んだ時のチェックポイントのインデックス
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "LapCounter")

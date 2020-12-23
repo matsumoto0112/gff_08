@@ -5,6 +5,7 @@
 #include "gff_08/stage/RaceManager.h"
 #include "gff_08/utils/MyGameInstance.h"
 #include "gff_08/utils/NetworkConnectUtility.h"
+#include "gff_08/utils/RankingSort.h"
 #include "kismet/GamePlayStatics.h"
 
 #include <numeric>
@@ -64,12 +65,13 @@ void ULapCounter::PassCheckPoint(ACheckPoint* PassedCheckPoint) {
 				break;
 			case 4:	   // 3T–ÚI—¹ ƒS[ƒ‹Œã
 			{
+				UpdateAccurateRanking();
 				SoundSystem->PlaySound2D(ESoundResourceType::SE_RACE_GOAL);
 				SoundSystem->PlayBGM(ESoundResourceType::BGM_GOAL);
 				RaceManager->GetHUD()->RankingUpdateStop();
 				AActor* ParentActor = GetOwner();
 				ABoat* ParentBoat = Cast<ABoat>(ParentActor);
-				//ParentBoat->EnableAutoMode();
+				// ParentBoat->EnableAutoMode();
 				if (Ranking == 1) {
 					ParentBoat->EnableConfettiParticle();
 				}
@@ -124,4 +126,40 @@ void ULapCounter::PassCheckPoint(ACheckPoint* PassedCheckPoint) {
 
 TArray<float> ULapCounter::GetLapTimes() const {
 	return LapTimes;
+}
+
+void ULapCounter::UpdateAccurateRanking() {
+	auto CopyArray = [](TArray<float>& Dest, const TArray<float>& Source) {
+		const int32 Size = Source.Num();
+		Dest.Empty();
+		for (int32 i = 0; i < Size; i++) {
+			Dest.Push(Source[i]);
+		}
+	};
+
+	const int32 PlayerIndex = UMyGameInstance::GetInstance()->GetUserData()->GetPlayerIndex();
+
+	switch (PlayerIndex) {
+		case 0:
+			CopyArray(UMyGameInstance::GetInstance()->GetPlayData()->Player1Data.LapTimes, LapTimes);
+			break;
+		case 1:
+			CopyArray(UMyGameInstance::GetInstance()->GetPlayData()->Player2Data.LapTimes, LapTimes);
+			break;
+		case 2:
+			CopyArray(UMyGameInstance::GetInstance()->GetPlayData()->Player3Data.LapTimes, LapTimes);
+			break;
+		case 3:
+			CopyArray(UMyGameInstance::GetInstance()->GetPlayData()->Player4Data.LapTimes, LapTimes);
+			break;
+		default:
+			break;
+	}
+
+	auto PlayData = URankingSort::GetPlayDatasSortedByRanking();
+	for (int32 i = 0; i < 4; i++) {
+		if (PlayData[i].PlayerIndex == PlayerIndex) {
+			Ranking = i + 1;
+		}
+	}
 }
