@@ -50,11 +50,18 @@ struct GFF_08_API FNetworkInputData {
 	GENERATED_USTRUCT_BODY()
 	// ì¸óÕèÓïÒ
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "NetworkSynchroParameters")
-	float LeftMotorValue;
+	uint8 CompressionLeftMotorData;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "NetworkSynchroParameters")
-	float RightMotorValue;
+	uint8 CompressionRightMotorData;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "NetworkSynchroParameters")
-	bool bBack;
+	uint8 CompressionbBackData;
+
+	//UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "NetworkSynchroParameters")
+	//float LeftMotorValue;
+	//UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "NetworkSynchroParameters")
+	//float RightMotorValue;
+	//UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "NetworkSynchroParameters")
+	//bool bBack;
 };
 
 /**
