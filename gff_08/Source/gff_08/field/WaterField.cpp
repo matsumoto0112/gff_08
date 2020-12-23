@@ -55,7 +55,7 @@ FVector AWaterField::GetAccelVelocity(const FVector& position) {
 	if (this == nullptr || IsGrid(grid) == false || WaveArray[grid.X][grid.Y].IsValid == false) {
 		return FVector::ZeroVector;
 	}
-
+	//return FVector::ZeroVector;
 	return WaveArray[grid.X][grid.Y].Velocity;
 }
 
