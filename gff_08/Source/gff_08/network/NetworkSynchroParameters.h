@@ -56,12 +56,12 @@ struct GFF_08_API FNetworkInputData {
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "NetworkSynchroParameters")
 	uint8 CompressionbBackData;
 
-	//UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "NetworkSynchroParameters")
-	//float LeftMotorValue;
-	//UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "NetworkSynchroParameters")
-	//float RightMotorValue;
-	//UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "NetworkSynchroParameters")
-	//bool bBack;
+	// UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "NetworkSynchroParameters")
+	// float LeftMotorValue;
+	// UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "NetworkSynchroParameters")
+	// float RightMotorValue;
+	// UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "NetworkSynchroParameters")
+	// bool bBack;
 };
 
 /**
@@ -75,6 +75,9 @@ struct GFF_08_API FNetworkTransformData {
 	FVector FixLocation;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "NetworkSynchroParameters")
 	FRotator FixRotation;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "NetworkSynchroParameters")
+	FVector FixVelocity;
+
 	//! 現在のチェックポイントのインデックス（ランキング計算用）
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "NetworkSynchroParameters")
 	int32 CheckPointIndex;
