@@ -24,7 +24,7 @@ public:
 	void SetGoalUI();
 
 	UFUNCTION(BlueprintImplementableEvent, BlueprintCallable, Category = "CountDownTimer")
-	void SetAnyBoatGoaledUI();
+	void SetAnyBoatGoaledUI(int32 RemainSeconds);
 	UFUNCTION(BlueprintImplementableEvent, BlueprintCallable, Category = "CountDownTimer")
 	void ClearUI();
 };

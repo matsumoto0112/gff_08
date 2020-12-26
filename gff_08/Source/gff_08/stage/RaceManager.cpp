@@ -46,7 +46,7 @@ void ARaceManager::BeginPlay() {
 	}
 
 	bRaceAlreadySetup = false;
-	
+
 	//マルチゲームなら
 	if (UNetworkConnectUtility::IsMultiGame(GetWorld()) == true) {
 		GEngine->AddOnScreenDebugMessage(-1, 3.0f, FColor::White, "Connected MasterServer");
@@ -92,7 +92,7 @@ void ARaceManager::Tick(float DeltaTime) {
 			bRaceEndCountdownStarted = IsAnyBoatGoaled();
 			return;
 		}
-		CountDownUI->SetAnyBoatGoaledUI();
+		CountDownUI->SetAnyBoatGoaledUI(static_cast<int32>(RaceEndRemainTime));
 		RaceEndRemainTime -= DeltaTime;
 		if (!bRaceEnded && RaceEndRemainTime <= 0.0f) {
 			//マルチプレイ時の終了処理
