@@ -215,7 +215,7 @@ void ABoat::PushMovementValue() {
 void ABoat::CalcMovementValues(float& MoveValue, float& LeftValue, float& RightValue) const {
 	const FInputInfo InputInfo = IDriver::Execute_CurrentInputInfo(Driver.GetObject());
 
-	const float Coef = InputInfo.bBack ? -1.0f : 1.0f;
+	const float Coef = InputInfo.bBack ? -0.45f : 1.0f;
 
 	const float MinValue = FMath::Min(InputInfo.LeftMotorValue, InputInfo.RightMotorValue);
 	const float MaxValue = FMath::Max(InputInfo.LeftMotorValue, InputInfo.RightMotorValue);
