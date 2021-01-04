@@ -16,12 +16,8 @@ bool UNetworkConnectUtility::IsOwner(const AActor* target) {
 }
 
 bool UNetworkConnectUtility::IsMultiGame(const UObject* worldContextObject) {
-	//UE_LOG(LogTemp, Log, TEXT("Call Method. Name is IsMultiGame"));
-	//FStrixRoom roomProperty = UStrixBlueprintFunctionLibrary::GetCurrentRoom(
-	//	worldContextObject, UMyGameInstance::GetInstance()->GetNetworkData()->GetChannelID());
-	//UE_LOG(LogTemp, Log, TEXT("End Method"));
+	//RoomServer‚ªÚ‘±‚³‚ê‚Ä‚¢‚é‚©‚Ç‚¤‚©‚Å”»•Ê‚·‚é
 	return UStrixBlueprintFunctionLibrary::IsRoomServerConnected(worldContextObject,UMyGameInstance::GetInstance()->GetNetworkData()->GetChannelID()) == true;
-	//return roomProperty.Capacity != 0; 
 }
 
 bool UNetworkConnectUtility::IsOwnerPlayerIndex(int32 Index) {
