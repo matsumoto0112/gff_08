@@ -8,9 +8,9 @@
 #include "kismet/GamePlayStatics.h"
 
 //順位:回復時間(s)
-const TMap<int32, float> UBoatMover::kWaveAccelerationRecoverIntervalTimes = {{1, 8.0f}, {2, 4.0f}, {3, 2.0f}, {4, 1.0f}};
+const TMap<int32, float> UBoatMover::kWaveAccelerationRecoverIntervalTimes = {{1, 1.0f}, {2, 0.75f}, {3, 0.5f}, {4, 0.0f}};
 //順位:有効時間(s)
-const TMap<int32, float> UBoatMover::kWaveAccelerationActiveTimes = {{1, 1.0f}, {2, 1.0f}, {3, 1.0f}, {4, 1.0f}};
+const TMap<int32, float> UBoatMover::kWaveAccelerationActiveTimes = {{1, 2.0f}, {2, 4.0f}, {3, 6.0f}, {4, 10.0f}};
 //順位:加速力
 // NOTE:最大速度は変わらないため、最高速度に達しやすくなるかのみを変えられる
 const TMap<int32, float> UBoatMover::kBoatAccerationCoefs = {{1, 1.0f}, {2, 1.1f}, {3, 1.2f}, {4, 1.5f}};
