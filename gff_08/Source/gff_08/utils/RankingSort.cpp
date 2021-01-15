@@ -42,10 +42,6 @@ TArray<FGamePlayData> URankingSort::GetPlayDatasSortedByRanking() {
 		}
 	});
 
-	for (auto&& R : Res) {
-		GEngine->AddOnScreenDebugMessage(-1, 30.0f, FColor::Green,
-			FString::Format(TEXT("{0}'s data ({1}, {2}, {3})"), {R.PlayerIndex, R.LapTimes[0], R.LapTimes[1], R.LapTimes[2]}));
-	}
 	return Res;
 }
 
@@ -72,4 +68,31 @@ FGamePlayData URankingSort::GetMyPlayerResultData() {
 		default:
 			return Instance->GetPlayData()->Player4Data;
 	}
+}
+
+int32 URankingSort::UngoalPlayerRankingNumber() {
+	auto Data = UMyGameInstance::GetInstance()->GetPlayData();
+	int32 Cnt = 0;
+	auto IsGoaled = [](auto& Data) {
+		if (Data.LapTimes.Num() != 3) {
+			return false;
+		}
+		for (int32 i = 0; i < 3; i++) {
+			if (Data.LapTimes[i] == 0.0f)
+				return false;
+		}
+
+		return true;
+	};
+
+	if (IsGoaled(Data->Player1Data))
+		Cnt++;
+	if (IsGoaled(Data->Player2Data))
+		Cnt++;
+	if (IsGoaled(Data->Player3Data))
+		Cnt++;
+	if (IsGoaled(Data->Player4Data))
+		Cnt++;
+
+	return Cnt + 1;
 }

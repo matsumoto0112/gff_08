@@ -32,4 +32,7 @@ public:
 	 */
 	UFUNCTION(BlueprintPure, Category = "RankingSort")
 	static FGamePlayData GetMyPlayerResultData();
+
+	UFUNCTION(BlueprintPure, Category = "RankingSort")
+	static int32 UngoalPlayerRankingNumber();
 };
